@@ -14,6 +14,7 @@ dependencies {
     testImplementation(kotlin("test"))
 
     implementation("io.github.wldt:wldt-core:0.4.0")
+    implementation("io.github.wldt:mqtt-physical-adapter:0.1.2")
 }
 
 tasks.test {
