@@ -1,15 +1,54 @@
 import execution.ExecutionStrategy
 import hdt.HumanDigitalTwin
+import it.wldt.adapter.mqtt.digital.MqttDigitalAdapter
+import it.wldt.adapter.mqtt.digital.MqttDigitalAdapterConfiguration
+import it.wldt.adapter.mqtt.digital.topic.MqttQosLevel
+import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapter
+import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapterConfiguration
+import it.wldt.core.engine.DigitalTwin
 import it.wldt.core.engine.DigitalTwinEngine
-import mapping.Util
+import shadowing.DefaultShadowingFunction
+import kotlin.collections.forEach
 
 object WLDTExecutionStrategy: ExecutionStrategy<Unit> {
     val dtEngine = DigitalTwinEngine()
+    val MQTT_BROKER = System.getenv("MQTT_BROKER") ?: "localhost"
+    val MQTT_BROKER_PORT = System.getenv("MQTT_BROKER_PORT")?.toInt() ?: 1883
 
     override fun execute(dts: List<HumanDigitalTwin>): Result<Unit> {
-        dts
-            .map { Util.getDtFromHumanDigitalTwin(it) }
-            .forEach { dtEngine.addDigitalTwin(it) }
+        dts.forEach { it ->
+            val id = it.id
+            val dt = DigitalTwin(id, DefaultShadowingFunction())
+
+            val mqttPhysicalConfigBuilder = MqttPhysicalAdapterConfiguration.builder(MQTT_BROKER, MQTT_BROKER_PORT)
+                //SETUP PROPERTIES
+            it.models.flatMap { it.properties }.forEach {
+                mqttPhysicalConfigBuilder.addPhysicalAssetPropertyAndTopic(
+                    it.internalName,
+                    it.defaultValue(),
+                    "${id}/sensor/${it.internalName}",
+                    it::deserialize
+                )
+            }
+            val mqttPhysicalConfig = mqttPhysicalConfigBuilder.build()
+            val mqttPhysicalAdapter = MqttPhysicalAdapter("${it.id}-mqtt-pa",mqttPhysicalConfig)
+            dt.addPhysicalAdapter(mqttPhysicalAdapter)
+
+            val mqttDigitalConfigBuilder = MqttDigitalAdapterConfiguration.builder(MQTT_BROKER, MQTT_BROKER_PORT)
+            it.models.flatMap { it.properties }.forEach {
+                mqttDigitalConfigBuilder.addPropertyTopic(
+                    it.internalName,
+                    "${id}/state/${it.internalName}",
+                    MqttQosLevel.MQTT_QOS_0,
+                    it::serialize
+                )
+            }
+            val mqttDigitalConfig = mqttDigitalConfigBuilder.build()
+            val mqttDigitalAdapter = MqttDigitalAdapter("${it.id}-mqtt-da", mqttDigitalConfig)
+            dt.addDigitalAdapter(mqttDigitalAdapter)
+
+            dtEngine.addDigitalTwin(dt)
+        }
         dtEngine.startAll()
         return Result.success(Unit)
     }
