@@ -12,7 +12,7 @@ data class HeartRate(
     override val description: String = "The number of heartbeats per minute.",
     override val id: String = "loinc:8867-4", // LOINC code for heart rate measurement
     override val timestamp: Long = System.currentTimeMillis(),
-) : Property {
+) : InstantProperty {
 
     override fun defaultValue(): Default {
         return default()
@@ -27,7 +27,7 @@ data class HeartRate(
     }
 
     companion object {
-        val gson = Gson()
+        private val gson = Gson()
 
         fun default(): HeartRate {
             return HeartRate(60)

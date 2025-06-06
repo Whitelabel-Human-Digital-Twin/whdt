@@ -12,7 +12,7 @@ import kotlin.collections.forEach
 
 object WLDTExecutionStrategy: ExecutionStrategy<Unit> {
     val dtEngine = DigitalTwinEngine()
-    val MQTT_BROKER = System.getenv("MQTT_BROKER") ?: "localhost"
+    val MQTT_BROKER = System.getenv("MQTT_BROKER") ?: "test.mosquitto.org"
     val MQTT_BROKER_PORT = System.getenv("MQTT_BROKER_PORT")?.toInt() ?: 1883
 
     override fun execute(dts: List<HumanDigitalTwin>): Result<Unit> {
@@ -25,7 +25,7 @@ object WLDTExecutionStrategy: ExecutionStrategy<Unit> {
             it.models.flatMap { it.properties }.forEach {
                 mqttPhysicalConfigBuilder.addPhysicalAssetPropertyAndTopic(
                     it.internalName,
-                    it.defaultValue(),
+                    it,
                     "${id}/sensor/${it.internalName}",
                     it::deserialize
                 )

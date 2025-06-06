@@ -15,7 +15,7 @@ data class BloodPressure(
     override val id: String = "loinc:8480-6", // LOINC code for blood pressure measurement,
     override val timestamp: Long = System.currentTimeMillis(),
 
-) : Property {
+) : InstantProperty {
     override fun defaultValue(): Default {
         return default()
     }
@@ -29,7 +29,7 @@ data class BloodPressure(
     }
 
     companion object {
-        val gson = Gson()
+        private val gson = Gson()
 
         fun default(): BloodPressure {
             return BloodPressure(120, 80)

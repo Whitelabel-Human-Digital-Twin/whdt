@@ -11,7 +11,6 @@ data class GivenName(
     override val internalName: String = name.lowercase().replace(" ", "-"),
     override val description: String = "A name property.",
     override val id: String = "custom:name",
-    override val timestamp: Long = System.currentTimeMillis(),
 ) : Property {
 
     override fun defaultValue(): Default {

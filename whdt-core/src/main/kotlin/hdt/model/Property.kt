@@ -1,13 +1,14 @@
 package hdt.model
 
-import hdt.util.Default
-import hdt.util.Deserialize
-import hdt.util.Serialize
+import hdt.util.*
 
 interface Property: Default, Deserialize, Serialize {
     val name: String
     val internalName: String
     val description: String
     val id: String
-    val timestamp: Long
 }
+
+interface InstantProperty: Property, Instant
+
+interface TimeRangedProperty: Property, TimePeriod
