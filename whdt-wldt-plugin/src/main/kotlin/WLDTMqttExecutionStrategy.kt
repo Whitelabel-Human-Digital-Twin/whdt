@@ -10,10 +10,14 @@ import it.wldt.core.engine.DigitalTwinEngine
 import shadowing.DefaultShadowingFunction
 import kotlin.collections.forEach
 
-object WLDTExecutionStrategy: ExecutionStrategy<Unit> {
-    val dtEngine = DigitalTwinEngine()
-    val MQTT_BROKER = System.getenv("MQTT_BROKER") ?: "test.mosquitto.org"
-    val MQTT_BROKER_PORT = System.getenv("MQTT_BROKER_PORT")?.toInt() ?: 1883
+/**
+ * WLDTMqttExecutionStrategy is an implementation of ExecutionStrategy that sets up a WLDT Digital Twin Engine
+ * with MQTT adapters for the provided HumanDigitalTwins.
+ */
+object WLDTMqttExecutionStrategy: ExecutionStrategy<Unit> {
+    private val dtEngine = DigitalTwinEngine()
+    private val MQTT_BROKER = System.getenv("MQTT_BROKER") ?: "test.mosquitto.org"
+    private val MQTT_BROKER_PORT = System.getenv("MQTT_BROKER_PORT")?.toInt() ?: 1883
 
     override fun execute(dts: List<HumanDigitalTwin>): Result<Unit> {
         dts.forEach { it ->

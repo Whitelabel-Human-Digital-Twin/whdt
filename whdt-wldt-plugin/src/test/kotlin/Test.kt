@@ -23,5 +23,5 @@ fun main() {
         )
     )
 
-    App(hdts).run(WLDTExecutionStrategy)
+    App(hdts).run(WLDTMqttExecutionStrategy)
 }
