@@ -156,8 +156,6 @@ public class HdtShadowingFunction extends ShadowingFunction {
                 logger.error("Error setting up model", e);
             }
         });
-
-        notifyShadowingSync();
     }
 
     private void startShadowing(Map<String, PhysicalAssetDescription> adaptersPhysicalAssetDescriptionMap)
