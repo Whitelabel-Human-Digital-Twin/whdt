@@ -22,7 +22,7 @@ object WLDTMqttExecutionStrategy: ExecutionStrategy<Unit> {
     override fun execute(dts: List<HumanDigitalTwin>): Result<Unit> {
         dts.forEach { it ->
             val id = it.id
-            val dt = DigitalTwin(id, DefaultShadowingFunction())
+            val dt = factory.HumanDigitalTwinFactories.fromHumanDigitalTwin(it)
 
             val mqttPhysicalConfigBuilder = MqttPhysicalAdapterConfiguration.builder(MQTT_BROKER, MQTT_BROKER_PORT)
                 //SETUP PROPERTIES

@@ -10,7 +10,7 @@ data class GivenName(
     override val name: String = "Given Name",
     override val internalName: String = name.lowercase().replace(" ", "-"),
     override val description: String = "A name property.",
-    override val id: String = "custom:name",
+    override val id: String = "custom:given-name",
 ) : Property {
 
     override fun defaultValue(): Default {
