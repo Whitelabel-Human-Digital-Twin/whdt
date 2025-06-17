@@ -3,6 +3,7 @@ package factory
 import hdt.HumanDigitalTwin
 import hdt.interfaces.digital.MqttDigitalInterface
 import hdt.interfaces.physical.MqttPhysicalInterface
+import hdt.model.Model
 import it.wldt.adapter.mqtt.digital.MqttDigitalAdapter
 import it.wldt.adapter.mqtt.digital.MqttDigitalAdapterConfiguration
 import it.wldt.adapter.mqtt.digital.topic.MqttQosLevel
