@@ -1,7 +1,6 @@
 package shadowing;
 
 import hdt.Model;
-import hdt.model.Property;
 import it.wldt.adapter.digital.event.DigitalActionWldtEvent;
 import it.wldt.adapter.physical.PhysicalAssetDescription;
 import it.wldt.adapter.physical.event.PhysicalAssetEventWldtEvent;

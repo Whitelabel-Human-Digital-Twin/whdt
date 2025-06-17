@@ -1,4 +1,4 @@
-package hdt.model
+package hdt.model.property
 
 import com.google.gson.Gson
 import hdt.util.Default

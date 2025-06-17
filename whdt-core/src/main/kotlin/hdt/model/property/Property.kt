@@ -1,4 +1,4 @@
-package hdt.model
+package hdt.model.property
 
 import hdt.util.*
 
