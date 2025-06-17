@@ -20,12 +20,18 @@ object WLDTMqttExecutionStrategy: ExecutionStrategy<Unit> {
     private val MQTT_BROKER_PORT = System.getenv("MQTT_BROKER_PORT")?.toInt() ?: 1883
 
     override fun execute(dts: List<HumanDigitalTwin>): Result<Unit> {
+        setupDigitalTwins(dts)
+        dtEngine.startAll()
+        return Result.success(Unit)
+    }
+
+    fun setupDigitalTwins(dts: List<HumanDigitalTwin>) {
         dts.forEach { it ->
             val id = it.id
             val dt = factory.HumanDigitalTwinFactories.fromHumanDigitalTwin(it)
 
             val mqttPhysicalConfigBuilder = MqttPhysicalAdapterConfiguration.builder(MQTT_BROKER, MQTT_BROKER_PORT)
-                //SETUP PROPERTIES
+            //SETUP PROPERTIES
             it.models.flatMap { it.properties }.forEach {
                 mqttPhysicalConfigBuilder.addPhysicalAssetPropertyAndTopic(
                     it.internalName,
@@ -53,7 +59,5 @@ object WLDTMqttExecutionStrategy: ExecutionStrategy<Unit> {
 
             dtEngine.addDigitalTwin(dt)
         }
-        dtEngine.startAll()
-        return Result.success(Unit)
     }
 }
