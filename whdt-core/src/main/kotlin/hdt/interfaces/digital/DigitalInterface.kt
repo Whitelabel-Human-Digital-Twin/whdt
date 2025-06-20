@@ -16,7 +16,7 @@ interface DigitalInterface {
 
 class MqttDigitalInterface(
     override val properties: List<Property>,
-    val broker: String = "test.mosquitto.org",
+    val broker: String = "localhost",
     val port: Int = 1883,
     val clientId: String = "mqtt-di-${System.currentTimeMillis()}"
 ) : DigitalInterface {
