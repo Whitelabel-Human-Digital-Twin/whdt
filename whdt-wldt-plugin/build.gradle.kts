@@ -16,6 +16,7 @@ dependencies {
     implementation("io.github.wldt:wldt-core:0.4.0")
     implementation("io.github.wldt:mqtt-physical-adapter:0.1.2")
     implementation("io.github.wldt:mqtt-digital-adapter:0.1.2")
+    implementation("io.github.wldt:http-digital-adapter:0.2")
 }
 
 tasks.test {
