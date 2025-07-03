@@ -1,8 +1,11 @@
 package factory
 
 import hdt.HumanDigitalTwin
+import hdt.interfaces.digital.HttpDigitalInterface
 import hdt.interfaces.digital.MqttDigitalInterface
 import hdt.interfaces.physical.MqttPhysicalInterface
+import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapter
+import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapterConfiguration
 import it.wldt.adapter.mqtt.digital.MqttDigitalAdapter
 import it.wldt.adapter.mqtt.digital.MqttDigitalAdapterConfiguration
 import it.wldt.adapter.mqtt.digital.topic.MqttQosLevel
@@ -27,6 +30,7 @@ object HumanDigitalTwinFactory {
         val digitalAdapters = hdt.digitalInterfaces.mapNotNull { dI ->
             when (dI) {
                 is MqttDigitalInterface -> getDaFromDigitalInterfaceMqtt(dI)
+                is HttpDigitalInterface -> getDaFromHttpDigitalInterface(dI, dt)
                 else -> null // Handle other digital interfaces if needed
             }
         }
@@ -79,6 +83,17 @@ object HumanDigitalTwinFactory {
         return MqttDigitalAdapter(
             dI.clientId,
             mqttConfig
+        )
+    }
+
+    fun getDaFromHttpDigitalInterface(dI: HttpDigitalInterface, dt: DigitalTwin): HttpDigitalAdapter {
+        val httpConfig  = HttpDigitalAdapterConfiguration(dI.id, dI.host, dI.port)
+
+        httpConfig.addPropertiesFilter(dI.properties.map { it.internalName })
+
+        return HttpDigitalAdapter(
+            httpConfig,
+            dt
         )
     }
 }
