@@ -1,4 +1,4 @@
-import execution.App
+import execution.WldtApp
 import hdt.model.ModelImpl
 import hdt.model.property.BloodPressure
 import hdt.model.property.GivenName
@@ -37,5 +37,5 @@ fun main() {
         )
     )
 
-    App(hdts).run(WLDTExecutionStrategy)
+    WldtApp().addDts(hdts).run()
 }
