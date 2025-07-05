@@ -1,9 +1,11 @@
 plugins {
     kotlin("jvm") version "2.1.20"
+    `maven-publish`
 }
-
-group = "io.github"
-version = "1.0-SNAPSHOT"
+allprojects {
+    group = "io.github.lm98"
+    version = "1.0-SNAPSHOT"
+}
 
 repositories {
     mavenCentral()

@@ -1,9 +1,29 @@
 plugins {
     kotlin("jvm")
+    `maven-publish`
 }
 
-group = "io.github"
-version = "1.0-SNAPSHOT"
+publishing {
+    publications {
+        create<MavenPublication>("gpr") {
+            from(components["java"])
+            groupId = "io.github.lm98"
+            artifactId = project.name
+            version = project.version.toString()
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/lm98/whdt")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("GPR_USER")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("GPR_KEY")
+            }
+        }
+    }
+}
 
 repositories {
     mavenCentral()
