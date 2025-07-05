@@ -3,13 +3,15 @@ plugins {
     `maven-publish`
 }
 
+val moduleVersion: String = rootProject.file("${project.name}/version.txt").readText().trim()
+
 publishing {
     publications {
         create<MavenPublication>("gpr") {
             from(components["java"])
             groupId = "io.github.lm98"
             artifactId = project.name
-            version = project.version.toString()
+            version = moduleVersion
         }
     }
 

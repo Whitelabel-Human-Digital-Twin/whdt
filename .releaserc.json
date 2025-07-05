@@ -11,7 +11,7 @@
       "message": "chore(release): ${nextRelease.version} [skip ci]"
     }],
     ["@semantic-release/exec", {
-      "publishCmd": "./gradlew -PpackageVersion=${nextRelease.version} publishAllPublicationsToGitHubPackagesRepository"
+      "publishCmd": "./gradlew :core:publish :plugin:publish -PpackageVersion=${nextRelease.version}"
     }]
   ]
 }
