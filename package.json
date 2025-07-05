@@ -1,0 +1,26 @@
+{
+  "name": "whdt",
+  "version": "1.0.0",
+  "description": "WHDT is a framework for creating and managing human digital twins. It provides a set of tools and libraries to build, deploy, and maintain digital representations of individuals, enabling personalized experiences and interactions.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lm98/whdt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lm98/whdt/issues"
+  },
+  "homepage": "https://github.com/lm98/whdt#readme",
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "semantic-release": "^24.2.6"
+  }
+}
