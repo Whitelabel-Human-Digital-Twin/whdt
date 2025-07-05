@@ -4,7 +4,7 @@ plugins {
 }
 allprojects {
     group = "io.github.lm98"
-    version = "1.0-SNAPSHOT"
+    version = System.getenv("PACKAGE_VERSION") ?: "1.0.0-SNAPSHOT"
 }
 
 repositories {
