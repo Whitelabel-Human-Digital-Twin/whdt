@@ -18,9 +18,11 @@
   },
   "homepage": "https://github.com/lm98/whdt#readme",
   "devDependencies": {
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/exec": "^7.1.0",
-    "@semantic-release/git": "^10.0.1",
-    "semantic-release": "^24.2.6"
+    "semantic-release": "^22.0.0",
+    "@semantic-release/git": "^10.0.0",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^10.0.1",
+    "@semantic-release/release-notes-generator": "^11.0.4"
   }
 }

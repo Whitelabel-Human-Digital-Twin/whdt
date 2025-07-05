@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm")
     `maven-publish`
 }
+val moduleVersion: String = rootProject.file("${project.name}/version.txt").readText().trim()
 
 publishing {
     publications {
@@ -9,7 +10,7 @@ publishing {
             from(components["java"])
             groupId = "io.github.lm98"
             artifactId = project.name
-            version = project.version.toString()
+            version = moduleVersion
         }
     }
 
