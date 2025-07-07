@@ -1,9 +1,10 @@
 package factory
 
-import hdt.HumanDigitalTwin
-import hdt.interfaces.digital.HttpDigitalInterface
-import hdt.interfaces.digital.MqttDigitalInterface
-import hdt.interfaces.physical.MqttPhysicalInterface
+import io.github.lm98.whdt.core.hdt.HumanDigitalTwin
+import io.github.lm98.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
+import io.github.lm98.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
+import io.github.lm98.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
+import io.github.lm98.whdt.wldt.plugin.shadowing.HdtShadowingFunction
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapter
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapterConfiguration
 import it.wldt.adapter.mqtt.digital.MqttDigitalAdapter
@@ -11,7 +12,6 @@ import it.wldt.adapter.mqtt.digital.MqttDigitalAdapterConfiguration
 import it.wldt.adapter.mqtt.digital.topic.MqttQosLevel
 import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapter
 import it.wldt.core.engine.DigitalTwin
-import shadowing.HdtShadowingFunction
 
 object HumanDigitalTwinFactory {
     fun fromHumanDigitalTwin(hdt: HumanDigitalTwin): DigitalTwin {
