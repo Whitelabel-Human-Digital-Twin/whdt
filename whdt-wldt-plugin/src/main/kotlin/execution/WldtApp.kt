@@ -1,7 +1,8 @@
 package execution
 
 import factory.HumanDigitalTwinFactory.fromHumanDigitalTwin
-import hdt.HumanDigitalTwin
+import io.github.lm98.whdt.core.hdt.HumanDigitalTwin
+import io.github.lm98.whdt.core.execution.App
 import it.wldt.core.engine.DigitalTwinEngine
 
 class WldtApp: App {
