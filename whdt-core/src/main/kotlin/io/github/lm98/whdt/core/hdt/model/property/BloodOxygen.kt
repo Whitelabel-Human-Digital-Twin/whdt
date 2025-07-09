@@ -3,8 +3,11 @@ package io.github.lm98.whdt.core.hdt.model.property
 import com.google.gson.Gson
 import io.github.lm98.whdt.core.util.Default
 import io.github.lm98.whdt.core.util.Deserialize
+import io.github.lm98.whdt.core.util.Instant
 import io.github.lm98.whdt.core.util.Serialize
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class BloodOxygen(
     val percentage: Int,
     override val name: String = "Blood Oxygen",
@@ -13,7 +16,7 @@ data class BloodOxygen(
     override val id: String = "loinc:2708-6", // LOINC code for oxygen saturation measurement
     override val timestamp: Long = System.currentTimeMillis(),
     val timezone: Int = 0,
-) : InstantProperty {
+) : Property, Instant {
 
     override fun deserialize(value: String): Deserialize {
         return fromJson(value)

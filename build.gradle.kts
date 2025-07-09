@@ -21,6 +21,7 @@ subprojects {
 
     plugins.withId("org.jetbrains.kotlin.jvm") {
         dependencies {
+            "implementation"("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
             "testImplementation"("io.kotest:kotest-runner-junit5:$kotestVersion")
             "testImplementation"("io.kotest:kotest-assertions-core:$kotestVersion")
             "testImplementation"("io.kotest:kotest-framework-engine:$kotestVersion")

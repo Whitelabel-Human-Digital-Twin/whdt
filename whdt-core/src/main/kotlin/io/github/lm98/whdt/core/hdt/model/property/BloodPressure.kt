@@ -3,8 +3,11 @@ package io.github.lm98.whdt.core.hdt.model.property
 import com.google.gson.Gson
 import io.github.lm98.whdt.core.util.Default
 import io.github.lm98.whdt.core.util.Deserialize
+import io.github.lm98.whdt.core.util.Instant
 import io.github.lm98.whdt.core.util.Serialize
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class BloodPressure(
     val systolic: Int,
     val diastolic: Int,
@@ -14,7 +17,7 @@ data class BloodPressure(
     override val id: String = "loinc:8480-6", // LOINC code for blood pressure measurement,
     override val timestamp: Long = System.currentTimeMillis(),
 
-) : InstantProperty {
+) : Property, Instant {
 
     override fun deserialize(value: String): Deserialize {
         return fromJson(value)

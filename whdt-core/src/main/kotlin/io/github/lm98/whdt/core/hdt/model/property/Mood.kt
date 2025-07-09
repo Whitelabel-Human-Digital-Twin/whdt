@@ -3,8 +3,11 @@ package io.github.lm98.whdt.core.hdt.model.property
 import com.google.gson.Gson
 import io.github.lm98.whdt.core.util.Default
 import io.github.lm98.whdt.core.util.Deserialize
+import io.github.lm98.whdt.core.util.Instant
 import io.github.lm98.whdt.core.util.Serialize
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Mood(
     val mood: String,
     val energyLevel: Int = 50, // Scale from 1 to 100
@@ -13,7 +16,7 @@ data class Mood(
     override val description: String = "The emotional state of the individual.",
     override val id: String = "hdt:00001-1", // custom code for mood assessment
     override val timestamp: Long = System.currentTimeMillis(),
-): InstantProperty {
+): Property, Instant {
 
     override fun deserialize(value: String): Deserialize {
         return fromJson(value)

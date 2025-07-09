@@ -4,7 +4,9 @@ import com.google.gson.Gson
 import io.github.lm98.whdt.core.util.Default
 import io.github.lm98.whdt.core.util.Deserialize
 import io.github.lm98.whdt.core.util.Serialize
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class GivenName(
     val givenName: String,
     override val name: String = "Given Name",
