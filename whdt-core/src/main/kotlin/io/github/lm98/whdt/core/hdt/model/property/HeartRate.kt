@@ -1,9 +1,9 @@
 package io.github.lm98.whdt.core.hdt.model.property
 
 import com.google.gson.Gson
-import io.github.lm98.whdt.core.hdt.util.Default
-import io.github.lm98.whdt.core.hdt.util.Deserialize
-import io.github.lm98.whdt.core.hdt.util.Serialize
+import io.github.lm98.whdt.core.util.Default
+import io.github.lm98.whdt.core.util.Deserialize
+import io.github.lm98.whdt.core.util.Serialize
 
 data class HeartRate(
     val bpm: Int,
