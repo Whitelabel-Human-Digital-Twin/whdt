@@ -24,9 +24,6 @@ data class GenericProperty(
     override val id: String = "generic:property",
     val value: Argument = EmptyArgument(Unit) // Default value as an empty argument,
 ): Property {
-    override fun defaultValue(): Default {
-        return default()
-    }
 
     override fun deserialize(value: String): Deserialize {
         return fromJson(value)
@@ -36,12 +33,9 @@ data class GenericProperty(
         return toJson(this)
     }
 
-    companion object {
+    companion object: Default<GenericProperty> {
         private val gson = Gson()
 
-        fun default(): GenericProperty {
-            return GenericProperty("Generic Property", "generic-property")
-        }
 
         fun fromJson(json: String): GenericProperty {
             return gson.fromJson(json, GenericProperty::class.java)
@@ -49,6 +43,10 @@ data class GenericProperty(
 
         fun toJson(property: GenericProperty): String {
             return gson.toJson(property)
+        }
+
+        override fun defaultValue(): GenericProperty {
+            return GenericProperty("Generic Property", "generic-property")
         }
     }
 }

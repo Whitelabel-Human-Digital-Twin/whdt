@@ -13,10 +13,6 @@ data class GivenName(
     override val id: String = "custom:given-name",
 ) : Property {
 
-    override fun defaultValue(): Default {
-        return default()
-    }
-
     override fun deserialize(value: String): Deserialize {
         return fromJson(value)
     }
@@ -25,12 +21,8 @@ data class GivenName(
         return toJson(s as GivenName)
     }
 
-    companion object {
+    companion object: Default<GivenName> {
         val gson = Gson()
-
-        fun default(): GivenName {
-            return GivenName("Default Name")
-        }
 
         fun fromJson(json: String): GivenName {
             return gson.fromJson(json, GivenName::class.java)
@@ -38,6 +30,10 @@ data class GivenName(
 
         fun toJson(name: GivenName): String {
             return gson.toJson(name)
+        }
+
+        override fun defaultValue(): GivenName {
+            return GivenName("Default Name")
         }
     }
 }

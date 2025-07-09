@@ -14,9 +14,6 @@ data class Steps(
     override val startTime: Long = System.currentTimeMillis(),
     override val endTime: Long = System.currentTimeMillis(),
 ): TimeRangedProperty {
-    override fun defaultValue(): Default {
-        return default()
-    }
 
     override fun deserialize(value: String): Deserialize {
         return fromJson(value)
@@ -26,10 +23,10 @@ data class Steps(
         return toJson(s as Steps)
     }
 
-    companion object {
+    companion object: Default<Steps> {
         private val gson = Gson()
 
-        fun default(): Steps {
+        override fun defaultValue(): Steps {
             return Steps(0)
         }
 

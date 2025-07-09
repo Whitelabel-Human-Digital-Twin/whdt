@@ -14,10 +14,6 @@ data class HeartRate(
     override val timestamp: Long = System.currentTimeMillis(),
 ) : InstantProperty {
 
-    override fun defaultValue(): Default {
-        return default()
-    }
-
     override fun deserialize(value: String): Deserialize {
         return fromJson(value)
     }
@@ -26,10 +22,10 @@ data class HeartRate(
         return toJson(s as HeartRate)
     }
 
-    companion object {
+    companion object: Default<HeartRate> {
         private val gson = Gson()
 
-        fun default(): HeartRate {
+        override fun defaultValue(): HeartRate {
             return HeartRate(60)
         }
 

@@ -15,10 +15,6 @@ data class BloodOxygen(
     val timezone: Int = 0,
 ) : InstantProperty {
 
-    override fun defaultValue(): Default {
-        return default()
-    }
-
     override fun deserialize(value: String): Deserialize {
         return fromJson(value)
     }
@@ -27,12 +23,8 @@ data class BloodOxygen(
         return toJson(s as BloodOxygen)
     }
 
-    companion object {
+    companion object: Default<BloodOxygen> {
         private val gson = Gson()
-
-        fun default(): BloodOxygen {
-            return BloodOxygen(95)
-        }
 
         fun fromJson(json: String): BloodOxygen {
             return gson.fromJson(json, BloodOxygen::class.java)
@@ -40,6 +32,10 @@ data class BloodOxygen(
 
         fun toJson(bloodOxygen: BloodOxygen): String {
             return gson.toJson(bloodOxygen)
+        }
+
+        override fun defaultValue(): BloodOxygen {
+            return BloodOxygen(95)
         }
     }
 }
