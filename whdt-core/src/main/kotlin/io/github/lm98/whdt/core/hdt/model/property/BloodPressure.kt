@@ -15,9 +15,6 @@ data class BloodPressure(
     override val timestamp: Long = System.currentTimeMillis(),
 
 ) : InstantProperty {
-    override fun defaultValue(): Default {
-        return default()
-    }
 
     override fun deserialize(value: String): Deserialize {
         return fromJson(value)
@@ -27,12 +24,8 @@ data class BloodPressure(
         return toJson(s as BloodPressure)
     }
 
-    companion object {
+    companion object: Default<BloodPressure> {
         private val gson = Gson()
-
-        fun default(): BloodPressure {
-            return BloodPressure(120, 80)
-        }
 
         fun fromJson(json: String): BloodPressure {
             return gson.fromJson(json, BloodPressure::class.java)
@@ -40,6 +33,10 @@ data class BloodPressure(
 
         fun toJson(bloodPressure: BloodPressure): String {
             return gson.toJson(bloodPressure)
+        }
+
+        override fun defaultValue(): BloodPressure {
+            return BloodPressure(120, 80)
         }
     }
 }

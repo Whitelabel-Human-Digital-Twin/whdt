@@ -15,10 +15,6 @@ data class Mood(
     override val timestamp: Long = System.currentTimeMillis(),
 ): InstantProperty {
 
-    override fun defaultValue(): Default {
-        return default()
-    }
-
     override fun deserialize(value: String): Deserialize {
         return fromJson(value)
     }
@@ -27,10 +23,10 @@ data class Mood(
         return toJson(s as Mood)
     }
 
-    companion object {
+    companion object: Default<Mood> {
         private val gson = Gson()
 
-        fun default(): Mood {
+        override fun defaultValue(): Mood {
             return Mood("Neutral")
         }
 
