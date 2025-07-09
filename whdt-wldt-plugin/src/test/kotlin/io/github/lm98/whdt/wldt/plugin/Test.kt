@@ -1,10 +1,10 @@
 package io.github.lm98.whdt.wldt.plugin
 
 import execution.WldtApp
-import io.github.lm98.whdt.core.hdt.HumanDigitalTwinImpl
+import io.github.lm98.whdt.core.hdt.HumanDigitalTwin
 import io.github.lm98.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.lm98.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
-import io.github.lm98.whdt.core.hdt.model.ModelImpl
+import io.github.lm98.whdt.core.hdt.model.Model
 import io.github.lm98.whdt.core.hdt.model.property.BloodPressure
 import io.github.lm98.whdt.core.hdt.model.property.GivenName
 import io.github.lm98.whdt.core.hdt.model.property.HeartRate
@@ -21,7 +21,7 @@ fun main() {
         HeartRate(72)
     )
 
-    val model = ModelImpl(properties)
+    val model = Model(properties)
 
     val pI = MqttPhysicalInterface(
         properties = properties,
@@ -34,7 +34,7 @@ fun main() {
     )
 
     val hdts = listOf(
-        HumanDigitalTwinImpl(
+        HumanDigitalTwin(
             id = "hd1",
             models = listOf(model),
             physicalInterfaces = listOf(pI),

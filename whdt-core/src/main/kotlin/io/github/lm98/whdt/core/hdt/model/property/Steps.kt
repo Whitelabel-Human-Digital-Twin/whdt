@@ -4,7 +4,10 @@ import com.google.gson.Gson
 import io.github.lm98.whdt.core.util.Default
 import io.github.lm98.whdt.core.util.Deserialize
 import io.github.lm98.whdt.core.util.Serialize
+import io.github.lm98.whdt.core.util.TimePeriod
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Steps(
     val count: Int,
     override val name: String = "Steps",
@@ -13,7 +16,7 @@ data class Steps(
     override val id: String = "hdt:00002-1", // custom code for step count
     override val startTime: Long = System.currentTimeMillis(),
     override val endTime: Long = System.currentTimeMillis(),
-): TimeRangedProperty {
+): Property, TimePeriod {
 
     override fun deserialize(value: String): Deserialize {
         return fromJson(value)
