@@ -4,6 +4,6 @@ import io.github.lm98.whdt.core.hdt.model.property.Property
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Model(
+data class Model(
     val properties: List<Property>,
 )
