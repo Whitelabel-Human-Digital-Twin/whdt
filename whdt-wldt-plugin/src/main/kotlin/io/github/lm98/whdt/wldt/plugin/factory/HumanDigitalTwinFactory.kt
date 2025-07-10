@@ -1,10 +1,11 @@
-package factory
+package io.github.lm98.whdt.wldt.plugin.factory
 
 import io.github.lm98.whdt.core.hdt.HumanDigitalTwin
 import io.github.lm98.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
 import io.github.lm98.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.lm98.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.lm98.whdt.core.hdt.model.property.Property
+import io.github.lm98.whdt.core.serde.modules.propertyModule
 import io.github.lm98.whdt.wldt.plugin.shadowing.HdtShadowingFunction
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapter
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapterConfiguration
@@ -12,12 +13,13 @@ import it.wldt.adapter.mqtt.digital.MqttDigitalAdapter
 import it.wldt.adapter.mqtt.digital.MqttDigitalAdapterConfiguration
 import it.wldt.adapter.mqtt.digital.topic.MqttQosLevel
 import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapter
+import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapterConfiguration
 import it.wldt.core.engine.DigitalTwin
 import kotlinx.serialization.json.Json
 
 object HumanDigitalTwinFactory {
     val json = Json {
-        serializersModule = io.github.lm98.whdt.core.serde.modules.propertyModule
+        serializersModule = propertyModule
         classDiscriminator = "type"
         prettyPrint = true
     }
@@ -50,7 +52,7 @@ object HumanDigitalTwinFactory {
     }
 
     fun getPaFromPhysicalInterfaceMqtt(pI: MqttPhysicalInterface): MqttPhysicalAdapter {
-        val mqttConfigBuilder = it.wldt.adapter.mqtt.physical.MqttPhysicalAdapterConfiguration.builder(
+        val mqttConfigBuilder = MqttPhysicalAdapterConfiguration.builder(
             pI.broker,
             pI.port,
         )
