@@ -1,6 +1,6 @@
 package io.github.lm98.whdt.wldt.plugin
 
-import execution.WldtApp
+import io.github.lm98.whdt.wldt.plugin.execution.WldtApp
 import io.github.lm98.whdt.core.hdt.HumanDigitalTwin
 import io.github.lm98.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.lm98.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
