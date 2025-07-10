@@ -1,10 +1,7 @@
 package io.github.lm98.whdt.core.hdt.model.property
 
-import com.google.gson.Gson
 import io.github.lm98.whdt.core.util.Default
-import io.github.lm98.whdt.core.util.Deserialize
 import io.github.lm98.whdt.core.util.Instant
-import io.github.lm98.whdt.core.util.Serialize
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,24 +16,7 @@ data class BloodPressure(
 
 ) : Property, Instant {
 
-    override fun deserialize(value: String): Deserialize {
-        return fromJson(value)
-    }
-
-    override fun serialize(s: Serialize): String {
-        return toJson(s as BloodPressure)
-    }
-
     companion object: Default<BloodPressure> {
-        private val gson = Gson()
-
-        fun fromJson(json: String): BloodPressure {
-            return gson.fromJson(json, BloodPressure::class.java)
-        }
-
-        fun toJson(bloodPressure: BloodPressure): String {
-            return gson.toJson(bloodPressure)
-        }
 
         override fun defaultValue(): BloodPressure {
             return BloodPressure(120, 80)
