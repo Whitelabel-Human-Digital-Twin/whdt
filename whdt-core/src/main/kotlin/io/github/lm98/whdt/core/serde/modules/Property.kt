@@ -16,11 +16,11 @@ val propertyModule = SerializersModule {
         subclass(Surname::class, Surname.serializer())
     }
 
-    polymorphic(Argument::class) {
-        subclass(Argument.EmptyArgument::class, Argument.EmptyArgument.serializer())
-        subclass(Argument.StringArgument::class, Argument.StringArgument.serializer())
-        subclass(Argument.IntArgument::class, Argument.IntArgument.serializer())
-        subclass(Argument.FloatArgument::class, Argument.FloatArgument.serializer())
-        subclass(Argument.BooleanArgument::class, Argument.BooleanArgument.serializer())
+    polymorphic(PropertyValue::class) {
+        subclass(PropertyValue.EmptyPropertyValue::class, PropertyValue.EmptyPropertyValue.serializer())
+        subclass(PropertyValue.StringPropertyValue::class, PropertyValue.StringPropertyValue.serializer())
+        subclass(PropertyValue.IntPropertyValue::class, PropertyValue.IntPropertyValue.serializer())
+        subclass(PropertyValue.FloatPropertyValue::class, PropertyValue.FloatPropertyValue.serializer())
+        subclass(PropertyValue.BooleanPropertyValue::class, PropertyValue.BooleanPropertyValue.serializer())
     }
 }
