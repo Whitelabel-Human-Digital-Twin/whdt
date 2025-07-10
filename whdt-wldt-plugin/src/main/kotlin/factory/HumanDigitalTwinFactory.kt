@@ -4,6 +4,7 @@ import io.github.lm98.whdt.core.hdt.HumanDigitalTwin
 import io.github.lm98.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
 import io.github.lm98.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.lm98.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
+import io.github.lm98.whdt.core.hdt.model.property.Property
 import io.github.lm98.whdt.wldt.plugin.shadowing.HdtShadowingFunction
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapter
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapterConfiguration
@@ -12,9 +13,17 @@ import it.wldt.adapter.mqtt.digital.MqttDigitalAdapterConfiguration
 import it.wldt.adapter.mqtt.digital.topic.MqttQosLevel
 import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapter
 import it.wldt.core.engine.DigitalTwin
+import kotlinx.serialization.json.Json
 
 object HumanDigitalTwinFactory {
+    val json = Json {
+        serializersModule = io.github.lm98.whdt.core.serde.modules.propertyModule
+        classDiscriminator = "type"
+        prettyPrint = true
+    }
+
     fun fromHumanDigitalTwin(hdt: HumanDigitalTwin): DigitalTwin {
+
         val shad = HdtShadowingFunction("${hdt.id}-shadowing-function", hdt.models)
         val dt = DigitalTwin(hdt.id, shad)
 
@@ -51,7 +60,7 @@ object HumanDigitalTwinFactory {
                 property.internalName,
                 property,
                 "${pI.clientId}/sensor/${property.internalName}",
-                property::deserialize
+                json::decodeFromString
             )
         }
 
@@ -73,9 +82,10 @@ object HumanDigitalTwinFactory {
             mqttConfigBuilder.addPropertyTopic(
                 property.internalName,
                 "${dI.clientId}/state/${property.internalName}",
-                MqttQosLevel.MQTT_QOS_0,
-                property::serialize
-            )
+                MqttQosLevel.MQTT_QOS_0
+            ) { property: Property ->
+                json.encodeToString(property)
+            }
         }
 
         val mqttConfig = mqttConfigBuilder.build()

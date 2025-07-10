@@ -1,9 +1,6 @@
 package io.github.lm98.whdt.core.hdt.model.property
 
-import com.google.gson.Gson
 import io.github.lm98.whdt.core.util.Default
-import io.github.lm98.whdt.core.util.Deserialize
-import io.github.lm98.whdt.core.util.Serialize
 import io.github.lm98.whdt.core.util.TimePeriod
 import kotlinx.serialization.Serializable
 
@@ -18,27 +15,10 @@ data class Steps(
     override val endTime: Long = System.currentTimeMillis(),
 ): Property, TimePeriod {
 
-    override fun deserialize(value: String): Deserialize {
-        return fromJson(value)
-    }
-
-    override fun serialize(s: Serialize): String {
-        return toJson(s as Steps)
-    }
-
     companion object: Default<Steps> {
-        private val gson = Gson()
 
         override fun defaultValue(): Steps {
             return Steps(0)
-        }
-
-        fun fromJson(json: String): Steps {
-            return gson.fromJson(json, Steps::class.java)
-        }
-
-        fun toJson(steps: Steps): String {
-            return gson.toJson(steps)
         }
     }
 }
