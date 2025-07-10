@@ -5,22 +5,22 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class Argument {
+sealed class PropertyValue {
     @Serializable
     @SerialName("EmptyArgument")
-    object EmptyArgument: Argument()
+    object EmptyPropertyValue: PropertyValue()
     @Serializable
     @SerialName("StringArgument")
-    data class StringArgument(val value: String) : Argument()
+    data class StringPropertyValue(val value: String) : PropertyValue()
     @Serializable
     @SerialName("IntArgument")
-    data class IntArgument(val value: Int) : Argument()
+    data class IntPropertyValue(val value: Int) : PropertyValue()
     @Serializable
     @SerialName("FloatArgument")
-    data class FloatArgument(val value: Float) : Argument()
+    data class FloatPropertyValue(val value: Float) : PropertyValue()
     @Serializable
     @SerialName("BooleanArgument")
-    data class BooleanArgument(val value: Boolean) : Argument()
+    data class BooleanPropertyValue(val value: Boolean) : PropertyValue()
 }
 
 @Serializable
@@ -29,7 +29,7 @@ data class GenericProperty(
     override val internalName: String,
     override val description: String = "A generic property that can hold any type of value.",
     override val id: String = "generic:property",
-    val value: Argument = Argument.EmptyArgument // Default value as an empty argument,
+    val value: PropertyValue = PropertyValue.EmptyPropertyValue // Default value as an empty argument,
 ): Property {
 
     companion object: Default<GenericProperty> {

@@ -1,6 +1,7 @@
 package io.github.lm98.whdt.core.serde
 
-import io.github.lm98.whdt.core.hdt.model.property.Argument
+import io.github.lm98.whdt.core.hdt.model.Model
+import io.github.lm98.whdt.core.hdt.model.property.PropertyValue
 import io.github.lm98.whdt.core.hdt.model.property.GenericProperty
 import io.github.lm98.whdt.core.hdt.model.property.Property
 import io.kotest.core.spec.style.FunSpec
@@ -15,7 +16,7 @@ class TestSerDeProperty: FunSpec({
             prettyPrint = true
         }
 
-        val prop: Property = GenericProperty("username", "username", value = Argument.StringArgument("leona"))
+        val prop: Property = GenericProperty("username", "username", value = PropertyValue.StringPropertyValue("leona"))
         val serialized = json.encodeToString(prop)
         //println(serialized)
         val deserialized = json.decodeFromString<Property>(serialized)
