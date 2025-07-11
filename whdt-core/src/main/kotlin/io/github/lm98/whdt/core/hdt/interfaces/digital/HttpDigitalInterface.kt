@@ -10,7 +10,7 @@ data class HttpDigitalInterface(
     override val properties: List<Property>,
     val host: String = "localhost",
     val port: Int = 8080,
-    val id: String = "http-di-${System.currentTimeMillis()}",
+    val id: String,
 ) : DigitalInterface  {
     override val interfaceType: DigitalInterfaceType = DigitalInterfaceType.HTTP
 }
