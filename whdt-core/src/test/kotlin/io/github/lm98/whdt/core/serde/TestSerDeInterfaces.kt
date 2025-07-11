@@ -9,6 +9,7 @@ import io.github.lm98.whdt.core.hdt.model.property.GenericProperty
 import io.github.lm98.whdt.core.hdt.model.property.PropertyValue
 import io.github.lm98.whdt.core.serde.modules.interfaceModule
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.paths.beSymbolicLink
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.json.Json
 
@@ -21,6 +22,7 @@ class TestSerDeInterfaces: FunSpec({
         }
 
         val pI: PhysicalInterface = MqttPhysicalInterface(
+            clientId = "mqtt-pi",
             properties = listOf(
                 GenericProperty("username", "username", value = PropertyValue.StringPropertyValue("leona")),
                 GenericProperty("password", "password", value = PropertyValue.StringPropertyValue("123456")),
@@ -44,13 +46,16 @@ class TestSerDeInterfaces: FunSpec({
             GenericProperty("password", "password", value = PropertyValue.StringPropertyValue("123456")),
         )
 
-        val mqtt: DigitalInterface = MqttDigitalInterface(properties)
+        val mqtt: DigitalInterface = MqttDigitalInterface(
+            clientId = "mqtt-di",
+            properties = properties
+        )
         val serMqtt = json.encodeToString(mqtt)
         //println(serialized)
         val deMqtt = json.decodeFromString<DigitalInterface>(serMqtt)
         deMqtt shouldBe mqtt
 
-        val http: DigitalInterface = HttpDigitalInterface(properties)
+        val http: DigitalInterface = HttpDigitalInterface(id = "http-di", properties = properties)
         val serHttp = json.encodeToString(http)
         //println(serialized)
         val deHttp = json.decodeFromString<DigitalInterface>(serHttp)
