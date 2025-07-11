@@ -1,15 +1,19 @@
 import { execSync } from 'child_process';
 import { readFileSync, writeFileSync } from 'fs';
 
-const modules = ['core', 'plugin'];
-const changedModules = [];
+function getModules() {
+  const settings = readFileSync('settings.gradle.kts', 'utf-8');
+  const includeLine = settings.match(/include\(([^)]+)\)/);
+  if (!includeLine) return [];
 
-for (const module of modules) {
-  const output = execSync(`git diff --name-only HEAD~1 HEAD`).toString();
-  if (output.includes(`${module}/`)) {
-    changedModules.push(module);
-  }
+  return includeLine[1]
+    .split(',')
+    .map(s => s.trim().replace(/["']/g, '')); // strip quotes
 }
+
+const modules = getModules();
+const changedFiles = execSync('git diff --name-only HEAD~1 HEAD').toString().split('\n');
+const changedModules = modules.filter(mod => changedFiles.some(file => file.startsWith(`${mod}/`)));
 
 if (changedModules.length === 0) {
   console.log('No modules changed — skipping release.');
@@ -33,7 +37,6 @@ for (const module of changedModules) {
   execSync(`git push origin HEAD`);
   execSync(`git push origin ${module}-v${newVersion}`);
 
-  // Trigger Gradle publish for just that module
   execSync(`./gradlew :${module}:publish -PpackageVersion=${newVersion}`, {
     stdio: 'inherit',
     env: {
