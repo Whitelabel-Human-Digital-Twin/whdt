@@ -10,7 +10,7 @@ data class MqttDigitalInterface(
     override val properties: List<Property>,
     val broker: String = "localhost",
     val port: Int = 1883,
-    val clientId: String = "mqtt-di-${System.currentTimeMillis()}"
+    val clientId: String,
 ) : DigitalInterface {
     override val interfaceType: DigitalInterfaceType = DigitalInterfaceType.MQTT
 

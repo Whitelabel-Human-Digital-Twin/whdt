@@ -10,7 +10,7 @@ data class MqttPhysicalInterface(
     override val properties: List<Property>,
     val broker: String = "localhost",
     val port: Int = 1883,
-    val clientId: String = "mqtt-pa-${System.currentTimeMillis()}"
+    val clientId: String,
 ) : PhysicalInterface {
     override val interfaceType: PhysicalInterfaceType = PhysicalInterfaceType.MQTT
 
