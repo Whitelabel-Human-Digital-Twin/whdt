@@ -30,7 +30,21 @@ class WldtApp: App {
         return this
     }
 
-    override fun run() {
+    override fun startDt(id: String): App {
+        dtEngine.startDigitalTwin(id)
+        return this
+    }
+
+    override fun stopDt(id: String): App {
+        dtEngine.stopDigitalTwin(id)
+        return this
+    }
+
+    override fun startAll() {
         dtEngine.startAll()
+    }
+
+    override fun stopAll() {
+        dtEngine.stopAll()
     }
 }

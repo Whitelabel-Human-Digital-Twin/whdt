@@ -14,5 +14,16 @@ interface App {
     fun removeDts(hdts: List<HumanDigitalTwin>): App {
         return removeDtsById(hdts.map { it.id })
     }
-    fun run()
+    fun startDt(id: String): App
+    fun startDts(ids: List<String>): App {
+        ids.forEach { startDt(it) }
+        return this
+    }
+    fun stopDt(id: String): App
+    fun stopDts(ids: List<String>): App {
+        ids.forEach { stopDt(it) }
+        return this
+    }
+    fun startAll()
+    fun stopAll()
 }
