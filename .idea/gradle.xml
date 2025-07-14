@@ -10,6 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/whdt-core" />
+            <option value="$PROJECT_DIR$/whdt-examples" />
             <option value="$PROJECT_DIR$/whdt-wldt-plugin" />
           </set>
         </option>
