@@ -2,9 +2,11 @@ package io.github.lm98.whdt.core.hdt.model.property
 
 import io.github.lm98.whdt.core.util.Default
 import io.github.lm98.whdt.core.util.TimePeriod
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+@SerialName("steps")
 data class Steps(
     val count: Int,
     override val name: String = "Steps",

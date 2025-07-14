@@ -39,7 +39,7 @@ class TestSerDeHdt: FunSpec({
       )
 
       val serialized = Stub.hdtJsonSerDe().serialize(hdt)
-      println(serialized)
+      //println(serialized)
       val deserialized = Stub.hdtJsonSerDe().deserialize(serialized)
 
       deserialized shouldBe hdt
