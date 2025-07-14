@@ -1,9 +1,11 @@
 package io.github.lm98.whdt.core.hdt.model.property
 
 import io.github.lm98.whdt.core.util.Default
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+@SerialName("surname")
 data class Surname(
     val surname: String,
     override val name: String = "Surname",

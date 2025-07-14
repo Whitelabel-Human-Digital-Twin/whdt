@@ -2,9 +2,11 @@ package io.github.lm98.whdt.core.hdt.model.property
 
 import io.github.lm98.whdt.core.util.Default
 import io.github.lm98.whdt.core.util.Instant
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+@SerialName("mood")
 data class Mood(
     val mood: String,
     val energyLevel: Int = 50, // Scale from 1 to 100
