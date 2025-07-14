@@ -42,5 +42,5 @@ fun main() {
         )
     )
 
-    WldtApp().addDts(hdts).run()
+    WldtApp().addDts(hdts).startAll()
 }
