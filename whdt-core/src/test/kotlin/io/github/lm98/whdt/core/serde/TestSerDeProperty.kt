@@ -6,38 +6,28 @@ import io.github.lm98.whdt.core.hdt.model.property.Property
 import io.github.lm98.whdt.core.hdt.model.property.PropertyValue
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import kotlinx.serialization.json.Json
 
 class TestSerDeProperty: FunSpec({
     test("Test SerDe GenericProperty") {
-        val json = Json {
-            serializersModule = io.github.lm98.whdt.core.serde.modules.propertyModule
-            classDiscriminator = "type"
-            prettyPrint = true
-        }
+        val serde = Stub.propertyJsonSerDe()
 
         val prop: Property = GenericProperty("username", "username", value = PropertyValue.StringPropertyValue("leona"))
-        val serialized = json.encodeToString(prop)
+        val serialized = serde.serialize(prop)
         //println(serialized)
-        val deserialized = json.decodeFromString<Property>(serialized)
+        val deserialized = serde.deserialize(serialized)
 
         deserialized shouldBe prop
     }
 
     test("Test SerDe Model") {
-        val json = Json {
-            serializersModule = io.github.lm98.whdt.core.serde.modules.propertyModule
-            classDiscriminator = "type"
-            prettyPrint = true
-        }
-
+        val serde = Stub.modelJsonSerDe()
         val model = Model(listOf(
             GenericProperty("username", "username", value = PropertyValue.StringPropertyValue("leona")),
             GenericProperty("password", "password", value = PropertyValue.StringPropertyValue("123456")),
         ))
-        val serialized = json.encodeToString(Model.serializer(), model)
+        val serialized = serde.serialize(model)
         //println(serialized)
-        val deserialized = json.decodeFromString(Model.serializer(),serialized)
+        val deserialized = serde.deserialize(serialized)
 
         deserialized shouldBe model
     }
