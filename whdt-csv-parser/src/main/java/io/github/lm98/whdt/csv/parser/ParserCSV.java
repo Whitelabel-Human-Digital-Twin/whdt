@@ -9,41 +9,59 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class ParserCSV {
 	private final static Logger logger = LoggerFactory.getLogger(ParserCSV.class);
 
     //BROKER URL
     private static String BROKER_URI = "tcp://127.0.0.1:1883";
+	private final Pattern PATTERN = Pattern.compile("\\d+,\\d{1,15}");
 	
 	private final String nomeFile;
-    private List<String> allDate = new ArrayList<>();
     private List<String> dates = new ArrayList<>();
     private List<String> header = new ArrayList<>();
-	private List<GenericProperty> properties = new ArrayList<>();
+	private Map<Integer,GenericProperty> properties = new HashMap<>();
 	
 	public ParserCSV(String nome) {
 		this.nomeFile = nome;
-		this.leggiFile();
 	}
+	private String convertiRiga(String riga) {
+		String tmp = PATTERN.matcher(riga).replaceAll(match -> {
+			return match.group().replace(",", "#!@");
+		});
+
+		tmp = tmp.replace(",", ";");
+
+		tmp = tmp.replace(".", ",");
+
+		tmp = tmp.replace("\"", "");
+
+		tmp = tmp.replace("#!@", ",");
+
+		return tmp;
+	}
+
 	private void leggiFile(){
 		try {
-			header = Arrays.asList(Files.newBufferedReader(Paths.get(nomeFile)).readLine().split(";"));
-			allDate = Files.readAllLines(Paths.get(nomeFile));
-			allDate.forEach(linea -> Arrays.asList(linea.split(";")).forEach(e -> dates.add(e)));
+			String tmp;
+			BufferedReader reader = Files.newBufferedReader(Paths.get(nomeFile));
+			header = Arrays.asList(reader.readLine().replace(",", ";").split(";"));
+			while ( (tmp = reader.readLine()) != null) {
+				Arrays.asList(convertiRiga(tmp).split(";")).forEach(ele -> dates.add(ele));
+			}
 			dates.removeAll(header);
+			System.out.println(header.size());
+			header.forEach(dati -> System.out.println("testa = "+dati));
 			System.out.println(dates.size());
+			dates.forEach(dati -> System.out.println("dato = "+dati));
+			if((dates.size() % header.size()) != 0 )
+				throw new sizeException("il numero degli elementi non coincide con quello degli header");
 
-			//properties.forEach(p -> System.out.println(p.toString()));
-			//date.forEach(dati -> System.out.println("dato = "+dati));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -54,10 +72,10 @@ public class ParserCSV {
 	public void createProperties() {
 		int index = 0;
 		for (String s : header) {
-			properties.add(new GenericProperty(s, s,, Integer.toString(index), this.getPropertyValue(index)));
+			properties.put((index+1),new GenericProperty(s, s,"A generic property that can hold any type of value.", Integer.toString(index), this.getPropertyValue(index)));
 			index++;
 		}
-		properties.forEach(p -> System.out.println(p.toString()));
+		properties.forEach((p,g) -> System.out.println("Proprieta' numero "+p+" : "+g.toString()));
 	}
 
 	private PropertyValue getPropertyValue(int col) {
@@ -114,10 +132,9 @@ public class ParserCSV {
 	        return "Double";
 	    }catch (Exception e){}
 
-		/*try {
-			Boolean.parseBoolean(input);
+		if (input.toUpperCase().equals("TRUE") ||   input.toUpperCase().equals("FALSE")) {
 			return "Boolean";
-		}catch (Exception e){}*/
+		}
 		
 		return "String";
 	}
@@ -175,7 +192,8 @@ public class ParserCSV {
     }
 	
 	public static void main(String[] args) {
-		ParserCSV parserCSV = new ParserCSV("large_dataset.csv");
+		ParserCSV parserCSV = new ParserCSV("csvEsempio.csv");
+		parserCSV.leggiFile();
 		parserCSV.createProperties();
 	}
 	

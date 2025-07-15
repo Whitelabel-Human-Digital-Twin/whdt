@@ -16,7 +16,7 @@ public class Test {
 	            
 	            ParserCSV parser = new ParserCSV("large_dataset.csv");
 	            // Create an Instance of ConsoleDigital Adapter
-	            parser.ConsoleDigitalAdapter consoleDigitalAdapter = new parser.ConsoleDigitalAdapter();
+	            ConsoleDigitalAdapter consoleDigitalAdapter = new ConsoleDigitalAdapter();
 
 	            // Create an Instance of the MQTT Physical Adapter using the defined configuration
 	            //MqttPhysicalAdapter mqttPhysicalAdapter = new MqttPhysicalAdapter("test-mqtt-pa", configMqtt);

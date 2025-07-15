@@ -1,4 +1,4 @@
-package parser;
+package io.github.lm98.whdt.csv.parser;
 
 import it.wldt.adapter.digital.DigitalAdapter;
 import it.wldt.core.state.*;
