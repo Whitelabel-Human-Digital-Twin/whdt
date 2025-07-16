@@ -1,6 +1,7 @@
 package io.github.lm98.whdt.core.serde
 
 import io.github.lm98.whdt.core.hdt.model.Model
+import io.github.lm98.whdt.core.hdt.model.property.BloodPressure
 import io.github.lm98.whdt.core.hdt.model.property.GenericProperty
 import io.github.lm98.whdt.core.hdt.model.property.Property
 import io.github.lm98.whdt.core.hdt.model.property.PropertyValue
@@ -17,6 +18,28 @@ class TestSerDeProperty: FunSpec({
         val deserialized = serde.deserialize(serialized)
 
         deserialized shouldBe prop
+    }
+
+    test("Serialized property should contain all fields") {
+        val serde = Stub.propertyJsonSerDe()
+
+        val time = System.currentTimeMillis()
+        val prop: Property = BloodPressure(120, 80, timestamp = time)
+        val serialized = serde.serialize(prop)
+        //println(serialized)
+        // serialized should contain internal name, name and other fields
+        serialized shouldBe """
+            {
+                "type": "blood-pressure",
+                "systolic": 120,
+                "diastolic": 80,
+                "name": "Blood Pressure",
+                "internalName": "blood-pressure",
+                "description": "The pressure of blood in the circulatory system.",
+                "id": "loinc:8480-6",
+                "timestamp": $time
+            }
+        """.trimIndent()
     }
 
     test("Test SerDe Model") {
