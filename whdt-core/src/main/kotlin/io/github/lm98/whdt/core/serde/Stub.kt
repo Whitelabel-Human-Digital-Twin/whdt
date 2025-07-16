@@ -15,18 +15,21 @@ object Stub {
         serializersModule = hdtModule
         classDiscriminator = "type"
         prettyPrint = true
+        encodeDefaults = true
     }
 
     private val propertyJson = Json {
         serializersModule = propertyModule
         classDiscriminator = "type"
         prettyPrint = true
+        encodeDefaults = true
     }
 
     private val interfaceJson = Json {
         serializersModule = interfaceModule
         classDiscriminator = "type"
         prettyPrint = true
+        encodeDefaults = true
     }
     
     fun hdtJsonSerDe(): SerDe<HumanDigitalTwin> = jsonSerDe<HumanDigitalTwin>(hdtJson)
