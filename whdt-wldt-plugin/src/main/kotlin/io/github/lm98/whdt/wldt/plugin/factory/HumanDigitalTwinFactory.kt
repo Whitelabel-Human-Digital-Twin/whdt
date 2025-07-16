@@ -5,6 +5,7 @@ import io.github.lm98.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
 import io.github.lm98.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.lm98.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.lm98.whdt.core.hdt.model.property.Property
+import io.github.lm98.whdt.core.serde.Stub
 import io.github.lm98.whdt.core.serde.modules.propertyModule
 import io.github.lm98.whdt.wldt.plugin.shadowing.HdtShadowingFunction
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapter
@@ -18,12 +19,7 @@ import it.wldt.core.engine.DigitalTwin
 import kotlinx.serialization.json.Json
 
 object HumanDigitalTwinFactory {
-    val json = Json {
-        serializersModule = propertyModule
-        classDiscriminator = "type"
-        prettyPrint = true
-    }
-
+    val serde = Stub.propertyJsonSerDe()
     fun fromHumanDigitalTwin(hdt: HumanDigitalTwin): DigitalTwin {
 
         val shad = HdtShadowingFunction("${hdt.id}-shadowing-function", hdt.models)
@@ -62,7 +58,7 @@ object HumanDigitalTwinFactory {
                 property.internalName,
                 property,
                 "${pI.clientId}/sensor/${property.internalName}",
-                json::decodeFromString
+                serde::deserialize
             )
         }
 
@@ -86,7 +82,7 @@ object HumanDigitalTwinFactory {
                 "${dI.clientId}/state/${property.internalName}",
                 MqttQosLevel.MQTT_QOS_0
             ) { property: Property ->
-                json.encodeToString(property)
+                serde.serialize(property)
             }
         }
 
