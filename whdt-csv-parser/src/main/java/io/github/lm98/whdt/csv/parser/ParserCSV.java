@@ -25,24 +25,27 @@ public class ParserCSV {
 	
 	private ParserCSV() {}
 
-	public  Map<Integer,List<GenericProperty>> Parsing(String nomeFile) {
-		leggiFile(nomeFile);
-		createProperties();
-		return properties;
+	public Map<Integer,List<GenericProperty>> Parsing(String nomeFile) {
+		this.clearAll();
+		this.leggiFile(nomeFile);
+		this.createProperties();
+		return this.properties;
+	}
+
+	private void clearAll(){
+		this.dates.clear();
+		this.header.clear();
+		this.properties.clear();
 	}
 
 	private String covertRow(String riga) {
 		String tmp = PATTERN.matcher(riga).replaceAll(match -> {
-			return match.group().replace(",", "#!@");
+			return match.group().replace(",", ".");
 		});
 
 		tmp = tmp.replace(",", ";");
 
-		tmp = tmp.replace(".", ",");
-
 		tmp = tmp.replace("\"", "");
-
-		tmp = tmp.replace("#!@", ".");
 
 		return tmp;
 	}
@@ -51,17 +54,13 @@ public class ParserCSV {
 		try {
 			String tmp;
 			BufferedReader reader = Files.newBufferedReader(Paths.get(nomeFile));
-			header = Arrays.asList(reader.readLine().replace(",", ";").split(";"));
+			this.header = Arrays.asList(reader.readLine().replace(",", ";").split(";"));
 			while ( (tmp = reader.readLine()) != null) {
-				if(covertRow(tmp).split(";").length == header.size())
-                    dates.addAll(Arrays.asList(covertRow(tmp).split(";")));
+				if(covertRow(tmp).split(";").length == this.header.size())
+					this.dates.addAll(Arrays.asList(covertRow(tmp).split(";")));
 				else
 					throw new sizeException("il numero degli elementi non coincide con quello degli header");
 			}
-			System.out.println(header.size());
-			header.forEach(dati -> System.out.println("testa = "+dati));
-			System.out.println(dates.size());
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -70,11 +69,12 @@ public class ParserCSV {
 	private void createProperties() {
 		List<GenericProperty> tmp = new ArrayList<>();
 		int index = 1;
-		for (int i = 0; i < dates.size(); i++) {
-			int p = i % header.size() ;
-			tmp.add(new GenericProperty(header.get(p), header.get(p), "A generic property that can hold any type of value.", Integer.toString(p+1), this.getPropertyValue(dates.get(i))));
-			if(p+1 == header.size()) {
-				properties.put(index, tmp.stream().toList());
+		String description = "A generic property that can hold any type of value.";
+		for (int i = 0; i < this.dates.size(); i++) {
+			int p = i % this.header.size() ;
+			tmp.add(new GenericProperty(this.header.get(p),this.header.get(p),description,Integer.toString(p+1),this.getPropertyValue(this.dates.get(i))));
+			if(p+1 == this.header.size()) {
+				this.properties.put(index, tmp.stream().toList());
 				tmp.clear();
 				index++;
 			}
@@ -118,9 +118,14 @@ public class ParserCSV {
 		return "String";
 	}
 
-	public void toSting(){
-		this.header.forEach(h -> System.out.println("header = "+h));
-		this.dates.forEach(d -> System.out.println("dates = "+d));
-		this.properties.forEach((p,g) -> g.forEach( gp -> System.out.println("Paziente numero "+ p +" : "+gp.toString())));
+	public static void toSting(Map<Integer,List<GenericProperty>> prop){
+		prop.forEach((p,g) -> g.forEach( gp -> System.out.println("Paziente numero "+ p +" : "+gp.toString())));
+	}
+
+	public static void main(String[] args) throws IOException {
+		Map<Integer,List<GenericProperty>> prova;
+		ParserCSV parser = ParserCSV.createParserCSV();
+		prova = parser.Parsing("csvEsempio.csv");
+		ParserCSV.toSting(prova);
 	}
 }
