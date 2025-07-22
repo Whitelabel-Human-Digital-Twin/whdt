@@ -44,5 +44,6 @@ fun main() {
         )
     )
 
-    WldtApp().addDts(hdts).startAll()
+    val startedDts = WldtApp().addStartAll(hdts)
+    println("Started Dts: ${startedDts.map { it.getOrNull() }}")
 }
