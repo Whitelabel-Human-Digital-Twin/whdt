@@ -8,9 +8,10 @@ import it.wldt.core.engine.DigitalTwinEngine
 class WldtApp: App {
     private val dtEngine: DigitalTwinEngine = DigitalTwinEngine()
 
-    override fun addDt(hdt: HumanDigitalTwin): Result<Unit> {
+    override fun addDt(hdt: HumanDigitalTwin): Result<String> {
         return runCatching {
             dtEngine.addDigitalTwin(fromHumanDigitalTwin(hdt))
+            hdt.id
         }
     }
 
