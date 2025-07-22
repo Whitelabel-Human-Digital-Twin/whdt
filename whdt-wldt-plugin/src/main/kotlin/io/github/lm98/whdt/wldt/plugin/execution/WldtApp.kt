@@ -8,43 +8,29 @@ import it.wldt.core.engine.DigitalTwinEngine
 class WldtApp: App {
     private val dtEngine: DigitalTwinEngine = DigitalTwinEngine()
 
-    override fun addDt(hdt: HumanDigitalTwin): App {
-        dtEngine.addDigitalTwin(fromHumanDigitalTwin(hdt))
-        return this
-    }
-
-    override fun addDts(hdts: List<HumanDigitalTwin>): App {
-        hdts.forEach {
-            dtEngine.addDigitalTwin(fromHumanDigitalTwin(it))
+    override fun addDt(hdt: HumanDigitalTwin): Result<Unit> {
+        return runCatching {
+            dtEngine.addDigitalTwin(fromHumanDigitalTwin(hdt))
         }
-        return this
     }
 
-    override fun removeDtById(id: String): App {
-        dtEngine.removeDigitalTwin(id)
-        return this
+    override fun removeDtById(id: String): Result<Unit> {
+        return runCatching { dtEngine.removeDigitalTwin(id) }
     }
 
-    override fun removeDtsById(ids: List<String>): App {
-        ids.forEach { dtEngine.removeDigitalTwin(it) }
-        return this
+    override fun startDt(id: String): Result<Unit> {
+        return runCatching { dtEngine.startDigitalTwin(id) }
     }
 
-    override fun startDt(id: String): App {
-        dtEngine.startDigitalTwin(id)
-        return this
+    override fun stopDt(id: String): Result<Unit> {
+        return runCatching { dtEngine.stopDigitalTwin(id) }
     }
 
-    override fun stopDt(id: String): App {
-        dtEngine.stopDigitalTwin(id)
-        return this
+    override fun startAll(): Result<Unit> {
+        return runCatching { dtEngine.startAll() }
     }
 
-    override fun startAll() {
-        dtEngine.startAll()
-    }
-
-    override fun stopAll() {
-        dtEngine.stopAll()
+    override fun stopAll(): Result<Unit> {
+        return runCatching { dtEngine.stopAll() }
     }
 }
