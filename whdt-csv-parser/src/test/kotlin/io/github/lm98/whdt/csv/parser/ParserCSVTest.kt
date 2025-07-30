@@ -30,4 +30,8 @@ class ParserCSVTest: FunSpec({
         }
     }
 
+    test("TestSizeException") {
+        val parser = ParserCSV.createParserCSV()
+        val p = parser.parsing("# paziente;età gestazionale (weeks);sex\n1;28.3").get(1)?.get(2)?.component5()
+    }
 })

@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class ParserCSV {
 
-	private final Pattern PATTERN = Pattern.compile("\\d+[,.]\\d{1,15}");
+	private final Pattern PATTERN = Pattern.compile("\\d+[.,]\\d{1,20}");
 
 	private static ParserCSV parserCSV;
     private final List<String> dates = new ArrayList<>();
@@ -63,7 +63,7 @@ public class ParserCSV {
 		tmp = tmp.replace("\"", "");
 
 		tmp = tmp.replace("__", ",");
-		System.out.println(tmp);
+
 		return tmp;
 	}
 
@@ -75,7 +75,7 @@ public class ParserCSV {
 			if(covertRow(line).split(";").length == this.header.size())
 				this.dates.addAll(Arrays.asList(covertRow(line).split(";")));
 			else
-				throw new sizeException("il numero degli elementi non coincide con quello degli header");
+				throw new SizeException("il numero degli elementi non coincide con quello degli header");
 		}
 		this.dates.removeAll(this.header);
 	}
@@ -99,7 +99,7 @@ public class ParserCSV {
 				if(covertRow(tmp).split(";").length == this.header.size())
 					this.dates.addAll(Arrays.asList(covertRow(tmp).split(";")));
 				else
-					throw new sizeException("il numero degli elementi non coincide con quello degli header");
+					throw new SizeException("il numero degli elementi non coincide con quello degli header");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -151,10 +151,6 @@ public class ParserCSV {
 			return "Float";
 		} catch (Exception _){}
 
-		try {
-	        Double.parseDouble(input);
-	        return "Double";
-	    }catch (Exception _){}
 
 		if (input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false"))
 			return "Boolean";
