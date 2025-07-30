@@ -134,8 +134,7 @@ public class ParserCSV {
 			return new PropertyValue.BooleanPropertyValue(Boolean.parseBoolean(date));
 		else if(identifyDataType(date).equals("String"))
 			return new PropertyValue.StringPropertyValue(date);
-		else
-			throw new DataTypeException("Tipo di dato non riconosciuto dal sistema");
+		return null;
 	}
 
 	//Metodo che in base al dato in entrata ne identifica il tipo
