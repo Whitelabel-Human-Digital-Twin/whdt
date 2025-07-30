@@ -24,6 +24,7 @@ sealed class PropertyValue {
 }
 
 @Serializable
+@SerialName("generic-property")
 data class GenericProperty(
     override val name: String,
     override val internalName: String,

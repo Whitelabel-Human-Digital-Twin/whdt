@@ -1,5 +1,7 @@
-package io.github.lm98.whdt.wldt.plugin
+package io.github.lm98
 
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 import io.github.lm98.whdt.wldt.plugin.execution.WldtApp
 import io.github.lm98.whdt.core.hdt.HumanDigitalTwin
 import io.github.lm98.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
@@ -42,5 +44,6 @@ fun main() {
         )
     )
 
-    WldtApp().addDts(hdts).run()
+    val startedDts = WldtApp().addStartAll(hdts)
+    println("Started Dts: ${startedDts.map { it.getOrNull() }}")
 }

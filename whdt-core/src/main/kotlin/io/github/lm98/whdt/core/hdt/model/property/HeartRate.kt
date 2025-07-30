@@ -2,9 +2,11 @@ package io.github.lm98.whdt.core.hdt.model.property
 
 import io.github.lm98.whdt.core.util.Default
 import io.github.lm98.whdt.core.util.Instant
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+@SerialName("heart-rate")
 data class HeartRate(
     val bpm: Int,
     override val name: String = "Heart Rate",

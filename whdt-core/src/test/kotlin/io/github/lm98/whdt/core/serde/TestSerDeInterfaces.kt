@@ -7,20 +7,12 @@ import io.github.lm98.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.lm98.whdt.core.hdt.interfaces.physical.PhysicalInterface
 import io.github.lm98.whdt.core.hdt.model.property.GenericProperty
 import io.github.lm98.whdt.core.hdt.model.property.PropertyValue
-import io.github.lm98.whdt.core.serde.modules.interfaceModule
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.paths.beSymbolicLink
 import io.kotest.matchers.shouldBe
-import kotlinx.serialization.json.Json
 
 class TestSerDeInterfaces: FunSpec({
     test("Test SerDe Physical Interfaces") {
-        val json = Json {
-            serializersModule = interfaceModule
-            classDiscriminator = "type"
-            prettyPrint = true
-        }
-
+        val serde = Stub.physicalInterfaceJsonSerDe()
         val pI: PhysicalInterface = MqttPhysicalInterface(
             clientId = "mqtt-pi",
             properties = listOf(
@@ -28,19 +20,15 @@ class TestSerDeInterfaces: FunSpec({
                 GenericProperty("password", "password", value = PropertyValue.StringPropertyValue("123456")),
             )
         )
-        val serialized = json.encodeToString(pI)
+        val serialized = serde.serialize(pI)
         //println(serialized)
-        val deserialized = json.decodeFromString<PhysicalInterface>(serialized)
+        val deserialized = serde.deserialize(serialized)
 
         deserialized shouldBe pI
     }
 
     test("Test SerDe Digital Interfaces") {
-        val json = Json {
-            serializersModule = interfaceModule
-            classDiscriminator = "type"
-            prettyPrint = true
-        }
+        val serde = Stub.digitalInterfaceJsonSerDe()
         val properties = listOf(
             GenericProperty("username", "username", value = PropertyValue.StringPropertyValue("leona")),
             GenericProperty("password", "password", value = PropertyValue.StringPropertyValue("123456")),
@@ -50,15 +38,15 @@ class TestSerDeInterfaces: FunSpec({
             clientId = "mqtt-di",
             properties = properties
         )
-        val serMqtt = json.encodeToString(mqtt)
+        val serMqtt = serde.serialize(mqtt)
         //println(serialized)
-        val deMqtt = json.decodeFromString<DigitalInterface>(serMqtt)
+        val deMqtt = serde.deserialize(serMqtt)
         deMqtt shouldBe mqtt
 
         val http: DigitalInterface = HttpDigitalInterface(id = "http-di", properties = properties)
-        val serHttp = json.encodeToString(http)
+        val serHttp = serde.serialize(http)
         //println(serialized)
-        val deHttp = json.decodeFromString<DigitalInterface>(serHttp)
+        val deHttp = serde.deserialize(serHttp)
         deHttp shouldBe http
     }
 })

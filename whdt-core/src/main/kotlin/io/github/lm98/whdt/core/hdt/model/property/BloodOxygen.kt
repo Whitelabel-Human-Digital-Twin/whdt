@@ -2,9 +2,11 @@ package io.github.lm98.whdt.core.hdt.model.property
 
 import io.github.lm98.whdt.core.util.Default
 import io.github.lm98.whdt.core.util.Instant
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+@SerialName("blood-oxygen")
 data class BloodOxygen(
     val percentage: Int,
     override val name: String = "Blood Oxygen",
