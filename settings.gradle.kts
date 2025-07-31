@@ -4,4 +4,5 @@ plugins {
 rootProject.name = "whdt"
 include("whdt-core")
 include("whdt-wldt-plugin")
+include("whdt-csv-parser")
 include("whdt-examples")
