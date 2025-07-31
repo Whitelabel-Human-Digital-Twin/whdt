@@ -54,15 +54,13 @@ public class ParserCSV {
 
 	// metodo per riuscire a identificare i valori e pulire la stringa per poterci lavorare
 	private String covertRow(String riga) {
-		String tmp = PATTERN.matcher(riga).replaceAll(match -> {
-			return match.group().replace(",", "__").replace(".", "__");
-		});
+		String tmp = PATTERN.matcher(riga).replaceAll(match -> match.group().replace(",", "__"));
 
 		tmp = tmp.replace(",", ";");
 
 		tmp = tmp.replace("\"", "");
 
-		tmp = tmp.replace("__", ",");
+		tmp = tmp.replace("__", ".");
 
 		return tmp;
 	}
