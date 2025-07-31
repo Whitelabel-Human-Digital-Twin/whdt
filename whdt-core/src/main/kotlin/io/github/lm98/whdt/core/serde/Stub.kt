@@ -11,21 +11,21 @@ import io.github.lm98.whdt.core.serde.modules.propertyModule
 import kotlinx.serialization.json.Json
 
 object Stub {
-    private val hdtJson = Json {
+    val hdtJson = Json {
         serializersModule = hdtModule
         classDiscriminator = "type"
         prettyPrint = true
         encodeDefaults = true
     }
 
-    private val propertyJson = Json {
+    val propertyJson = Json {
         serializersModule = propertyModule
         classDiscriminator = "type"
         prettyPrint = true
         encodeDefaults = true
     }
 
-    private val interfaceJson = Json {
+    val interfaceJson = Json {
         serializersModule = interfaceModule
         classDiscriminator = "type"
         prettyPrint = true
