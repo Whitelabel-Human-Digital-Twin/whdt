@@ -13,10 +13,9 @@ import java.util.regex.Pattern;
 public class ParserCSV {
 
 	private final Pattern PATTERN = Pattern.compile("\\d+[.,]\\d{1,20}");
-
 	private static ParserCSV parserCSV;
-    private final List<String> dates = new ArrayList<>();
-    private final List<String> header = new ArrayList<>();
+	private final List<String> dates = new ArrayList<>();
+	private final List<String> header = new ArrayList<>();
 	private final Map<Integer,List<GenericProperty>> properties = new HashMap<>();
 
 	// metodo per ottenere il ParserCSV
@@ -55,7 +54,6 @@ public class ParserCSV {
 	// metodo per riuscire a identificare i valori e pulire la stringa per poterci lavorare
 	private String covertRow(String riga) {
 		String tmp = PATTERN.matcher(riga).replaceAll(match -> match.group().replace(",", "__"));
-
 		tmp = tmp.replace(",", ";");
 
 		tmp = tmp.replace("\"", "");
@@ -147,7 +145,6 @@ public class ParserCSV {
 			Float.parseFloat(input);
 			return "Float";
 		} catch (Exception _){}
-
 
 		if (input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false"))
 			return "Boolean";
