@@ -55,9 +55,9 @@ object HumanDigitalTwinFactory {
 
         pI.properties.forEach { property ->
             mqttConfigBuilder.addPhysicalAssetPropertyAndTopic(
-                property.internalName,
+                property.id,
                 property,
-                "${pI.clientId}/sensor/${property.internalName}",
+                "${pI.clientId}/sensor/${property.id}",
                 serde::deserialize
             )
         }
@@ -78,8 +78,8 @@ object HumanDigitalTwinFactory {
 
         dI.properties.forEach { property ->
             mqttConfigBuilder.addPropertyTopic(
-                property.internalName,
-                "${dI.clientId}/state/${property.internalName}",
+                property.id,
+                "${dI.clientId}/state/${property.id}",
                 MqttQosLevel.MQTT_QOS_0
             ) { property: Property ->
                 serde.serialize(property)
@@ -97,7 +97,7 @@ object HumanDigitalTwinFactory {
     fun getDaFromHttpDigitalInterface(dI: HttpDigitalInterface, dt: DigitalTwin): HttpDigitalAdapter {
         val httpConfig  = HttpDigitalAdapterConfiguration(dI.id, dI.host, dI.port)
 
-        httpConfig.addPropertiesFilter(dI.properties.map { it.internalName })
+        httpConfig.addPropertiesFilter(dI.properties.map { it.id })
 
         return HttpDigitalAdapter(
             httpConfig,
