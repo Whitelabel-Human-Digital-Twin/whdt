@@ -1,6 +1,7 @@
 package io.github.lm98.whdt.csv.parser;
 
 import io.github.lm98.whdt.core.hdt.model.property.*;
+import io.github.lm98.whdt.core.hdt.model.property.Properties;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -16,7 +17,7 @@ public class ParserCSV {
 	private static ParserCSV parserCSV;
 	private final List<String> dates = new ArrayList<>();
 	private final List<String> header = new ArrayList<>();
-	private final Map<Integer,List<GenericProperty>> properties = new HashMap<>();
+	private final Map<Integer,List<Property>> properties = new HashMap<>();
 
 	// metodo per ottenere il ParserCSV
 	public static ParserCSV createParserCSV(){
@@ -26,7 +27,7 @@ public class ParserCSV {
 	}
 
 	// metodo statico per stampare a schermo i dati ottenuti
-	public static void MyToSting(Map<Integer,List<GenericProperty>> prop){
+	public static void MyToSting(Map<Integer,List<Property>> prop){
 		prop.forEach((p,g) -> g.forEach( gp -> System.out.println("Paziente numero "+ p +" : "+gp.toString())));
 	}
 
@@ -34,7 +35,7 @@ public class ParserCSV {
 	private ParserCSV() {}
 
 	// metodo principale
-	public Map<Integer,List<GenericProperty>> parsing(String fileName) {
+	public Map<Integer,List<Property>> parsing(String fileName) {
 		this.clearAll();
 		if(fileName.contains(".csv"))
 			this.readFile(fileName);
@@ -106,12 +107,19 @@ public class ParserCSV {
 
 	//Metodo per creare le varie proprietà
 	private void createProperties() {
-		List<GenericProperty> tmp = new ArrayList<>();
+		List<Property> tmp = new ArrayList<>();
 		int index = 1;
 		String description = "A generic property that can hold any type of value.";
 		for (int i = 0; i < this.dates.size(); i++) {
 			int p = i % this.header.size() ;
-			tmp.add(new GenericProperty(this.header.get(p),this.header.get(p),description,Integer.toString(p+1),this.getPropertyValue(this.dates.get(i))));
+			Property prop = Properties.INSTANCE.singleValueProperty(
+					this.header.get(p),
+					this.header.get(p),
+					description,
+					Integer.toString(p + 1),
+					this.getPropertyValue(this.dates.get(i))
+			);
+			tmp.add(prop);
 			if(p+1 == this.header.size()) {
 				this.properties.put(index, tmp.stream().toList());
 				tmp.clear();

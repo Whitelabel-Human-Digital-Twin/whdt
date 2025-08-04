@@ -7,7 +7,7 @@ import io.kotest.core.spec.style.FunSpec
 class ParserCSVTest: FunSpec({
     test("TestCsvStringa") {
         val parser = ParserCSV.createParserCSV()
-        val p = parser.parsing("# paziente;età gestazionale (weeks);sex\n1;28.3;F").get(1)?.get(2)?.component5()
+        val p = parser.parsing("# paziente;età gestazionale (weeks);sex\n1;28.3;F").get(1)?.get(2)?.component4()?.get("value")
         when (p) {
             is PropertyValue.StringPropertyValue -> println(p.value)
             else -> {}
@@ -24,7 +24,7 @@ class ParserCSVTest: FunSpec({
         val parser = ParserCSV.createParserCSV()
         val p = parser.parsing("csvEsempio.csv")
         ParserCSV.MyToSting(p)
-        val c =  parser.parsing("# paziente,età gestazionale (weeks),sex\n").get(1)?.get(0)?.component5()
+        val c =  parser.parsing("# paziente,età gestazionale (weeks),sex\n").get(1)?.get(0)?.component4()?.get("value")
         when (c) {
             is PropertyValue.StringPropertyValue -> println(c.value)
             else -> {}
