@@ -5,7 +5,7 @@ import io.github.lm98.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
 import io.github.lm98.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.lm98.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.lm98.whdt.core.hdt.interfaces.physical.PhysicalInterface
-import io.github.lm98.whdt.core.hdt.model.property.GenericProperty
+import io.github.lm98.whdt.core.hdt.model.property.Properties.singleValueProperty
 import io.github.lm98.whdt.core.hdt.model.property.PropertyValue
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -16,8 +16,8 @@ class TestSerDeInterfaces: FunSpec({
         val pI: PhysicalInterface = MqttPhysicalInterface(
             clientId = "mqtt-pi",
             properties = listOf(
-                GenericProperty("username", "username", value = PropertyValue.StringPropertyValue("leona")),
-                GenericProperty("password", "password", value = PropertyValue.StringPropertyValue("123456")),
+                singleValueProperty("username", "username", value = PropertyValue.StringPropertyValue("leona")),
+                singleValueProperty("password", "password", value = PropertyValue.StringPropertyValue("123456")),
             )
         )
         val serialized = serde.serialize(pI)
@@ -30,8 +30,8 @@ class TestSerDeInterfaces: FunSpec({
     test("Test SerDe Digital Interfaces") {
         val serde = Stub.digitalInterfaceJsonSerDe()
         val properties = listOf(
-            GenericProperty("username", "username", value = PropertyValue.StringPropertyValue("leona")),
-            GenericProperty("password", "password", value = PropertyValue.StringPropertyValue("123456")),
+            singleValueProperty("username", "username", value = PropertyValue.StringPropertyValue("leona")),
+            singleValueProperty("password", "password", value = PropertyValue.StringPropertyValue("123456")),
         )
 
         val mqtt: DigitalInterface = MqttDigitalInterface(
