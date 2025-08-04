@@ -145,7 +145,7 @@ public class HdtShadowingFunction extends ShadowingFunction {
                 this.digitalTwinStateManager.startStateTransaction();
                 m.getProperties().forEach(p -> {
                     try {
-                        this.digitalTwinStateManager.createProperty(new DigitalTwinStateProperty<>(p.getInternalName(), p));
+                        this.digitalTwinStateManager.createProperty(new DigitalTwinStateProperty<>(p.getId(), p));
                     } catch (WldtDigitalTwinStateException e) {
                         throw new RuntimeException(e);
                     }
