@@ -17,7 +17,7 @@ public class ParserCSV {
 	private static ParserCSV parserCSV;
 	private final List<String> dates = new ArrayList<>();
 	private final List<String> header = new ArrayList<>();
-	private final Map<Integer,List<Property>> properties = new HashMap<>();
+	private final Map<String,List<Property>> properties = new HashMap<>();
 
 	// metodo per ottenere il ParserCSV
 	public static ParserCSV createParserCSV(){
@@ -27,7 +27,7 @@ public class ParserCSV {
 	}
 
 	// metodo statico per stampare a schermo i dati ottenuti
-	public static void MyToSting(Map<Integer,List<Property>> prop){
+	public static void MyToSting(Map<String,List<Property>> prop){
 		prop.forEach((p,g) -> g.forEach( gp -> System.out.println("Paziente numero "+ p +" : "+gp.toString())));
 	}
 
@@ -35,7 +35,7 @@ public class ParserCSV {
 	private ParserCSV() {}
 
 	// metodo principale
-	public Map<Integer,List<Property>> parsing(String fileName) {
+	public Map<String,List<Property>> parsing(String fileName) {
 		this.clearAll();
 		if(fileName.contains(".csv"))
 			this.readFile(fileName);
@@ -79,15 +79,15 @@ public class ParserCSV {
 
 	// metodo per separare la varie righe cercando determinati caratteri
 	private List<String> divide(String stringaCSV){
-        String[] tmp = stringaCSV.split("\\r\\n|\\r|\\n");
-        return new ArrayList<>(Arrays.asList(tmp));
+		String[] tmp = stringaCSV.split("\\r\\n|\\r|\\n");
+		return new ArrayList<>(Arrays.asList(tmp));
 	}
 
 	//Metodo che dato un file in entrata separare gli header dai dati controllando che ci siano abbastanza dati per gli header. -problema con la ricerca del file
 	private void readFile(String nomeFile) {
 		try {
 			String tmp;
-			URL url = ClassLoader.getSystemClassLoader().getResource(nomeFile);
+	 		URL url = ClassLoader.getSystemClassLoader().getResource(nomeFile);
 			if (url == null)
 				throw new FileNotFoundException("File non trovato: " + nomeFile);
 			BufferedReader reader = Files.newBufferedReader(Paths.get(url.toURI()));
@@ -98,32 +98,35 @@ public class ParserCSV {
 				else
 					throw new SizeException("il numero degli elementi non coincide con quello degli header");
 			}
-		} catch (IOException e) {
+		}catch (IOException e) {
 			e.printStackTrace();
-		} catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+		}catch (URISyntaxException e) {
+			throw new RuntimeException(e);
         }
     }
 
 	//Metodo per creare le varie proprietà
 	private void createProperties() {
 		List<Property> tmp = new ArrayList<>();
-		int index = 1;
+		String index = "";
 		String description = "A generic property that can hold any type of value.";
 		for (int i = 0; i < this.dates.size(); i++) {
 			int p = i % this.header.size() ;
-			Property prop = Properties.INSTANCE.singleValueProperty(
-					this.header.get(p),
-					this.header.get(p),
-					description,
-					Integer.toString(p + 1),
-					this.getPropertyValue(this.dates.get(i))
-			);
-			tmp.add(prop);
+			if (p != 0) {
+				Property prop = Properties.INSTANCE.singleValueProperty(
+						this.header.get(p),
+						this.header.get(p),
+						description,
+						Integer.toString(p + 1),
+						this.getPropertyValue(this.dates.get(i))
+				);
+				tmp.add(prop);
+			}else{
+				index= this.dates.get(i);
+			}
 			if(p+1 == this.header.size()) {
 				this.properties.put(index, tmp.stream().toList());
 				tmp.clear();
-				index++;
 			}
 		}
 	}
@@ -134,6 +137,10 @@ public class ParserCSV {
 			return new PropertyValue.FloatPropertyValue(Float.parseFloat(date));
 		else if(identifyDataType(date).equals("Integer"))
 			return new PropertyValue.IntPropertyValue(Integer.parseInt(date));
+		else if (identifyDataType(date).equals("Double"))
+			return new PropertyValue.DoublePropertyValue(Double.parseDouble(date));
+		else if(identifyDataType(date).equals("Long"))
+			return new PropertyValue.LongPropertyValue(Long.parseLong(date));
 		else if(identifyDataType(date).equals("Boolean"))
 			return new PropertyValue.BooleanPropertyValue(Boolean.parseBoolean(date));
 		else if(identifyDataType(date).equals("String"))
@@ -145,14 +152,24 @@ public class ParserCSV {
 	private String identifyDataType(String data){
 		String input= data.strip();
 		try {
-	        Integer.parseInt(input);
-	        return "Integer";
-	    }catch (Exception _){}
+			Integer.parseInt(input);
+			return "Integer";
+		}catch (Exception _){}
 
 		try{
 			Float.parseFloat(input);
 			return "Float";
-		} catch (Exception _){}
+		}catch (Exception _){}
+
+		try{
+			Double.parseDouble(input);
+			return "Double";
+		}catch (Exception _){}
+
+		try{
+			Long.parseLong(input);
+			return "Long";
+		}catch (Exception _){}
 
 		if (input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false"))
 			return "Boolean";
