@@ -1,35 +1,62 @@
 package io.github.lm98.whdt.csv.parser
 
-import io.github.lm98.whdt.core.hdt.model.property.PropertyValue
+import io.github.lm98.whdt.core.hdt.model.property.*
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 
 class ParserCSVTest: FunSpec({
-    /*test("TestCsvStringa") {
+    test("Test Csv StringPropertyValue") {
         val parser = ParserCSV.createParserCSV()
-        val p = parser.parsing("# paziente;età gestazionale (weeks);sex\n1;28.3;F").get(0)?.get(2)?.component4()?.get("value")
-        when (p) {
-            is PropertyValue.StringPropertyValue -> println(p.value)
-            else -> {}
+        val map = parser.parsing("# paziente;età gestazionale (weeks);sex\n4;28.3;F")
+
+        map shouldNotBe null
+        map.keys shouldBe setOf("4")
+
+        val prop = map.get("4")?.get(1)?.component4()?.get("3")
+        prop shouldNotBe null
+        when (prop) {
+            is PropertyValue.StringPropertyValue -> {prop.value shouldBe "F"}
+            else ->{println("errore")}
         }
-    }*/
+    }
+
+    test("Test Csv IntegerPropertyValue") {
+        val parser = ParserCSV.createParserCSV()
+        val map = parser.parsing("# paziente;età gestazionale (weeks);sex\n4;28;F")
+
+        map shouldNotBe null
+        map.keys shouldBe setOf("4")
+
+        val prop = map.get("4")?.get(0)?.component4()?.get("2")
+        prop shouldNotBe null
+        when (prop) {
+            is PropertyValue.IntPropertyValue -> {prop.value shouldBe 28}
+            else ->{println("errore")}
+        }
+    }
+
+    test("Test Csv BooleanPropertyValue") {
+        val parser = ParserCSV.createParserCSV()
+        val map = parser.parsing("# paziente;età gestazionale (weeks);is live\n4;28.3;TrUe")
+
+        map shouldNotBe null
+        map.keys shouldBe setOf("4")
+
+        val prop = map.get("4")?.get(1)?.component4()?.get("3")
+        prop shouldNotBe null
+        when (prop) {
+            is PropertyValue.BooleanPropertyValue -> {prop.value shouldBe true}
+            else ->{println("errore")}
+        }
+    }
 
     test("TestCsvFile"){
         val parser = ParserCSV.createParserCSV()
         val p = parser.parsing("csvEsempio.csv")
         ParserCSV.MyToSting(p)
     }
-
-    /*test("TestCsvStringa&File"){
-        val parser = ParserCSV.createParserCSV()
-        val p = parser.parsing("csvEsempio.csv")
-        ParserCSV.MyToSting(p)
-        val c =  parser.parsing("# paziente,età gestazionale (weeks),sex\n").get(0)?.get(0)?.component4()?.get("value")
-        when (c) {
-            is PropertyValue.StringPropertyValue -> println(c.value)
-            else -> {}
-        }
-    }*/
 
     test("TestSizeException") {
         val parser = ParserCSV.createParserCSV()
