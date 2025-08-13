@@ -14,7 +14,7 @@ class ParserCSVTest: FunSpec({
         map shouldNotBe null
         map.keys shouldBe setOf("4")
 
-        val prop = map.get("4")?.get(1)?.component4()?.get("3")
+        val prop = map["4"]?.get(1)?.component4()?.get("3")
         prop shouldNotBe null
         when (prop) {
             is PropertyValue.StringPropertyValue -> {prop.value shouldBe "F"}
@@ -29,7 +29,7 @@ class ParserCSVTest: FunSpec({
         map shouldNotBe null
         map.keys shouldBe setOf("4")
 
-        val prop = map.get("4")?.get(0)?.component4()?.get("2")
+        val prop = map["4"]?.get(0)?.component4()?.get("2")
         prop shouldNotBe null
         when (prop) {
             is PropertyValue.IntPropertyValue -> {prop.value shouldBe 28}
@@ -44,7 +44,7 @@ class ParserCSVTest: FunSpec({
         map shouldNotBe null
         map.keys shouldBe setOf("4")
 
-        val prop = map.get("4")?.get(1)?.component4()?.get("3")
+        val prop = map["4"]?.get(1)?.component4()?.get("3")
         prop shouldNotBe null
         when (prop) {
             is PropertyValue.BooleanPropertyValue -> {prop.value shouldBe true}
@@ -52,10 +52,41 @@ class ParserCSVTest: FunSpec({
         }
     }
 
+    test("Test Csv LongPropertyValue") {
+        val parser = ParserCSV.createParserCSV()
+        val map = parser.parsing("# paziente;età gestazionale (weeks);is live\n4;28.3;100000000000043242")
+
+        map shouldNotBe null
+        map.keys shouldBe setOf("4")
+
+        val prop = map["4"]?.get(1)?.component4()?.get("3")
+        prop shouldNotBe null
+        when (prop) {
+            is PropertyValue.LongPropertyValue -> {prop.value shouldBe 100000000000043242}
+            else ->{println("errore")}
+        }
+    }
+
+    test("Test Csv FloatPropertyValue") {
+        val parser = ParserCSV.createParserCSV()
+        val map = parser.parsing("# paziente;età gestazionale (weeks);is live\n4;28.3;1.424323E18")
+
+        map shouldNotBe null
+        map.keys shouldBe setOf("4")
+
+        val prop = map["4"]?.get(1)?.component4()?.get("3")
+        prop shouldNotBe null
+        when (prop) {
+            is PropertyValue.FloatPropertyValue -> {prop.value shouldBe 1.424323E18f}
+            else ->{println("errore")}
+        }
+    }
+
     test("TestCsvFile"){
         val parser = ParserCSV.createParserCSV()
         val p = parser.parsing("csvEsempio.csv")
-        ParserCSV.MyToSting(p)
+        p["3"]?.size shouldBe 74
+        p["4"]?.size shouldBe 74
     }
 
     test("TestSizeException") {
