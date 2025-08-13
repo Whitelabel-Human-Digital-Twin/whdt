@@ -157,6 +157,11 @@ public class ParserCSV {
 		}catch (Exception _){}
 
 		try{
+			Long.parseLong(input);
+			return "Long";
+		}catch (Exception _){}
+
+		try{
 			Float.parseFloat(input);
 			return "Float";
 		}catch (Exception _){}
@@ -164,11 +169,6 @@ public class ParserCSV {
 		try{
 			Double.parseDouble(input);
 			return "Double";
-		}catch (Exception _){}
-
-		try{
-			Long.parseLong(input);
-			return "Long";
 		}catch (Exception _){}
 
 		if (input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false"))
