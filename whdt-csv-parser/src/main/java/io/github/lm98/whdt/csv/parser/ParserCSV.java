@@ -117,7 +117,7 @@ public class ParserCSV {
 						this.header.get(p),
 						this.header.get(p),
 						description,
-						Integer.toString(p + 1),
+						"value",
 						this.getPropertyValue(this.dates.get(i))
 				);
 				tmp.add(prop);
