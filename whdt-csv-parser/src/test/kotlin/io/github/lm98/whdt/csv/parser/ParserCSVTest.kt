@@ -1,6 +1,7 @@
 package io.github.lm98.whdt.csv.parser
 
 import io.github.lm98.whdt.core.hdt.model.property.*
+import io.kotest.assertions.fail
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -14,7 +15,7 @@ class ParserCSVTest: FunSpec({
         map shouldNotBe null
         map.keys shouldBe setOf("4")
 
-        val prop = map["4"]?.get(1)?.component4()?.get("3")
+        val prop = map["4"]?.get(1)?.component4()?.get("value")
         prop shouldNotBe null
         when (prop) {
             is PropertyValue.StringPropertyValue -> {prop.value shouldBe "F"}
@@ -29,11 +30,11 @@ class ParserCSVTest: FunSpec({
         map shouldNotBe null
         map.keys shouldBe setOf("4")
 
-        val prop = map["4"]?.get(0)?.component4()?.get("2")
+        val prop = map["4"]?.get(0)?.component4()?.get("value")
         prop shouldNotBe null
         when (prop) {
             is PropertyValue.IntPropertyValue -> {prop.value shouldBe 28}
-            else ->{println("errore")}
+            else ->{fail("errore")}
         }
     }
 
@@ -44,11 +45,11 @@ class ParserCSVTest: FunSpec({
         map shouldNotBe null
         map.keys shouldBe setOf("4")
 
-        val prop = map["4"]?.get(1)?.component4()?.get("3")
+        val prop = map["4"]?.get(1)?.component4()?.get("value")
         prop shouldNotBe null
         when (prop) {
             is PropertyValue.BooleanPropertyValue -> {prop.value shouldBe true}
-            else ->{println("errore")}
+            else ->{fail("errore")}
         }
     }
 
@@ -59,11 +60,11 @@ class ParserCSVTest: FunSpec({
         map shouldNotBe null
         map.keys shouldBe setOf("4")
 
-        val prop = map["4"]?.get(1)?.component4()?.get("3")
+        val prop = map["4"]?.get(1)?.component4()?.get("value")
         prop shouldNotBe null
         when (prop) {
             is PropertyValue.LongPropertyValue -> {prop.value shouldBe 100000000000043242}
-            else ->{println("errore")}
+            else ->{fail("errore")}
         }
     }
 
@@ -74,11 +75,11 @@ class ParserCSVTest: FunSpec({
         map shouldNotBe null
         map.keys shouldBe setOf("4")
 
-        val prop = map["4"]?.get(1)?.component4()?.get("3")
+        val prop = map["4"]?.get(1)?.component4()?.get("value")
         prop shouldNotBe null
         when (prop) {
             is PropertyValue.FloatPropertyValue -> {prop.value shouldBe 1.424323E18f}
-            else ->{println("errore")}
+            else ->{fail("errore")}
         }
     }
 
