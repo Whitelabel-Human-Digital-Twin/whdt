@@ -98,4 +98,19 @@ object Properties {
             )
         )
     }
+
+    fun mood(
+        moodScore: Int,
+        timestamp: Long = System.currentTimeMillis()
+    ): Property {
+        return Property(
+            name = "Mood",
+            id = "mood",
+            description = "A numerical score for the mood level.",
+            valueMap = mapOf(
+                "moodScore" to IntPropertyValue(moodScore),
+                "timestamp" to LongPropertyValue(timestamp),
+            )
+        )
+    }
 }

@@ -2,6 +2,7 @@ package io.github.lm98
 
 import io.github.lm98.whdt.wldt.plugin.execution.WldtApp
 import io.github.lm98.whdt.core.hdt.HumanDigitalTwin
+import io.github.lm98.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
 import io.github.lm98.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.lm98.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.lm98.whdt.core.hdt.model.Model
@@ -33,12 +34,17 @@ fun main() {
         clientId = "hd1",
     )
 
+    val httpDI = HttpDigitalInterface(
+        properties = properties,
+        id = "hd1"
+    )
+
     val hdts = listOf(
         HumanDigitalTwin(
             id = "hd1",
             models = listOf(model),
             physicalInterfaces = listOf(pI),
-            digitalInterfaces = listOf(dI),
+            digitalInterfaces = listOf(dI, httpDI),
         )
     )
 
