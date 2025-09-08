@@ -1,15 +1,15 @@
-package io.github.lm98
+package io.github.whdt
 
-import io.github.lm98.whdt.wldt.plugin.execution.WldtApp
-import io.github.lm98.whdt.core.hdt.HumanDigitalTwin
-import io.github.lm98.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
-import io.github.lm98.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
-import io.github.lm98.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
-import io.github.lm98.whdt.core.hdt.model.Model
-import io.github.lm98.whdt.core.hdt.model.property.Properties.bloodPressure
-import io.github.lm98.whdt.core.hdt.model.property.Properties.firstName
-import io.github.lm98.whdt.core.hdt.model.property.Properties.heartRate
-import io.github.lm98.whdt.core.hdt.model.property.Properties.surname
+import io.github.whdt.wldt.plugin.execution.WldtApp
+import io.github.whdt.core.hdt.HumanDigitalTwin
+import io.github.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
+import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
+import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
+import io.github.whdt.core.hdt.model.Model
+import io.github.whdt.core.hdt.model.property.Properties.bloodPressure
+import io.github.whdt.core.hdt.model.property.Properties.firstName
+import io.github.whdt.core.hdt.model.property.Properties.heartRate
+import io.github.whdt.core.hdt.model.property.Properties.surname
 
 fun main() {
     val properties = listOf(

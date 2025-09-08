@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm")
 }
 
-group = "io.github.lm98"
+group = "io.github.whdt"
 version = "0.0.0-SNAPSHOT"
 
 repositories {

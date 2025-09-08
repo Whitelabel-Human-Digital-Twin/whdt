@@ -9,7 +9,7 @@ publishing {
     publications {
         create<MavenPublication>("gpr") {
             from(components["java"])
-            groupId = "io.github.lm98"
+            groupId = "io.github.whdt"
             artifactId = project.name
             version = moduleVersion
         }
@@ -18,7 +18,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/lm98/whdt")
+            url = uri("https://maven.pkg.github.com/Whitelabel-Human-Digital-Twin/whdt")
             credentials {
                 username = project.findProperty("gpr.user") as String? ?: System.getenv("GPR_USER")
                 password = project.findProperty("gpr.key") as String? ?: System.getenv("GPR_KEY")
