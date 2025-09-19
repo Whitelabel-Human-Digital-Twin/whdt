@@ -1,6 +1,5 @@
 package io.github.whdt.core.hdt.interfaces.digital
 
-import io.github.whdt.core.hdt.model.property.Property
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
