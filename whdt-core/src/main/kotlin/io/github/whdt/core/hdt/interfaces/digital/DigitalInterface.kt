@@ -12,5 +12,4 @@ enum class DigitalInterfaceType {
 @Serializable
 sealed interface DigitalInterface {
     val interfaceType: DigitalInterfaceType
-    val properties: List<Property>
 }

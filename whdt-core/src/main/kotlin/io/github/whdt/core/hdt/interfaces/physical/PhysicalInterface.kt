@@ -10,6 +10,5 @@ enum class PhysicalInterfaceType {
 
 @Serializable
 sealed interface PhysicalInterface {
-    val properties: List<Property>
     val interfaceType: PhysicalInterfaceType
 }

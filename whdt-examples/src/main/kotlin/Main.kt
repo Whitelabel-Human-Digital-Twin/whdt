@@ -25,17 +25,14 @@ fun main() {
     val model = Model(properties)
 
     val pI = MqttPhysicalInterface(
-        properties = properties,
         clientId = "hd1",
     )
 
     val dI = MqttDigitalInterface(
-        properties = properties,
         clientId = "hd1",
     )
 
     val httpDI = HttpDigitalInterface(
-        properties = properties,
         id = "hd1"
     )
 
