@@ -7,7 +7,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("mqtt-digital-interface")
 data class MqttDigitalInterface(
-    override val properties: List<Property>,
     val broker: String = "localhost",
     val port: Int = 1883,
     val clientId: String,

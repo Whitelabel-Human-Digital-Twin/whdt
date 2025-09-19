@@ -10,15 +10,4 @@ data class Property(
     val id: String,
     val description: String,
     val valueMap: Map<String, PropertyValue> = emptyMap() // Map of value names to PropertyValue instances
-) {
-    companion object {
-        fun defaultValue(): Property {
-            return Property(
-                name = "Default Property",
-                id = "default-property",
-                description = "A default property with no specific values.",
-                valueMap = mapOf("default" to PropertyValue.EmptyPropertyValue)
-            )
-        }
-    }
-}
+)

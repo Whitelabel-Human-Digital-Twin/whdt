@@ -7,12 +7,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("mqtt-physical-interface")
 data class MqttPhysicalInterface(
-    override val properties: List<Property>,
     val broker: String = "localhost",
     val port: Int = 1883,
     val clientId: String,
 ) : PhysicalInterface {
     override val interfaceType: PhysicalInterfaceType = PhysicalInterfaceType.MQTT
-
-    // Additional MQTT-specific properties or methods can be added here
 }

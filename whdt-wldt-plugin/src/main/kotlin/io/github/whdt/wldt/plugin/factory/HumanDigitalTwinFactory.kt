@@ -25,9 +25,11 @@ object HumanDigitalTwinFactory {
         val shad = HdtShadowingFunction("${hdt.id}-shadowing-function", hdt.models)
         val dt = DigitalTwin(hdt.id, shad)
 
+        val properties = hdt.models.flatMap { it.properties }
+
         val physicalAdapters = hdt.physicalInterfaces.map { pI ->
             when (pI) {
-                is MqttPhysicalInterface -> getPaFromPhysicalInterfaceMqtt(pI)
+                is MqttPhysicalInterface -> getPaFromPhysicalInterfaceMqtt(pI, properties)
                 // Handle other physical interfaces if needed
             }
         }
@@ -36,8 +38,8 @@ object HumanDigitalTwinFactory {
 
         val digitalAdapters = hdt.digitalInterfaces.map { dI ->
             when (dI) {
-                is MqttDigitalInterface -> getDaFromDigitalInterfaceMqtt(dI)
-                is HttpDigitalInterface -> getDaFromHttpDigitalInterface(dI, dt)
+                is MqttDigitalInterface -> getDaFromDigitalInterfaceMqtt(dI, properties)
+                is HttpDigitalInterface -> getDaFromHttpDigitalInterface(dI, dt, properties)
                 // Handle other digital interfaces if needed
             }
         }
@@ -55,13 +57,13 @@ object HumanDigitalTwinFactory {
         return dt
     }
 
-    fun getPaFromPhysicalInterfaceMqtt(pI: MqttPhysicalInterface): MqttPhysicalAdapter {
+    fun getPaFromPhysicalInterfaceMqtt(pI: MqttPhysicalInterface, properties: List<Property>): MqttPhysicalAdapter {
         val mqttConfigBuilder = MqttPhysicalAdapterConfiguration.builder(
             pI.broker,
             pI.port,
         )
 
-        pI.properties.forEach { property ->
+        properties.forEach { property ->
             mqttConfigBuilder.addPhysicalAssetPropertyAndTopic(
                 property.id,
                 property,
@@ -78,13 +80,13 @@ object HumanDigitalTwinFactory {
         )
     }
 
-    fun getDaFromDigitalInterfaceMqtt(dI: MqttDigitalInterface): MqttDigitalAdapter {
+    fun getDaFromDigitalInterfaceMqtt(dI: MqttDigitalInterface, properties: List<Property>): MqttDigitalAdapter {
         val mqttConfigBuilder = MqttDigitalAdapterConfiguration.builder(
             dI.broker,
             dI.port,
         )
 
-        dI.properties.forEach { property ->
+        properties.forEach { property ->
             mqttConfigBuilder.addPropertyTopic(
                 property.id,
                 "${dI.clientId}/state/${property.id}",
@@ -102,10 +104,10 @@ object HumanDigitalTwinFactory {
         )
     }
 
-    fun getDaFromHttpDigitalInterface(dI: HttpDigitalInterface, dt: DigitalTwin): HttpDigitalAdapter {
+    fun getDaFromHttpDigitalInterface(dI: HttpDigitalInterface, dt: DigitalTwin, properties: List<Property>): HttpDigitalAdapter {
         val httpConfig  = HttpDigitalAdapterConfiguration(dI.id, dI.host, dI.port)
 
-        httpConfig.addPropertiesFilter(dI.properties.map { it.id })
+        httpConfig.addPropertiesFilter(properties.map { it.id })
 
         return HttpDigitalAdapter(
             httpConfig,
