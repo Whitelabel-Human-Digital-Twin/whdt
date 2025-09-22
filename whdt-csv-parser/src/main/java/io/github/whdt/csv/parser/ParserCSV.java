@@ -62,7 +62,6 @@ public class ParserCSV {
 
 		tmp = tmp = tmp.replace(",", ";");
 
-
 		tmp = tmp.replace("\"", "");
 
 		tmp = tmp.replace("__", ".");
