@@ -13,7 +13,9 @@ import java.util.regex.Pattern;
 
 public class ParserCSV {
 
-	private final Pattern PATTERN = Pattern.compile("\\d+[.,]\\d{1,20}");
+	private final Pattern patternPunto = Pattern.compile("\\d+\\.+\\d");
+	private final Pattern patternVirgola = Pattern.compile("\"[^\"]*\\d+,+\\d+[^\"]*\"");
+
 	private static ParserCSV parserCSV;
 	private final List<String> dates = new ArrayList<>();
 	private final List<String> header = new ArrayList<>();
@@ -54,8 +56,12 @@ public class ParserCSV {
 
 	// metodo per riuscire a identificare i valori e pulire la stringa per poterci lavorare
 	private String covertRow(String riga) {
-		String tmp = PATTERN.matcher(riga).replaceAll(match -> match.group().replace(",", "__"));
-		tmp = tmp.replace(",", ";");
+		String tmp = patternPunto.matcher(riga).replaceAll(match -> match.group().replace(".", "__"));
+
+		tmp = patternVirgola.matcher(tmp).replaceAll(match -> match.group().replace(",", "__"));
+
+		tmp = tmp = tmp.replace(",", ";");
+
 
 		tmp = tmp.replace("\"", "");
 
@@ -68,11 +74,14 @@ public class ParserCSV {
 	private void readString(String stringaCSV) {
 		List<String> lines = divide(stringaCSV);
 		this.header.addAll(Arrays.asList(covertRow(lines.getFirst()).split(";")));
+		int index = 1;
 		for(String line : lines) {
-			if(covertRow(line).split(";").length == this.header.size())
-				this.dates.addAll(Arrays.asList(covertRow(line).split(";")));
+			String[] tmp_line = covertRow(line).split(";");
+			if(tmp_line.length == this.header.size())
+				this.dates.addAll(Arrays.asList(tmp_line));
 			else
-				throw new SizeException("il numero degli elementi non coincide con quello degli header");
+				throw new SizeException(index,this.header,tmp_line);
+			index++;
 		}
 		this.dates.removeAll(this.header);
 	}
@@ -87,23 +96,26 @@ public class ParserCSV {
 	private void readFile(String nomeFile) {
 		try {
 			String tmp;
-	 		URL url = ClassLoader.getSystemClassLoader().getResource(nomeFile);
+			URL url = ClassLoader.getSystemClassLoader().getResource(nomeFile);
 			if (url == null)
 				throw new FileNotFoundException("File non trovato: " + nomeFile);
 			BufferedReader reader = Files.newBufferedReader(Paths.get(url.toURI()));
 			this.header.addAll(Arrays.asList(reader.readLine().replace(",", ";").split(";")));
+			int index=1;
 			while ( (tmp = reader.readLine()) != null) {
-				if(covertRow(tmp).split(";").length == this.header.size())
-					this.dates.addAll(Arrays.asList(covertRow(tmp).split(";")));
+				String[] tmp_line = covertRow(tmp).split(";");
+				if( tmp_line.length == this.header.size())
+					this.dates.addAll(Arrays.asList(tmp_line));
 				else
-					throw new SizeException("il numero degli elementi non coincide con quello degli header");
+					throw new SizeException(index,this.header,tmp_line);
+				index++;
 			}
 		}catch (IOException e) {
 			e.printStackTrace();
 		}catch (URISyntaxException e) {
 			throw new RuntimeException(e);
-        }
-    }
+		}
+	}
 
 	//Metodo per creare le varie proprietà
 	private void createProperties() {

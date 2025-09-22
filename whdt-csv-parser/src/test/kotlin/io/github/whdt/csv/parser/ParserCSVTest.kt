@@ -19,7 +19,7 @@ class ParserCSVTest: FunSpec({
         prop shouldNotBe null
         when (prop) {
             is PropertyValue.StringPropertyValue -> {prop.value shouldBe "F"}
-            else ->{println("errore")}
+            else ->{fail("errore")}
         }
     }
 
@@ -89,6 +89,14 @@ class ParserCSVTest: FunSpec({
         p["3"]?.size shouldBe 74
         p["4"]?.size shouldBe 74
     }
+
+    test("TestCsvFile2"){
+        val parser = ParserCSV.createParserCSV()
+        val p = parser.parsing("csv-str-from-http.csv")
+        p["3"]?.size shouldBe 68
+        p["4"]?.size shouldBe 68
+    }
+
 
     test("TestSizeException") {
         val parser = ParserCSV.createParserCSV()
