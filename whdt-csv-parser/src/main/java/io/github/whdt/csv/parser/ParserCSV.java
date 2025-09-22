@@ -60,7 +60,7 @@ public class ParserCSV {
 
 		tmp = patternVirgola.matcher(tmp).replaceAll(match -> match.group().replace(",", "__"));
 
-		tmp = tmp = tmp.replace(",", ";");
+		tmp = tmp.replace(",", ";");
 
 		tmp = tmp.replace("\"", "");
 
