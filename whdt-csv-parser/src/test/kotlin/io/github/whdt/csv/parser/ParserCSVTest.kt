@@ -97,6 +97,19 @@ class ParserCSVTest: FunSpec({
         p["4"]?.size shouldBe 68
     }
 
+    test("TestCsvFile3"){
+        val parser = ParserCSV.createParserCSV()
+        val p = parser.parsing("csvEsempio2.csv")
+        p["3"]?.size shouldBe 68
+        p["4"]?.size shouldBe 68
+    }
+
+    test("TestCsvFile4"){
+        val parser = ParserCSV.createParserCSV()
+        val p = parser.parsing("csvEsempio_pulito.csv")
+        p["3"]?.size shouldBe 68
+        p["4"]?.size shouldBe 68
+    }
 
     test("TestSizeException") {
         val parser = ParserCSV.createParserCSV()
