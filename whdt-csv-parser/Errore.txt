@@ -1,0 +1,151 @@
+=== ERRORE SIZE EXCEPTION ===
+Messaggio: nella riga 1 il numero degli elementi non coincide con quello degli header: numero header 69
+ numero elementi 68
+
+DETTAGLI ERRORE:
+Riga con errore: 1
+Numero header attesi: 69
+Numero elementi trovati: 68
+
+HEADER:
+  [0] # paziente
+  [1] età gestazionale (weeks)
+  [2] sex
+  [3] twins
+  [4] Body mass alla nascita  (g)
+  [5] parto
+  [6] apgar 1
+  [7] apgar 5
+  [8] età (mesi)
+  [9] età corretta (mesi)
+  [10] body mass alla visita (kg)
+  [11] altezza alla visita (cm)
+  [12] walking experience (weeks)
+  [13] walking esperience (months)
+  [14] BSID-III cognitive standardized scores
+  [15] HRv
+  [16] HRml
+  [17] Hrap
+  [18] SENv1
+  [19] SENv2
+  [20] SENv3
+  [21] SENv4
+  [22] SENv5
+  [23] SENv6
+  [24] SEN ml1 
+  [25] SEN ml2
+  [26] SEN ml3
+  [27] SEN ml4
+  [28] SEN ml5 
+  [29] SEN ml 6
+  [30] SEN ap1
+  [31] SEN ap2 
+  [32] SEN ap 3
+  [33] SEN ap 4
+  [34] SEN ap 5
+  [35] SEN ap 6
+  [36] RRv
+  [37] DETv
+  [38] AVGLv
+  [39] RRml
+  [40] DETml
+  [41] AVGLml
+  [42] Rrap
+  [43] DETap
+  [44] AVGlap
+  [45] Stride
+  [46] nStride
+  [47] Step
+  [48] nStep
+  [49] Stance%
+  [50] DS%
+  [51] stdStride
+  [52] stdStep
+  [53] stdStance
+  [54] stdDS
+  [55] Rstr_PSD1
+  [56] Rstr_PSD2
+  [57] Lstr_PSD1
+  [58] Lstr_PSD2
+  [59] step_PSD1
+  [60] step_PSD2
+  [61] Rstance_PSD1
+  [62] Rstance_PSD2
+  [63] Lstance_PSD1
+  [64] Lstance_PSD2
+  [65] DS_PSD1
+  [66] DS_PSD2
+  [67] simm_strT
+  [68] simm_stance
+
+VALORI TROVATI:
+  [0] 3
+  [1] 28.2
+  [2] F
+  [3] N
+  [4] 1325
+  [5] eutocico
+  [6] 4.6
+  [7] 23.8
+  [8] 21.4
+  [9] 10.2
+  [10] 82
+  [11] 6.5
+  [12] 6.7
+  [13] 88
+  [14] 1.042152532
+  [15] 1.21839639
+  [16] 1.104149772
+  [17] 0.3255933512
+  [18] 0.5017300865
+  [19] 0.6580968637
+  [20] 0.83809496
+  [21] 0.8896032483
+  [22] 1.054487484
+  [23] 0.3342849775
+  [24] 0.5639246478
+  [25] 0.8276077127
+  [26] 1.03653986
+  [27] 1.313839282
+  [28] 1.301953213
+  [29] 0.2566938448
+  [30] 0.3885121289
+  [31] 0.53112284
+  [32] 0.6380516002
+  [33] 0.7928096751
+  [34] 0.930384495
+  [35] 8.771754564
+  [36] 40.67734766
+  [37] 5.452910053
+  [38] 8.003119156
+  [39] 26.23248824
+  [40] 5.291529709
+  [41] 12.12067721
+  [42] 49.33664079
+  [43] 6.462827447
+  [44] 0.79296875
+  [45] 2.678189794
+  [46] 0.3828125
+  [47] 1.292919211
+  [48] 56.95071058
+  [49] 16.94915254
+  [50] 0.1739815477
+  [51] 0.09413702595
+  [52] 7.477823686
+  [53] 8.187465546
+  [54] 0.0987778992
+  [55] 0.2311755784
+  [56] 0.1088317122
+  [57] 0.2325294352
+  [58] 0.07198287289
+  [59] 0.1143398013
+  [60] 6.214616718
+  [61] 9.104823328
+  [62] 7.922082293
+  [63] 7.545586794
+  [64] 5.758051216
+  [65] 10.20488598
+  [66] 0.0875
+  [67] 0.06878306878
+================================
+
