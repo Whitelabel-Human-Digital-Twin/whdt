@@ -45,3 +45,5 @@ bin/
 node_modules
 
 .idea
+
+*Errore.txt
