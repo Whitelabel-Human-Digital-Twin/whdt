@@ -6,7 +6,6 @@ import io.github.whdt.core.hdt.model.Model
 import io.github.whdt.core.hdt.storage.Storage
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 
 /**
  * Represents a Human Digital Twin (HDT), a digital representation of a human being.

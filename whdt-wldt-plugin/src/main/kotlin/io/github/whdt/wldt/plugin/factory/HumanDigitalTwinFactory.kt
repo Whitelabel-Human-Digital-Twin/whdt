@@ -5,7 +5,6 @@ import io.github.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
 import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.whdt.core.hdt.model.property.Property
-import io.github.whdt.core.hdt.storage.Storage
 import io.github.whdt.core.hdt.storage.StorageType
 import io.github.whdt.core.serde.Stub
 import io.github.whdt.wldt.plugin.shadowing.HdtShadowingFunction
