@@ -6,6 +6,7 @@ import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.storage.Storage
+import io.github.whdt.core.hdt.storage.StorageType
 import io.github.whdt.core.serde.Stub
 import io.github.whdt.wldt.plugin.shadowing.HdtShadowingFunction
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapter
@@ -47,8 +48,11 @@ object HumanDigitalTwinFactory {
         digitalAdapters.forEach { dt.addDigitalAdapter(it) }
 
         val storages = hdt.storages.map { storage ->
-            when(storage) {
-                Storage.IN_MEMORY -> DefaultWldtStorage("${hdt.id}-default-storage", true)
+            when(storage.storageType) {
+                StorageType.IN_MEMORY -> DefaultWldtStorage("${hdt.id}-default-storage", true)
+                else -> {
+                    DefaultWldtStorage("${hdt.id}-default-storage", true)
+                }
             }
         }
 
