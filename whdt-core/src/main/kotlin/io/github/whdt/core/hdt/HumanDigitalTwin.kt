@@ -6,6 +6,7 @@ import io.github.whdt.core.hdt.model.Model
 import io.github.whdt.core.hdt.storage.Storage
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 /**
  * Represents a Human Digital Twin (HDT), a digital representation of a human being.
@@ -17,5 +18,5 @@ data class HumanDigitalTwin(
     val models: List<Model> = emptyList(),
     val physicalInterfaces: List<PhysicalInterface> = emptyList(),
     val digitalInterfaces: List<DigitalInterface> = emptyList(),
-    val storages: List<Storage> = listOf(Storage.IN_MEMORY),
+    val storages: List<Storage> = listOf(Storage.default()),
 )
