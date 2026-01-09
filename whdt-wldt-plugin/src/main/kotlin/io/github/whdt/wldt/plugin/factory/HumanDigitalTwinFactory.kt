@@ -7,6 +7,9 @@ import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.storage.StorageType
 import io.github.whdt.core.serde.Stub
+import io.github.whdt.distributed.id.HdtIdentifier
+import io.github.whdt.distributed.message.Message
+import io.github.whdt.distributed.namespace.Namespace
 import io.github.whdt.wldt.plugin.shadowing.HdtShadowingFunction
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapter
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapterConfiguration
@@ -17,6 +20,7 @@ import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapter
 import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapterConfiguration
 import it.wldt.core.engine.DigitalTwin
 import it.wldt.storage.DefaultWldtStorage
+import kotlinx.serialization.json.Json
 
 object HumanDigitalTwinFactory {
     val serde = Stub.propertyJsonSerDe()
@@ -70,9 +74,12 @@ object HumanDigitalTwinFactory {
             mqttConfigBuilder.addPhysicalAssetPropertyAndTopic(
                 property.id,
                 property,
-                "${pI.clientId}/sensor/${property.id}",
-                serde::deserialize
-            )
+                Namespace.PROPERTY_UPDATE_REQUEST_TOPIC_MQTT
+            ) { string ->
+                val message = Json.decodeFromString<Message>(string)
+                val property = Json.decodeFromJsonElement(serde.serializer, message.payload)
+                property
+            }
         }
 
         val mqttConfig = mqttConfigBuilder.build()
@@ -92,10 +99,14 @@ object HumanDigitalTwinFactory {
         properties.forEach { property ->
             mqttConfigBuilder.addPropertyTopic(
                 property.id,
-                "${dI.clientId}/state/${property.id}",
+                Namespace.PROPERTY_UPDATE_NOTIFICATION_TOPIC_MQTT,
                 MqttQosLevel.MQTT_QOS_0
             ) { property: Property ->
-                serde.serialize(property)
+                // Build a Message
+                val id = HdtIdentifier.fromQualifier(dI.clientId)
+                val payload = serde.serializeToJsonElement(property)
+                val message = Message(Namespace.PROPERTY_UPDATE_NOTIFICATION_TOPIC_MQTT, id, payload)
+                Json.encodeToString(message)
             }
         }
 
