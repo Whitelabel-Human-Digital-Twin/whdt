@@ -33,6 +33,7 @@ repositories {
 
 dependencies {
     implementation(project(":whdt-core"))
+    implementation(project(":whdt-distributed"))
     testImplementation(kotlin("test"))
 
     implementation("io.github.wldt:wldt-core:0.4.0")
