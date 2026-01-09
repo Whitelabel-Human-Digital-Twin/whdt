@@ -1,10 +1,12 @@
 package io.github.whdt.distributed.namespace
 
 object Namespace {
-    const val PROPERTY_TOPIC_MQTT = "whdt-property"
+    const val PROPERTY_UPDATE_NOTIFICATION_TOPIC_MQTT = "whdt-property-update-notification"
+    const val PROPERTY_UPDATE_REQUEST_TOPIC_MQTT = "whdt-property-update-request"
 
     val namespaces = listOf(
-        PROPERTY_TOPIC_MQTT,
+        PROPERTY_UPDATE_NOTIFICATION_TOPIC_MQTT,
+        PROPERTY_UPDATE_REQUEST_TOPIC_MQTT,
         )
 
     fun verifyNamespace(namespace: String): Result<Unit> {
