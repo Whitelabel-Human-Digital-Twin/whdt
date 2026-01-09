@@ -1,4 +1,4 @@
-package io.github.whdt.distributed
+package io.github.whdt.distributed.namespace
 
 object Namespace {
     const val PROPERTY_TOPIC_MQTT = "whdt-property"
