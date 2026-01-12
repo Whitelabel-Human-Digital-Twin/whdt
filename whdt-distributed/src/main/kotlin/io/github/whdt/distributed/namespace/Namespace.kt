@@ -1,19 +1,12 @@
 package io.github.whdt.distributed.namespace
 
+import io.github.whdt.distributed.id.HdtId
+
 object Namespace {
-    const val PROPERTY_UPDATE_NOTIFICATION_TOPIC_MQTT = "whdt-property-update-notification"
-    const val PROPERTY_UPDATE_REQUEST_TOPIC_MQTT = "whdt-property-update-request"
+    const val MQTT_PREFIX = "whdt"
+    const val PROPERTY_UPDATE_NOTIFICATION_POSTFIX_MQTT = "property-update-notification"
+    const val PROPERTY_UPDATE_REQUEST_POSTFIX_MQTT = "property-update-request"
 
-    val namespaces = listOf(
-        PROPERTY_UPDATE_NOTIFICATION_TOPIC_MQTT,
-        PROPERTY_UPDATE_REQUEST_TOPIC_MQTT,
-        )
-
-    fun verifyNamespace(namespace: String): Result<Unit> {
-        return if (namespaces.contains(namespace)) {
-            Result.success(Unit)
-        } else {
-            Result.failure(IllegalArgumentException("Namespace $namespace does not exist."))
-        }
-    }
+    fun propertyUpdateRequestTopic(hdtId: HdtId) = "$MQTT_PREFIX/$hdtId/$PROPERTY_UPDATE_REQUEST_POSTFIX_MQTT"
+    fun propertyUpdateNotificationTopic(hdtId: HdtId) = "$MQTT_PREFIX/$hdtId/$PROPERTY_UPDATE_NOTIFICATION_POSTFIX_MQTT"
 }
