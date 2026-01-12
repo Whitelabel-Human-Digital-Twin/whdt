@@ -76,7 +76,7 @@ object HumanDigitalTwinFactory {
             mqttConfigBuilder.addPhysicalAssetPropertyAndTopic(
                 property.id,
                 property,
-                Namespace.PROPERTY_UPDATE_REQUEST_TOPIC_MQTT
+                Namespace.propertyUpdateRequestTopic(pI.hdtId)
             ) { string ->
                 val message = Json.decodeFromString<Message>(string)
                 val property = Json.decodeFromJsonElement(serde.serializer, message.payload)
@@ -102,7 +102,7 @@ object HumanDigitalTwinFactory {
         properties.forEach { property ->
             mqttConfigBuilder.addPropertyTopic(
                 property.id,
-                Namespace.PROPERTY_UPDATE_NOTIFICATION_TOPIC_MQTT,
+                Namespace.propertyUpdateNotificationTopic(dI.hdtId),
                 MqttQosLevel.MQTT_QOS_0
             ) { property: Property ->
                 // Build a Message
