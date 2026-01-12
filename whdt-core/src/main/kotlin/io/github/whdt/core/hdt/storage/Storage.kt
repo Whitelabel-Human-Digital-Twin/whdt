@@ -3,7 +3,6 @@ package io.github.whdt.core.hdt.storage
 import io.github.whdt.core.hdt.model.id.HdtId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import java.util.UUID
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
