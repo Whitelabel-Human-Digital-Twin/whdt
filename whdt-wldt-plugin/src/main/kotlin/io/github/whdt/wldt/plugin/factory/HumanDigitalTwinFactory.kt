@@ -21,6 +21,8 @@ import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapterConfiguration
 import it.wldt.core.engine.DigitalTwin
 import it.wldt.storage.DefaultWldtStorage
 import kotlinx.serialization.json.Json
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 object HumanDigitalTwinFactory {
     val serde = Stub.propertyJsonSerDe()
@@ -90,6 +92,7 @@ object HumanDigitalTwinFactory {
         )
     }
 
+    @OptIn(ExperimentalTime::class)
     fun getDaFromDigitalInterfaceMqtt(dI: MqttDigitalInterface, properties: List<Property>): MqttDigitalAdapter {
         val mqttConfigBuilder = MqttDigitalAdapterConfiguration.builder(
             dI.broker,
@@ -103,9 +106,12 @@ object HumanDigitalTwinFactory {
                 MqttQosLevel.MQTT_QOS_0
             ) { property: Property ->
                 // Build a Message
-                val id = HdtIdentifier.fromQualifier(dI.clientId)
-                val payload = serde.serializeToJsonElement(property)
-                val message = Message(Namespace.PROPERTY_UPDATE_NOTIFICATION_TOPIC_MQTT, id, payload)
+                val message = Message(
+                    namespace = Namespace.PROPERTY_UPDATE_NOTIFICATION_TOPIC_MQTT,
+                    id = HdtIdentifier.newId(dI.clientId),
+                    sentAt = Clock.System.now(),
+                    payload = serde.serializeToJsonElement(property)
+                )
                 Json.encodeToString(message)
             }
         }
