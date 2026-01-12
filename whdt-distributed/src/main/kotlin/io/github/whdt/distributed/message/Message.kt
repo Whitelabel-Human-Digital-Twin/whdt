@@ -1,6 +1,6 @@
 package io.github.whdt.distributed.message
 
-import io.github.whdt.distributed.id.HdtId
+import io.github.whdt.core.hdt.model.id.HdtId
 import io.github.whdt.distributed.id.SenderId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json

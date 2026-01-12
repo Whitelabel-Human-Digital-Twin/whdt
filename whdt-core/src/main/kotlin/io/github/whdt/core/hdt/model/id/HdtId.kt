@@ -1,8 +1,6 @@
-package io.github.whdt.distributed.id
+package io.github.whdt.core.hdt.model.id
 
 import kotlinx.serialization.Serializable
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @JvmInline
 @Serializable

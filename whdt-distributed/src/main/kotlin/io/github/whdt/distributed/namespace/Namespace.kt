@@ -1,6 +1,6 @@
 package io.github.whdt.distributed.namespace
 
-import io.github.whdt.distributed.id.HdtId
+import io.github.whdt.core.hdt.model.id.HdtId
 
 object Namespace {
     const val MQTT_PREFIX = "whdt"
