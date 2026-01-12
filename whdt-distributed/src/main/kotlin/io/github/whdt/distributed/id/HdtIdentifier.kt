@@ -15,5 +15,9 @@ data class HdtIdentifier(val id: String, val qualifier: String) {
                 qualifier = qualifier
             )
         }
+
+        fun newId(id: String): HdtIdentifier {
+            return HdtIdentifier(id, id)
+        }
     }
 }
