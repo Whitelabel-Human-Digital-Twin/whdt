@@ -6,6 +6,7 @@ import io.github.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
 import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.whdt.core.hdt.model.Model
+import io.github.whdt.core.hdt.model.id.HdtId
 import io.github.whdt.core.hdt.model.property.Properties.bloodPressure
 import io.github.whdt.core.hdt.model.property.Properties.firstName
 import io.github.whdt.core.hdt.model.property.Properties.heartRate
@@ -38,7 +39,7 @@ fun main() {
 
     val hdts = listOf(
         HumanDigitalTwin(
-            hdtId = "hd1",
+            hdtId = HdtId.of("hd1"),
             models = listOf(model),
             physicalInterfaces = listOf(pI),
             digitalInterfaces = listOf(dI, httpDI),
