@@ -7,7 +7,8 @@ import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.storage.StorageType
 import io.github.whdt.core.serde.Stub
-import io.github.whdt.distributed.id.HdtIdentifier
+import io.github.whdt.distributed.id.HdtId
+import io.github.whdt.distributed.id.SenderId
 import io.github.whdt.distributed.message.Message
 import io.github.whdt.distributed.namespace.Namespace
 import io.github.whdt.wldt.plugin.shadowing.HdtShadowingFunction
@@ -107,8 +108,8 @@ object HumanDigitalTwinFactory {
             ) { property: Property ->
                 // Build a Message
                 val message = Message(
-                    namespace = Namespace.PROPERTY_UPDATE_NOTIFICATION_TOPIC_MQTT,
-                    id = HdtIdentifier.newId(dI.clientId),
+                    hdt = HdtId.of(dI.clientId),
+                    sender = SenderId.of(dI.clientId),
                     sentAt = Clock.System.now(),
                     payload = serde.serializeToJsonElement(property)
                 )

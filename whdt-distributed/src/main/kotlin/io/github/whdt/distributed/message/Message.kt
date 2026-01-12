@@ -1,6 +1,7 @@
 package io.github.whdt.distributed.message
 
-import io.github.whdt.distributed.id.HdtIdentifier
+import io.github.whdt.distributed.id.HdtId
+import io.github.whdt.distributed.id.SenderId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -13,12 +14,12 @@ import kotlin.time.Instant
 @Serializable
 @OptIn(ExperimentalTime::class)
 data class Message(
-    val namespace: String,
-    val id: HdtIdentifier,
+    val hdt: HdtId,
+    val sender: SenderId,
     val sentAt: Instant,
     @Transient
     val receivedAt: Instant = Clock.System.now(),
-    val payload: JsonElement
+    val payload: JsonElement,
 ) {
 
     /**
