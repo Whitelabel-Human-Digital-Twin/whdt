@@ -7,7 +7,7 @@ import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.storage.StorageType
 import io.github.whdt.core.serde.Stub
-import io.github.whdt.distributed.id.HdtId
+import io.github.whdt.core.hdt.model.id.HdtId
 import io.github.whdt.distributed.id.SenderId
 import io.github.whdt.distributed.message.Message
 import io.github.whdt.distributed.namespace.Namespace

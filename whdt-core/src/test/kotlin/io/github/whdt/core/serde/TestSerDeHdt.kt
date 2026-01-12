@@ -4,6 +4,7 @@ import io.github.whdt.core.hdt.HumanDigitalTwin
 import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.whdt.core.hdt.model.Model
+import io.github.whdt.core.hdt.model.id.HdtId
 import io.github.whdt.core.hdt.model.property.Properties.bloodPressure
 import io.github.whdt.core.hdt.model.property.Properties.firstName
 import io.github.whdt.core.hdt.model.property.Properties.heartRate
@@ -30,7 +31,7 @@ class TestSerDeHdt: FunSpec({
           clientId = "hd1",
       )
       val hdt = HumanDigitalTwin(
-          id = "hd1",
+          id = HdtId.of("hd1"),
           models = listOf(model),
           physicalInterfaces = listOf(pI),
           digitalInterfaces = listOf(dI),
