@@ -14,6 +14,7 @@ import io.kotest.matchers.shouldBe
 
 class TestSerDeHdt: FunSpec({
   test("Test SerDe HumanDigitalTwin") {
+      val hdtId = HdtId.of("hd-1")
       val properties = listOf(
           firstName("John"),
           surname("Doe"),
@@ -25,13 +26,13 @@ class TestSerDeHdt: FunSpec({
       )
       val model = Model(properties)
       val pI = MqttPhysicalInterface(
-          clientId = "hd1",
+          hdtId = hdtId,
       )
       val dI = MqttDigitalInterface(
-          clientId = "hd1",
+          hdtId = hdtId,
       )
       val hdt = HumanDigitalTwin(
-          hdtId = HdtId.of("hd1"),
+          hdtId = hdtId,
           models = listOf(model),
           physicalInterfaces = listOf(pI),
           digitalInterfaces = listOf(dI),

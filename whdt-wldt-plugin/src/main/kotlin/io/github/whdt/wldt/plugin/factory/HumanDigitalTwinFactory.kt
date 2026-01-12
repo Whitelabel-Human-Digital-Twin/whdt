@@ -88,7 +88,7 @@ object HumanDigitalTwinFactory {
         val mqttConfig = mqttConfigBuilder.build()
 
         return MqttPhysicalAdapter(
-            pI.clientId,
+            pI.id,
             mqttConfig
         )
     }
@@ -108,8 +108,8 @@ object HumanDigitalTwinFactory {
             ) { property: Property ->
                 // Build a Message
                 val message = Message(
-                    hdt = HdtId.of(dI.clientId),
-                    sender = SenderId.of(dI.clientId),
+                    hdt = dI.hdtId,
+                    sender = SenderId.of(dI.id),
                     sentAt = Clock.System.now(),
                     payload = serde.serializeToJsonElement(property)
                 )
@@ -120,7 +120,7 @@ object HumanDigitalTwinFactory {
         val mqttConfig = mqttConfigBuilder.build()
 
         return MqttDigitalAdapter(
-            dI.clientId,
+            dI.id,
             mqttConfig
         )
     }

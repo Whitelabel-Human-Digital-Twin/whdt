@@ -13,6 +13,7 @@ import io.github.whdt.core.hdt.model.property.Properties.heartRate
 import io.github.whdt.core.hdt.model.property.Properties.surname
 
 fun main() {
+    val hdtId = HdtId.of("hd-1")
     val properties = listOf(
         firstName("John"),
         surname("Doe"),
@@ -26,20 +27,20 @@ fun main() {
     val model = Model(properties)
 
     val pI = MqttPhysicalInterface(
-        clientId = "hd1",
+        hdtId = hdtId,
     )
 
     val dI = MqttDigitalInterface(
-        clientId = "hd1",
+        hdtId = hdtId,
     )
 
     val httpDI = HttpDigitalInterface(
-        id = "hd1"
+        hdtId = hdtId,
     )
 
     val hdts = listOf(
         HumanDigitalTwin(
-            hdtId = HdtId.of("hd1"),
+            hdtId = hdtId,
             models = listOf(model),
             physicalInterfaces = listOf(pI),
             digitalInterfaces = listOf(dI, httpDI),

@@ -1,7 +1,9 @@
 package io.github.whdt.core.hdt.storage
 
+import io.github.whdt.core.hdt.model.id.HdtId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import java.util.UUID
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -15,7 +17,8 @@ enum class StorageType {
 @Serializable
 @OptIn(ExperimentalUuidApi::class)
 data class Storage(
-    val id: String,
+    val hdtId: HdtId,
+    val id: String = "$hdtId-storage-${Uuid.random()}",
     val storageType: StorageType,
     @Transient
     val config: Map<String, String> = emptyMap(),
@@ -33,9 +36,9 @@ data class Storage(
     }
 
     companion object {
-        fun default(): Storage {
+        fun default(hdtId: HdtId): Storage {
             return Storage(
-                id = Uuid.random().toString(),
+                hdtId = hdtId,
                 storageType = StorageType.IN_MEMORY,
             )
         }
