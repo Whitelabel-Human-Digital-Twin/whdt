@@ -2,6 +2,9 @@ package io.github.whdt.distributed.id
 
 import kotlinx.serialization.Serializable
 
+/**
+ * Encapsulates the Sender of a [io.github.whdt.distributed.message.Message] in distributed contexts.
+ */
 @JvmInline
 @Serializable
 value class SenderId(val id: String) {

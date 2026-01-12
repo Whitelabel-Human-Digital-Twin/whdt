@@ -10,7 +10,9 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-
+/**
+ * Encapsulates a message regarding a specific [io.github.whdt.core.hdt.HumanDigitalTwin] in distributed contexts.
+ */
 @Serializable
 @OptIn(ExperimentalTime::class)
 data class Message(
