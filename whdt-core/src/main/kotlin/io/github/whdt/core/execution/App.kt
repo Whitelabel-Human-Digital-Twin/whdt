@@ -18,10 +18,10 @@ interface App {
         return ids.map { removeDtById(it)  }
     }
     fun removeDt(hdt: HumanDigitalTwin): Result<Unit> {
-        return removeDtById(hdt.id)
+        return removeDtById(hdt.hdtId.id)
     }
     fun removeDts(hdts: List<HumanDigitalTwin>): List<Result<Unit>> {
-        return removeDtsById(hdts.map { it.id })
+        return removeDtsById(hdts.map { it.hdtId.id })
     }
     fun startDt(id: String): Result<Unit>
     fun startDts(ids: List<String>): List<Result<Unit>> {

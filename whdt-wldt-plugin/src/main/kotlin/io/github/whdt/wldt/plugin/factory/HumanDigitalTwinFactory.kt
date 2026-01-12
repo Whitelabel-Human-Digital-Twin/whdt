@@ -29,8 +29,8 @@ object HumanDigitalTwinFactory {
     val serde = Stub.propertyJsonSerDe()
     fun fromHumanDigitalTwin(hdt: HumanDigitalTwin): DigitalTwin {
 
-        val shad = HdtShadowingFunction("${hdt.id}-shadowing-function", hdt.models)
-        val dt = DigitalTwin(hdt.id, shad)
+        val shad = HdtShadowingFunction("${hdt.hdtId}-shadowing-function", hdt.models)
+        val dt = DigitalTwin(hdt.hdtId.id, shad)
 
         val properties = hdt.models.flatMap { it.properties }
 
@@ -55,9 +55,9 @@ object HumanDigitalTwinFactory {
 
         val storages = hdt.storages.map { storage ->
             when(storage.storageType) {
-                StorageType.IN_MEMORY -> DefaultWldtStorage("${hdt.id}-default-storage", true)
+                StorageType.IN_MEMORY -> DefaultWldtStorage("${hdt.hdtId}-default-storage", true)
                 else -> {
-                    DefaultWldtStorage("${hdt.id}-default-storage", true)
+                    DefaultWldtStorage("${hdt.hdtId}-default-storage", true)
                 }
             }
         }
