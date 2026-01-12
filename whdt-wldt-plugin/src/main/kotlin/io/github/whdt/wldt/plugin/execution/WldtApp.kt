@@ -11,7 +11,7 @@ class WldtApp: App {
     override fun addDt(hdt: HumanDigitalTwin): Result<String> {
         return runCatching {
             dtEngine.addDigitalTwin(fromHumanDigitalTwin(hdt))
-            hdt.id
+            hdt.hdtId.id
         }
     }
 

@@ -31,7 +31,7 @@ class TestSerDeHdt: FunSpec({
           clientId = "hd1",
       )
       val hdt = HumanDigitalTwin(
-          id = HdtId.of("hd1"),
+          hdtId = HdtId.of("hd1"),
           models = listOf(model),
           physicalInterfaces = listOf(pI),
           digitalInterfaces = listOf(dI),

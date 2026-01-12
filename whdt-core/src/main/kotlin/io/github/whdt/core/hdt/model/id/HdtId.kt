@@ -5,6 +5,9 @@ import kotlinx.serialization.Serializable
 @JvmInline
 @Serializable
 value class HdtId(val id: String) {
+
+    override fun toString(): String = id
+
     companion object {
         fun of(raw: String): HdtId {
             require(raw.isNotEmpty())

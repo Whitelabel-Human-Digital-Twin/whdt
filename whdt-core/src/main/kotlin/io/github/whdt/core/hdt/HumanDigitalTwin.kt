@@ -14,7 +14,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("human-digital-twin")
 data class HumanDigitalTwin(
-    val id: HdtId,
+    val hdtId: HdtId,
     val models: List<Model> = emptyList(),
     val physicalInterfaces: List<PhysicalInterface> = emptyList(),
     val digitalInterfaces: List<DigitalInterface> = emptyList(),

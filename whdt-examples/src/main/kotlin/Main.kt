@@ -38,7 +38,7 @@ fun main() {
 
     val hdts = listOf(
         HumanDigitalTwin(
-            id = "hd1",
+            hdtId = "hd1",
             models = listOf(model),
             physicalInterfaces = listOf(pI),
             digitalInterfaces = listOf(dI, httpDI),
