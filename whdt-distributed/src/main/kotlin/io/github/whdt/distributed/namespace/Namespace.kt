@@ -7,18 +7,18 @@ import io.github.whdt.core.hdt.model.id.HdtId
  */
 object Namespace {
     const val MQTT_PREFIX = "whdt"
-    const val PROPERTY_UPDATE_NOTIFICATION_POSTFIX_MQTT = "property-update-notification"
-    const val PROPERTY_UPDATE_REQUEST_POSTFIX_MQTT = "property-update-request"
+    const val PROPERTY_UPDATE_NOTIFICATION_MQTT = "property-update-notification"
+    const val PROPERTY_UPDATE_REQUEST_MQTT = "property-update-request"
 
     /**
      * @param hdtId identifier for the hdt
      * @return the MQTT topic of a property update request for a hdt with the specified [HdtId].
      */
-    fun propertyUpdateRequestTopic(hdtId: HdtId) = "$MQTT_PREFIX/$hdtId/$PROPERTY_UPDATE_REQUEST_POSTFIX_MQTT"
+    fun propertyUpdateRequestTopic(hdtId: HdtId, propertyId: String) = "$MQTT_PREFIX/$hdtId/$PROPERTY_UPDATE_REQUEST_MQTT/$propertyId"
 
     /**
      * @param hdtId identifier for the hdt
      * @return the MQTT topic of a property update notification for a hdt with the specified [HdtId].
      */
-    fun propertyUpdateNotificationTopic(hdtId: HdtId) = "$MQTT_PREFIX/$hdtId/$PROPERTY_UPDATE_NOTIFICATION_POSTFIX_MQTT"
+    fun propertyUpdateNotificationTopic(hdtId: HdtId, propertyId: String) = "$MQTT_PREFIX/$hdtId/$PROPERTY_UPDATE_NOTIFICATION_MQTT/$propertyId"
 }
