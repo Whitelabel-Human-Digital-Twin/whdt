@@ -3,12 +3,12 @@ package io.github.whdt.distributed.message
 import io.github.whdt.core.hdt.model.id.HdtId
 import io.github.whdt.distributed.id.SenderId
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
 
 /**
  * Encapsulates a message regarding a specific [io.github.whdt.core.hdt.HumanDigitalTwin] in distributed contexts.
@@ -18,9 +18,9 @@ import kotlin.time.Instant
 data class Message(
     val hdt: HdtId,
     val sender: SenderId,
-    val sentAt: Instant,
+    val sentAt: Long,
     @Transient
-    val receivedAt: Instant = Clock.System.now(),
+    val receivedAt: Long = Clock.System.now().toEpochMilliseconds(),
     val payload: JsonElement,
 ) {
 

@@ -109,7 +109,7 @@ object HumanDigitalTwinFactory {
                 val message = Message(
                     hdt = dI.hdtId,
                     sender = SenderId.of(dI.id),
-                    sentAt = Clock.System.now(),
+                    sentAt = Clock.System.now().toEpochMilliseconds(),
                     payload = serde.serializeToJsonElement(property)
                 )
                 Json.encodeToString(message)
