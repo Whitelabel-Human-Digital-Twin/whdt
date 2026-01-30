@@ -1,4 +1,4 @@
-package io.github.whdt.core.serde.modules
+package io.github.whdt.distributed.serde.modules
 
 import io.github.whdt.core.hdt.model.property.*
 import kotlinx.serialization.modules.SerializersModule

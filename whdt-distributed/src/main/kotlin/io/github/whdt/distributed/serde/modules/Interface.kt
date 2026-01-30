@@ -1,4 +1,4 @@
-package io.github.whdt.core.serde.modules
+package io.github.whdt.distributed.serde.modules
 
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
 import io.github.whdt.core.hdt.interfaces.digital.HttpDigitalInterface

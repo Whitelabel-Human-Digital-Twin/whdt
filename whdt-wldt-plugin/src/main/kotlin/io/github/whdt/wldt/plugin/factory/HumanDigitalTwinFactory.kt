@@ -6,10 +6,8 @@ import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.storage.StorageType
-import io.github.whdt.core.serde.Stub
-import io.github.whdt.distributed.id.SenderId
-import io.github.whdt.distributed.message.Message
 import io.github.whdt.distributed.namespace.Namespace
+import io.github.whdt.distributed.serde.Stub
 import io.github.whdt.wldt.plugin.shadowing.HdtShadowingFunction
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapter
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapterConfiguration
@@ -20,12 +18,11 @@ import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapter
 import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapterConfiguration
 import it.wldt.core.engine.DigitalTwin
 import it.wldt.storage.DefaultWldtStorage
-import kotlinx.serialization.json.Json
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 object HumanDigitalTwinFactory {
-    val serde = Stub.propertyJsonSerDe()
+    val propertySerDe = Stub.propertyJsonSerDe()
+    //val messageSerDe = Stub.messageJsonSerDe()
     fun fromHumanDigitalTwin(hdt: HumanDigitalTwin): DigitalTwin {
 
         val shad = HdtShadowingFunction("${hdt.hdtId}-shadowing-function", hdt.models)
@@ -78,8 +75,8 @@ object HumanDigitalTwinFactory {
                 property,
                 Namespace.propertyUpdateRequestTopic(pI.hdtId, property.id)
             ) { string ->
-                val message = Json.decodeFromString<Message>(string)
-                val property = Json.decodeFromJsonElement(serde.serializer, message.payload)
+                //val message = messageSerDe.deserialize(string)
+                val property = propertySerDe.deserialize(string)
                 property
             }
         }
@@ -106,13 +103,13 @@ object HumanDigitalTwinFactory {
                 MqttQosLevel.MQTT_QOS_0
             ) { property: Property ->
                 // Build a Message
-                val message = Message(
+                /*val message = Message(
                     hdt = dI.hdtId,
                     sender = SenderId.of(dI.id),
                     sentAt = Clock.System.now().toEpochMilliseconds(),
-                    payload = serde.serializeToJsonElement(property)
-                )
-                Json.encodeToString(message)
+                    payload = propertySerDe.serializeToJsonElement(property)
+                )*/
+                propertySerDe.serialize(property)
             }
         }
 

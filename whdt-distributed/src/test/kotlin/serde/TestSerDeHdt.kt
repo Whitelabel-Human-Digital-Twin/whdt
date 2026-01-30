@@ -1,4 +1,4 @@
-package io.github.whdt.core.serde
+package serde
 
 import io.github.whdt.core.hdt.HumanDigitalTwin
 import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
@@ -9,6 +9,7 @@ import io.github.whdt.core.hdt.model.property.Properties.bloodPressure
 import io.github.whdt.core.hdt.model.property.Properties.firstName
 import io.github.whdt.core.hdt.model.property.Properties.heartRate
 import io.github.whdt.core.hdt.model.property.Properties.surname
+import io.github.whdt.distributed.serde.Stub
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 

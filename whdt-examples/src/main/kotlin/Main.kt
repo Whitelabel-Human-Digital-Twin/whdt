@@ -10,10 +10,12 @@ import io.github.whdt.core.hdt.model.id.HdtId
 import io.github.whdt.core.hdt.model.property.Properties.bloodPressure
 import io.github.whdt.core.hdt.model.property.Properties.firstName
 import io.github.whdt.core.hdt.model.property.Properties.heartRate
+import io.github.whdt.core.hdt.model.property.Properties.singleValueProperty
 import io.github.whdt.core.hdt.model.property.Properties.surname
+import io.github.whdt.core.hdt.model.property.PropertyValue
 
 fun main() {
-    val hdtId = HdtId.of("hd-1")
+    val hdtId = HdtId.of("Mimosa_1")
     val properties = listOf(
         firstName("John"),
         surname("Doe"),
@@ -21,7 +23,14 @@ fun main() {
             systolic = 120,
             diastolic = 80,
         ),
-        heartRate(72)
+        heartRate(72),
+        singleValueProperty(
+            name = "Quantita_Latte_Assunto",
+            id = "Quantita_Latte_Assunto",
+            description = "Quantita latte assunto per poppata (ml)",
+            valueName = "qt",
+            value = PropertyValue.IntPropertyValue(100),
+        ),
     )
 
     val model = Model(properties)

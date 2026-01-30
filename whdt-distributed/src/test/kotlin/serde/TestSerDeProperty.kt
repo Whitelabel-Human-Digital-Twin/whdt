@@ -1,10 +1,11 @@
-package io.github.whdt.core.serde
+package serde
 
 import io.github.whdt.core.hdt.model.Model
 import io.github.whdt.core.hdt.model.property.Properties.bloodPressure
 import io.github.whdt.core.hdt.model.property.Properties.singleValueProperty
 import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.model.property.PropertyValue
+import io.github.whdt.distributed.serde.Stub
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 

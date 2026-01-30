@@ -1,4 +1,4 @@
-package io.github.whdt.core.serde
+package io.github.whdt.distributed.serde
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
@@ -10,6 +10,7 @@ interface SerDe<T> {
     fun serialize(value: T): String
     fun serializeToJsonElement(value: T): JsonElement
     fun deserialize(data: String): T
+    fun deserializeFromJsonElement(data: JsonElement): T
 }
 
 inline fun <reified T> jsonSerDe(json: Json = Json): SerDe<T> {
@@ -19,5 +20,6 @@ inline fun <reified T> jsonSerDe(json: Json = Json): SerDe<T> {
         override fun serialize(value: T): String = json.encodeToString(serializer, value)
         override fun serializeToJsonElement(value: T): JsonElement = json.encodeToJsonElement(serializer, value)
         override fun deserialize(data: String): T = json.decodeFromString(serializer, data)
+        override fun deserializeFromJsonElement(data: JsonElement): T = json.decodeFromJsonElement(serializer, data)
     }
 }
