@@ -1,7 +1,7 @@
 package io.github.whdt.csv.parser;
 
 import io.github.whdt.core.hdt.model.property.*;
-import io.github.whdt.core.hdt.model.property.Properties;
+import kotlin.time.Clock;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -124,11 +124,11 @@ public class ParserCSV {
 		for (int i = 0; i < this.dates.size(); i++) {
 			int p = i % this.header.size() ;
 			if (p != 0) {
-				Property prop = Properties.INSTANCE.singleValueProperty(
+				Property prop = new Property(
 						this.header.get(p),
 						this.header.get(p),
 						description,
-						"value",
+						Clock.System.INSTANCE.now(),
 						this.getPropertyValue(this.dates.get(i))
 				);
 				tmp.add(prop);
