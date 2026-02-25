@@ -5,27 +5,21 @@ import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.whdt.core.hdt.model.Model
 import io.github.whdt.core.hdt.model.id.HdtId
-import io.github.whdt.core.hdt.model.property.Properties.bloodPressure
-import io.github.whdt.core.hdt.model.property.Properties.firstName
-import io.github.whdt.core.hdt.model.property.Properties.heartRate
-import io.github.whdt.core.hdt.model.property.Properties.surname
+import io.github.whdt.core.hdt.model.property.Property
+import io.github.whdt.core.hdt.model.property.PropertyValue
 import io.github.whdt.distributed.serde.Stub
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import kotlin.time.Clock
 
 class TestSerDeHdt: FunSpec({
   test("Test SerDe HumanDigitalTwin") {
       val hdtId = HdtId.of("hd-1")
       val properties = listOf(
-          firstName("John"),
-          surname("Doe"),
-          bloodPressure(
-              systolic = 120,
-              diastolic = 80,
-          ),
-          heartRate(72)
+          testProperty("First Name", PropertyValue.StringPropertyValue("John")),
+          testProperty("Surname", PropertyValue.StringPropertyValue("Doe"))
       )
-      val model = Model(properties)
+      val model = Model("my-model", "Test Model", properties)
       val pI = MqttPhysicalInterface(
           hdtId = hdtId,
       )
@@ -45,4 +39,16 @@ class TestSerDeHdt: FunSpec({
 
       deserialized shouldBe hdt
   }
-})
+}) {
+    companion object {
+        fun testProperty(name: String, value: PropertyValue): Property {
+            return Property(
+                id = name,
+                name = name,
+                description = "",
+                timestamp = Clock.System.now(),
+                value = value
+            )
+        }
+    }
+}
