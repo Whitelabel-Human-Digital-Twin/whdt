@@ -7,5 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("model")
 data class Model(
+    val id: String,
+    val description: String,
     val properties: List<Property>,
 )

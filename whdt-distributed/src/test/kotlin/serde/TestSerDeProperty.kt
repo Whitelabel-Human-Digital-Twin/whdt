@@ -1,22 +1,22 @@
 package serde
 
 import io.github.whdt.core.hdt.model.Model
-import io.github.whdt.core.hdt.model.property.Properties.bloodPressure
-import io.github.whdt.core.hdt.model.property.Properties.singleValueProperty
 import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.model.property.PropertyValue
 import io.github.whdt.distributed.serde.Stub
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import kotlin.time.Clock
 
 class TestSerDeProperty: FunSpec({
     test("Test SerDe GenericProperty") {
         val serde = Stub.propertyJsonSerDe()
 
-        val prop = singleValueProperty(
+        val prop = Property(
             name = "Username",
             id = "username",
             description = "The username of the user.",
+            timestamp = Clock.System.now(),
             value = PropertyValue.StringPropertyValue("leona"),
         )
         val serialized = serde.serialize(prop)
@@ -26,43 +26,17 @@ class TestSerDeProperty: FunSpec({
         deserialized shouldBe prop
     }
 
-    test("Serialized property should contain all fields") {
-        val serde = Stub.propertyJsonSerDe()
-
-        val time = System.currentTimeMillis()
-        val prop: Property = bloodPressure(120, 80, timestamp = time)
-        val serialized = serde.serialize(prop)
-        //println(serialized)
-        // serialized should contain internal name, name and other fields
-        serialized shouldBe """
-            {
-                "name": "Blood Pressure",
-                "id": "blood-pressure",
-                "description": "The pressure of blood in the circulatory system.",
-                "valueMap": {
-                    "systolic": {
-                        "type": "int-value",
-                        "value": 120
-                    },
-                    "diastolic": {
-                        "type": "int-value",
-                        "value": 80
-                    },
-                    "timestamp": {
-                        "type": "long-value",
-                        "value": $time
-                    }
-                }
-            }
-        """.trimIndent()
-    }
-
     test("Test SerDe Model") {
         val serde = Stub.modelJsonSerDe()
-        val model = Model(listOf(
-            singleValueProperty("username", "username", "", value = PropertyValue.StringPropertyValue("leona")),
-            singleValueProperty("password", "password", "", value = PropertyValue.StringPropertyValue("123456")),
-        ))
+        val now = Clock.System.now()
+        val model = Model(
+            "my-model",
+            "Test Model",
+            listOf(
+                Property("username", "username", "", now, PropertyValue.StringPropertyValue("leona")),
+                Property("password", "password", "", now, PropertyValue.StringPropertyValue("123456")),
+                )
+        )
         val serialized = serde.serialize(model)
         //println(serialized)
         val deserialized = serde.deserialize(serialized)

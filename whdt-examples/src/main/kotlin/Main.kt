@@ -1,39 +1,23 @@
 package io.github.whdt
 
-import io.github.whdt.wldt.plugin.execution.WldtApp
 import io.github.whdt.core.hdt.HumanDigitalTwin
 import io.github.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
 import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.whdt.core.hdt.model.Model
 import io.github.whdt.core.hdt.model.id.HdtId
-import io.github.whdt.core.hdt.model.property.Properties.bloodPressure
-import io.github.whdt.core.hdt.model.property.Properties.firstName
-import io.github.whdt.core.hdt.model.property.Properties.heartRate
-import io.github.whdt.core.hdt.model.property.Properties.singleValueProperty
-import io.github.whdt.core.hdt.model.property.Properties.surname
+import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.model.property.PropertyValue
+import io.github.whdt.wldt.plugin.execution.WldtApp
+import kotlin.time.Clock
 
 fun main() {
     val hdtId = HdtId.of("Mimosa_1")
     val properties = listOf(
-        firstName("John"),
-        surname("Doe"),
-        bloodPressure(
-            systolic = 120,
-            diastolic = 80,
-        ),
-        heartRate(72),
-        singleValueProperty(
-            name = "Quantita_Latte_Assunto",
-            id = "Quantita_Latte_Assunto",
-            description = "Quantita latte assunto per poppata (ml)",
-            valueName = "qt",
-            value = PropertyValue.IntPropertyValue(100),
-        ),
+        testProperty("First Name", PropertyValue.StringPropertyValue("John")),
+        testProperty("Surname", PropertyValue.StringPropertyValue("Doe"))
     )
-
-    val model = Model(properties)
+    val model = Model("my-model", "Test Model", properties)
 
     val pI = MqttPhysicalInterface(
         hdtId = hdtId,
@@ -58,4 +42,14 @@ fun main() {
 
     val startedDts = WldtApp().addStartAll(hdts)
     println("Started Dts: ${startedDts.map { it.getOrNull() }}")
+}
+
+fun testProperty(name: String, value: PropertyValue): Property {
+    return Property(
+        id = name,
+        name = name,
+        description = "",
+        timestamp = Clock.System.now(),
+        value = value
+    )
 }
