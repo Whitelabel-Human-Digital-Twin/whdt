@@ -8,12 +8,12 @@ import io.github.whdt.dsl.WhdtDsl
 @WhdtDsl
 class StorageBuilder(
     private val hdtId: HdtId,
+    private val id: String,
     private val storageType: StorageType,
 ) {
-    private var id: String? = null
     private val config = linkedMapOf<String, String>()
 
-    fun id(value: String) { id = value }
+    //fun id(value: String) { id = value }
 
     fun config(block: ConfigBuilder.() -> Unit) {
         ConfigBuilder(config).apply(block)
@@ -22,7 +22,7 @@ class StorageBuilder(
     fun build(): Storage =
         Storage(
             hdtId = hdtId,
-            id = id ?: Storage(hdtId = hdtId, storageType = storageType).id, // keep your default scheme
+            id = id, // keep your default scheme
             storageType = storageType,
             config = config.toMap(),
         )
