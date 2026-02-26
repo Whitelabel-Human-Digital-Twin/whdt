@@ -39,7 +39,7 @@ class HumanDigitalTwinBuilder(private val hdtId: HdtId) {
         type: StorageType,
         block: StorageBuilder.() -> Unit = {}
     ) {
-        storages += StorageBuilder(hdtId, type).apply(block).build()
+        storages += StorageBuilder(hdtId, id, type).apply(block).build()
     }
 
     fun build(): HumanDigitalTwin =
