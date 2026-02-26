@@ -14,6 +14,7 @@ data class MqttPhysicalInterface(
     val broker: String = "localhost",
     val port: Int = 1883,
     val id: String = "$hdtId-mqtt-physical-interface-${Uuid.random()}",
+    override val config: Map<String, String> = emptyMap(),
 ) : PhysicalInterface {
     override val interfaceType: PhysicalInterfaceType = PhysicalInterfaceType.MQTT
 }

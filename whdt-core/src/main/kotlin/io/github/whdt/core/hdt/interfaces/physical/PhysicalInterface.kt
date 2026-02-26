@@ -12,4 +12,5 @@ enum class PhysicalInterfaceType {
 sealed interface PhysicalInterface {
     val interfaceType: PhysicalInterfaceType
     val hdtId: HdtId
+    val config: Map<String, String>
 }
