@@ -9,6 +9,7 @@ import io.github.whdt.core.hdt.storage.StorageType
 import io.github.whdt.distributed.namespace.Namespace
 import io.github.whdt.distributed.serde.Stub
 import io.github.whdt.wldt.plugin.shadowing.HdtShadowingFunction
+import it.wldt.adapter.digital.DigitalAdapter
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapter
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapterConfiguration
 import it.wldt.adapter.mqtt.digital.MqttDigitalAdapter
@@ -16,11 +17,14 @@ import it.wldt.adapter.mqtt.digital.MqttDigitalAdapterConfiguration
 import it.wldt.adapter.mqtt.digital.topic.MqttQosLevel
 import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapter
 import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapterConfiguration
+import it.wldt.adapter.physical.PhysicalAdapter
 import it.wldt.core.engine.DigitalTwin
 import it.wldt.storage.DefaultWldtStorage
+import java.util.logging.Logger
 import kotlin.time.ExperimentalTime
 
 object HumanDigitalTwinFactory {
+    val logger: Logger = Logger.getLogger("HumanDigitalTwinFactory")
     val propertySerDe = Stub.propertyJsonSerDe()
     //val messageSerDe = Stub.messageJsonSerDe()
     fun fromHumanDigitalTwin(hdt: HumanDigitalTwin): DigitalTwin {
@@ -30,24 +34,34 @@ object HumanDigitalTwinFactory {
 
         val properties = hdt.models.flatMap { it.properties }
 
-        val physicalAdapters = hdt.physicalInterfaces.map { pI ->
-            when (pI) {
-                is MqttPhysicalInterface -> getPaFromPhysicalInterfaceMqtt(pI, properties)
+        hdt.physicalInterfaces.forEach {
+            val pI: PhysicalAdapter? = when (it) {
+                is MqttPhysicalInterface -> getPaFromPhysicalInterfaceMqtt(it, properties)
                 // Handle other physical interfaces if needed
+                else -> {
+                    logger.warning("cannot handle physical interface of type ${it.javaClass}")
+                    null
+                }
+            }
+            if(pI != null) {
+                dt.addPhysicalAdapter(pI)
             }
         }
 
-        physicalAdapters.forEach { dt.addPhysicalAdapter(it) }
-
-        val digitalAdapters = hdt.digitalInterfaces.map { dI ->
-            when (dI) {
-                is MqttDigitalInterface -> getDaFromDigitalInterfaceMqtt(dI, properties)
-                is HttpDigitalInterface -> getDaFromHttpDigitalInterface(dI, dt, properties)
-                // Handle other digital interfaces if needed
+        hdt.digitalInterfaces.forEach {
+            val dI: DigitalAdapter<*>? = when (it) {
+                is MqttDigitalInterface -> getDaFromDigitalInterfaceMqtt(it, properties)
+                is HttpDigitalInterface -> getDaFromHttpDigitalInterface(it, dt, properties)
+                else -> {
+                    logger.warning("cannot handle digital interface of type ${it.javaClass}")
+                    null
+                }
+            }
+            if(dI != null) {
+                dt.addDigitalAdapter(dI)
             }
         }
 
-        digitalAdapters.forEach { dt.addDigitalAdapter(it) }
 
         val storages = hdt.storages.map { storage ->
             when(storage.storageType) {
