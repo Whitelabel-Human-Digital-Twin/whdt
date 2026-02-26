@@ -14,6 +14,7 @@ data class HttpDigitalInterface(
     val host: String = "localhost",
     val port: Int = 8080,
     val id: String = "$hdtId-http-digital-interface-${Uuid.random()}",
+    override val config: Map<String, String> = emptyMap(),
 ) : DigitalInterface {
     override val interfaceType: DigitalInterfaceType = DigitalInterfaceType.HTTP
 }

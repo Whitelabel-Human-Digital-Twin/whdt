@@ -14,6 +14,7 @@ data class MqttDigitalInterface(
     val broker: String = "localhost",
     val port: Int = 1883,
     val id: String = "$hdtId-mqtt-digital-interface-${Uuid.random()}",
+    override val config: Map<String, String> = emptyMap(),
 ) : DigitalInterface {
     override val interfaceType: DigitalInterfaceType = DigitalInterfaceType.MQTT
 

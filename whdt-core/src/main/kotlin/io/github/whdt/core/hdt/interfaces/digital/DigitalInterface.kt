@@ -13,4 +13,5 @@ enum class DigitalInterfaceType {
 sealed interface DigitalInterface {
     val interfaceType: DigitalInterfaceType
     val hdtId: HdtId
+    val config: Map<String, String>
 }
