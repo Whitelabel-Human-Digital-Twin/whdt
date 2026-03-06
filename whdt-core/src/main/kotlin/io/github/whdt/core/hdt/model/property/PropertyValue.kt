@@ -29,4 +29,13 @@ sealed class PropertyValue {
     @Serializable
     @SerialName("long-value")
     data class LongPropertyValue(val value: Long) : PropertyValue()
+
+    companion object {
+        fun Int.pv(): PropertyValue = IntPropertyValue(this)
+        fun Float.pv(): PropertyValue = FloatPropertyValue(this)
+        fun Boolean.pv(): PropertyValue = BooleanPropertyValue(this)
+        fun Double.pv(): PropertyValue = DoublePropertyValue(this)
+        fun Long.pv(): PropertyValue = LongPropertyValue(this)
+        fun String.pv(): PropertyValue = StringPropertyValue(this)
+    }
 }
