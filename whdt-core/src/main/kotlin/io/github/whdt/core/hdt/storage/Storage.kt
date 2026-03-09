@@ -1,6 +1,6 @@
 package io.github.whdt.core.hdt.storage
 
-import io.github.whdt.core.hdt.model.id.HdtId
+import io.github.whdt.core.hdt.HdtId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -11,10 +11,12 @@ enum class StorageType {
     DB_POSTGRESQL,
 }
 
+@JvmInline @Serializable value class StorageId(val value: String)
+
 @Serializable
 data class Storage(
     val hdtId: HdtId,
-    val id: String = "Generic Storage for $hdtId",
+    val id: StorageId = StorageId("Generic Storage for $hdtId"),
     val storageType: StorageType,
     @Transient
     val config: Map<String, String> = emptyMap(),

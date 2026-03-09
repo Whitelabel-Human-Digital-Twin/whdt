@@ -1,6 +1,6 @@
 package io.github.whdt.core.hdt.interfaces.digital
 
-import io.github.whdt.core.hdt.model.id.HdtId
+import io.github.whdt.core.hdt.HdtId
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -10,18 +10,25 @@ enum class DigitalInterfaceType {
     HTTP,
 }
 
+@JvmInline @Serializable value class DigitalInterfaceId(val value: String)
+@JvmInline @Serializable value class DigitalInterfaceName(val value: String)
+
 @Serializable
 sealed interface DigitalInterface {
     val interfaceType: DigitalInterfaceType
     val hdtId: HdtId
+    val name: DigitalInterfaceName
+    val id: DigitalInterfaceId
     val config: Map<String, String>
 }
 
 @Serializable
 @SerialName("digital-interface-impl")
 data class DigitalInterfaceImpl(
-    val id: String,
     override val interfaceType: DigitalInterfaceType,
     override val hdtId: HdtId,
+    override val name: DigitalInterfaceName,
     override val config: Map<String, String> = emptyMap(),
-) : DigitalInterface
+) : DigitalInterface {
+    override val id = DigitalInterfaceId("$hdtId:$name")
+}

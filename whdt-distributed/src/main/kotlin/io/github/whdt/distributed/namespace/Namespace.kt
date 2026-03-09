@@ -1,6 +1,7 @@
 package io.github.whdt.distributed.namespace
 
-import io.github.whdt.core.hdt.model.id.HdtId
+import io.github.whdt.core.hdt.HdtId
+import io.github.whdt.core.hdt.model.property.PropertyName
 
 /**
  * This singleton is used to get correct topics and names for distributed WHDT applications and services.
@@ -14,11 +15,11 @@ object Namespace {
      * @param hdtId identifier for the hdt
      * @return the MQTT topic of a property update request for a hdt with the specified [HdtId].
      */
-    fun propertyUpdateRequestTopic(hdtId: HdtId, propertyId: String) = "$MQTT_PREFIX/$hdtId/$PROPERTY_UPDATE_REQUEST_MQTT/$propertyId"
+    fun propertyUpdateRequestTopic(hdtId: HdtId, propertyName: PropertyName) = "$MQTT_PREFIX/$hdtId/$PROPERTY_UPDATE_REQUEST_MQTT/$propertyName"
 
     /**
      * @param hdtId identifier for the hdt
      * @return the MQTT topic of a property update notification for a hdt with the specified [HdtId].
      */
-    fun propertyUpdateNotificationTopic(hdtId: HdtId, propertyId: String) = "$MQTT_PREFIX/$hdtId/$PROPERTY_UPDATE_NOTIFICATION_MQTT/$propertyId"
+    fun propertyUpdateNotificationTopic(hdtId: HdtId, propertyName: PropertyName) = "$MQTT_PREFIX/$hdtId/$PROPERTY_UPDATE_NOTIFICATION_MQTT/$propertyName"
 }

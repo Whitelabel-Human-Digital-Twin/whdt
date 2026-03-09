@@ -3,10 +3,11 @@ package io.github.whdt.core.hdt
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterface
 import io.github.whdt.core.hdt.model.Model
-import io.github.whdt.core.hdt.model.id.HdtId
 import io.github.whdt.core.hdt.storage.Storage
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+
+@JvmInline @Serializable value class HdtId(val id: String)
 
 /**
  * Represents a Human Digital Twin (HDT), a digital representation of a human being.
