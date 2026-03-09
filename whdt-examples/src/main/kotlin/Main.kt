@@ -13,11 +13,12 @@ import kotlin.time.Clock
 
 fun main() {
     val hdtId = HdtId.of("Mimosa_1")
+    val modelId = "my-model"
     val properties = listOf(
-        testProperty("First Name", PropertyValue.StringPropertyValue("John")),
-        testProperty("Surname", PropertyValue.StringPropertyValue("Doe"))
+        testProperty(modelId, "First Name", PropertyValue.StringPropertyValue("John")),
+        testProperty(modelId, "Surname", PropertyValue.StringPropertyValue("Doe"))
     )
-    val model = Model("my-model", "Test Model", properties)
+    val model = Model(hdtId, "my-model", "Test Model", properties)
 
     val pI = MqttPhysicalInterface(
         hdtId = hdtId,
@@ -44,9 +45,9 @@ fun main() {
     println("Started Dts: ${startedDts.map { it.getOrNull() }}")
 }
 
-fun testProperty(name: String, value: PropertyValue): Property {
+fun testProperty(modelId: String, name: String, value: PropertyValue): Property {
     return Property(
-        id = name,
+        modelId = modelId,
         name = name,
         description = "",
         timestamp = Clock.System.now(),
