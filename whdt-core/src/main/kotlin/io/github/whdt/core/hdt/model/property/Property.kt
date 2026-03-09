@@ -8,9 +8,11 @@ import kotlin.time.Instant
 @Serializable
 @SerialName("property")
 data class Property(
+    val modelId: String,
     val name: String,
-    val id: String,
     val description: String,
     val timestamp: Instant,
     val value: PropertyValue,
-)
+) {
+    val id: String = "$modelId:$name"
+}

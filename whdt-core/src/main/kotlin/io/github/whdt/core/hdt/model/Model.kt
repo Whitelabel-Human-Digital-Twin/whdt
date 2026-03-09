@@ -7,7 +7,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("model")
 data class Model(
-    val id: String,
+    val hdtId: String,
+    val name: String,
     val description: String,
     val properties: List<Property>,
-)
+) {
+    val id: String = "$hdtId:$name"
+}
