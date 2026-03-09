@@ -8,7 +8,7 @@ import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.storage.StorageType
 import io.github.whdt.distributed.namespace.Namespace
 import io.github.whdt.distributed.serde.Stub
-import io.github.whdt.wldt.plugin.shadowing.HdtShadowingFunction
+import io.github.whdt.wldt.plugin.shadowing.WhdtShadowingFunction
 import it.wldt.adapter.digital.DigitalAdapter
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapter
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapterConfiguration
@@ -29,7 +29,7 @@ object HumanDigitalTwinFactory {
     //val messageSerDe = Stub.messageJsonSerDe()
     fun fromHumanDigitalTwin(hdt: HumanDigitalTwin): DigitalTwin {
 
-        val shad = HdtShadowingFunction("${hdt.hdtId}-shadowing-function", hdt.models)
+        val shad = WhdtShadowingFunction("${hdt.hdtId}-shadowing-function", hdt.models)
         val dt = DigitalTwin(hdt.hdtId.id, shad)
 
         val properties = hdt.models.flatMap { it.properties }
@@ -85,9 +85,9 @@ object HumanDigitalTwinFactory {
 
         properties.forEach { property ->
             mqttConfigBuilder.addPhysicalAssetPropertyAndTopic(
-                property.id,
+                property.id.toString(),
                 property,
-                Namespace.propertyUpdateRequestTopic(pI.hdtId, property.id)
+                Namespace.propertyUpdateRequestTopic(pI.hdtId, property.name)
             ) { string ->
                 //val message = messageSerDe.deserialize(string)
                 val property = propertySerDe.deserialize(string)
@@ -98,7 +98,7 @@ object HumanDigitalTwinFactory {
         val mqttConfig = mqttConfigBuilder.build()
 
         return MqttPhysicalAdapter(
-            pI.id,
+            pI.id.toString(),
             mqttConfig
         )
     }
@@ -112,8 +112,8 @@ object HumanDigitalTwinFactory {
 
         properties.forEach { property ->
             mqttConfigBuilder.addPropertyTopic(
-                property.id,
-                Namespace.propertyUpdateNotificationTopic(dI.hdtId, property.id),
+                property.id.toString(),
+                Namespace.propertyUpdateNotificationTopic(dI.hdtId, property.name),
                 MqttQosLevel.MQTT_QOS_0
             ) { property: Property ->
                 // Build a Message
@@ -130,15 +130,15 @@ object HumanDigitalTwinFactory {
         val mqttConfig = mqttConfigBuilder.build()
 
         return MqttDigitalAdapter(
-            dI.id,
+            dI.id.toString(),
             mqttConfig
         )
     }
 
     fun getDaFromHttpDigitalInterface(dI: HttpDigitalInterface, dt: DigitalTwin, properties: List<Property>): HttpDigitalAdapter {
-        val httpConfig  = HttpDigitalAdapterConfiguration(dI.id, dI.host, dI.port)
+        val httpConfig  = HttpDigitalAdapterConfiguration(dI.id.toString(), dI.host, dI.port)
 
-        httpConfig.addPropertiesFilter(properties.map { it.id })
+        httpConfig.addPropertiesFilter(properties.map { it.id.toString() })
 
         return HttpDigitalAdapter(
             httpConfig,
