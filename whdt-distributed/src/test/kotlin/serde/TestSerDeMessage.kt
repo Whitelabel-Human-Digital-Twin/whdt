@@ -1,7 +1,10 @@
 package serde
 
-import io.github.whdt.core.hdt.model.id.HdtId
+import io.github.whdt.core.hdt.HdtId
+import io.github.whdt.core.hdt.model.ModelId
 import io.github.whdt.core.hdt.model.property.Property
+import io.github.whdt.core.hdt.model.property.PropertyDescription
+import io.github.whdt.core.hdt.model.property.PropertyName
 import io.github.whdt.core.hdt.model.property.PropertyValue.Companion.pv
 import io.github.whdt.distributed.id.SenderId
 import io.github.whdt.distributed.message.Message
@@ -22,7 +25,13 @@ class TestSerDeMessage: FunSpec({
     test("Serialize Message") {
       val hdtId = HdtId("1")
       val now = Clock.System.now()
-      val property = Property("my-model", "my-property", "", now, "test-property".pv())
+      val property = Property(
+          ModelId("my-model"),
+          PropertyName("my-property"),
+          PropertyDescription(""),
+          now,
+          "test-property".pv()
+      )
       val message = Message(
           hdt = hdtId,
           sender = SenderId("test-engine"),
