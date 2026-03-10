@@ -5,9 +5,21 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
-@JvmInline @Serializable value class PropertyId(val value: String)
-@JvmInline @Serializable value class PropertyName(val value: String)
-@JvmInline @Serializable value class PropertyDescription(val value: String)
+@JvmInline @Serializable value class PropertyId(val value: String) {
+    override fun toString(): String {
+        return value
+    }
+}
+@JvmInline @Serializable value class PropertyName(val value: String) {
+    override fun toString(): String {
+        return value
+    }
+}
+@JvmInline @Serializable value class PropertyDescription(val value: String) {
+    override fun toString(): String {
+        return value
+    }
+}
 
 @Serializable
 @SerialName("property")

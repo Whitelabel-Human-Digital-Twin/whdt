@@ -7,7 +7,11 @@ import io.github.whdt.core.hdt.storage.Storage
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@JvmInline @Serializable value class HdtId(val id: String)
+@JvmInline @Serializable value class HdtId(val id: String) {
+    override fun toString(): String {
+        return id
+    }
+}
 
 /**
  * Represents a Human Digital Twin (HDT), a digital representation of a human being.

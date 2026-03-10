@@ -11,16 +11,28 @@ enum class StorageType {
     DB_POSTGRESQL,
 }
 
-@JvmInline @Serializable value class StorageId(val value: String)
+@JvmInline @Serializable value class StorageName(val value: String) {
+    override fun toString(): String {
+        return value
+    }
+}
+
+@JvmInline @Serializable value class StorageId(val value: String) {
+    override fun toString(): String {
+        return value
+    }
+}
 
 @Serializable
 data class Storage(
     val hdtId: HdtId,
-    val id: StorageId = StorageId("Generic Storage for $hdtId"),
+    val name: StorageName,
     val storageType: StorageType,
     @Transient
     val config: Map<String, String> = emptyMap(),
 ) {
+    val id = StorageId("$hdtId:$name")
+
     fun addConfig(c: Map<String, String>): Storage {
         return copy(config = config + c)
     }
@@ -37,6 +49,7 @@ data class Storage(
         fun default(hdtId: HdtId): Storage {
             return Storage(
                 hdtId = hdtId,
+                name = StorageName("memory-storage"),
                 storageType = StorageType.IN_MEMORY,
             )
         }

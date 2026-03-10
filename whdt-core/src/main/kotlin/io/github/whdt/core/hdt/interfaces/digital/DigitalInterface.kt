@@ -10,8 +10,16 @@ enum class DigitalInterfaceType {
     HTTP,
 }
 
-@JvmInline @Serializable value class DigitalInterfaceId(val value: String)
-@JvmInline @Serializable value class DigitalInterfaceName(val value: String)
+@JvmInline @Serializable value class DigitalInterfaceId(val value: String) {
+    override fun toString(): String {
+        return value
+    }
+}
+@JvmInline @Serializable value class DigitalInterfaceName(val value: String) {
+    override fun toString(): String {
+        return value
+    }
+}
 
 @Serializable
 sealed interface DigitalInterface {

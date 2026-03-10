@@ -9,8 +9,16 @@ enum class PhysicalInterfaceType {
     MQTT,
 }
 
-@JvmInline @Serializable value class PhysicalInterfaceId(val value: String)
-@JvmInline @Serializable value class PhysicalInterfaceName(val value: String)
+@JvmInline @Serializable value class PhysicalInterfaceId(val value: String) {
+    override fun toString(): String {
+        return value
+    }
+}
+@JvmInline @Serializable value class PhysicalInterfaceName(val value: String) {
+    override fun toString(): String {
+        return value
+    }
+}
 
 @Serializable
 sealed interface PhysicalInterface {
