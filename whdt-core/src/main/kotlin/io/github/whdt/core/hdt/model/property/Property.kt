@@ -29,6 +29,7 @@ data class Property(
     val description: PropertyDescription,
     val timestamp: Instant,
     val value: PropertyValue,
+    val metadata: Map<String, String> = emptyMap(),
 ) {
     val id: PropertyId = PropertyId("$modelId:$name")
 }

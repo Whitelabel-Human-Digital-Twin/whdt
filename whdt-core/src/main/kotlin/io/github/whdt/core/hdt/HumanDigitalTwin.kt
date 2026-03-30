@@ -24,4 +24,5 @@ data class HumanDigitalTwin(
     val physicalInterfaces: List<PhysicalInterface> = emptyList(),
     val digitalInterfaces: List<DigitalInterface> = emptyList(),
     val storages: List<Storage> = listOf(Storage.default(hdtId)),
+    val metadata: Map<String, String> = emptyMap(),
 )
