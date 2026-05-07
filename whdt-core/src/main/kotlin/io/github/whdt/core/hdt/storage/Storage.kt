@@ -3,7 +3,6 @@ package io.github.whdt.core.hdt.storage
 import io.github.whdt.core.hdt.HdtId
 import io.github.whdt.core.hdt.HdtIdFactory
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 
 @Serializable
 enum class StorageType {
@@ -30,7 +29,6 @@ data class Storage(
     val hdtId: HdtId,
     val name: StorageName,
     val storageType: StorageType,
-    @Transient
     val config: Map<String, String> = emptyMap(),
 ) {
     val id = HdtIdFactory.storageId(hdtId, name)

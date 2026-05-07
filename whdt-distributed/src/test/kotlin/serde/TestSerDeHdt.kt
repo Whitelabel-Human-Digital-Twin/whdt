@@ -6,6 +6,9 @@ import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceName
 import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
 import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceName
+import io.github.whdt.core.hdt.storage.Storage
+import io.github.whdt.core.hdt.storage.StorageName
+import io.github.whdt.core.hdt.storage.StorageType
 import io.github.whdt.core.hdt.model.Model
 import io.github.whdt.core.hdt.model.ModelDescription
 import io.github.whdt.core.hdt.model.ModelId
@@ -38,11 +41,18 @@ class TestSerDeHdt: FunSpec({
           hdtId = hdtId,
           name = DigitalInterfaceName("mqtt-digital-int")
       )
+      val storage = Storage(
+          hdtId = hdtId,
+          name = StorageName("memory-storage"),
+          storageType = StorageType.IN_MEMORY,
+          config = mapOf("host" to "localhost", "port" to "27017"),
+      )
       val hdt = HumanDigitalTwin(
           hdtId = hdtId,
           models = listOf(model),
           physicalInterfaces = listOf(pI),
           digitalInterfaces = listOf(dI),
+          storages = listOf(storage),
       )
 
       val serialized = Stub.hdtJsonSerDe().serialize(hdt)
