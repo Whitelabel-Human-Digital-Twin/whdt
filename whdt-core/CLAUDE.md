@@ -32,7 +32,7 @@ No project module dependencies. External: `kotlinx.serialization` (via Gradle pl
 ## Non-obvious constraints
 
 - `Storage.config` is `@Transient` — silently dropped on serialization/deserialization; runtime config must be re-applied after deserializing a `Storage`.
-- IDs (`ModelId`, `PropertyId`, etc.) are computed fields (`"$parentId:$name"`), not stored. Constructing a `Model` or `Property` with the same name under a different parent produces a different ID with no collision detection.
+- IDs (`ModelId`, `PropertyId`, etc.) are computed fields (`"$parentId:$name"`), not stored and are created via `HdtIdFactory`. Renaming entities is done via the extension functions inside the factory. Each entity has ID collision detection on init {} blocks.
 - `PropertyValue` `.pv()` helpers (e.g. `"foo".pv()`) require `import io.github.whdt.core.hdt.model.property.PropertyValue.Companion.*` at call sites.
 - `DigitalInterfaceImpl`/`PhysicalInterfaceImpl` are generic impls accepting a type enum; prefer the named concrete types (`MqttDigitalInterface`, `HttpDigitalInterface`, `MqttPhysicalInterface`).
 
