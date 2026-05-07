@@ -1,6 +1,7 @@
 package io.github.whdt.core.hdt.interfaces.physical
 
 import io.github.whdt.core.hdt.HdtId
+import io.github.whdt.core.hdt.HdtIdFactory
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -10,14 +11,16 @@ enum class PhysicalInterfaceType {
 }
 
 @JvmInline @Serializable value class PhysicalInterfaceId(val value: String) {
-    override fun toString(): String {
-        return value
-    }
+    override fun toString(): String = value
 }
+
 @JvmInline @Serializable value class PhysicalInterfaceName(val value: String) {
-    override fun toString(): String {
-        return value
+    init {
+        require(value.isNotBlank()) { "PhysicalInterfaceName must not be blank" }
+        require(':' !in value) { "PhysicalInterfaceName must not contain ':'" }
     }
+
+    override fun toString(): String = value
 }
 
 @Serializable
@@ -37,5 +40,5 @@ data class PhysicalInterfaceImpl(
     override val name: PhysicalInterfaceName,
     override val config: Map<String, String> = emptyMap(),
 ) : PhysicalInterface {
-    override val id = PhysicalInterfaceId("$hdtId:$name")
+    override val id = HdtIdFactory.physicalInterfaceId(hdtId, name)
 }
