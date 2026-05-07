@@ -1,6 +1,7 @@
 package serde
 
 import io.github.whdt.core.hdt.HdtId
+import io.github.whdt.core.hdt.HdtIdFactory
 import io.github.whdt.core.hdt.model.Model
 import io.github.whdt.core.hdt.model.ModelDescription
 import io.github.whdt.core.hdt.model.ModelId
@@ -37,15 +38,17 @@ class TestSerDeProperty: FunSpec({
     test("Test SerDe Model") {
         val serde = Stub.modelJsonSerDe()
         val now = Clock.System.now()
-        val modelId = ModelId("my-model")
+        val hdtId = HdtId("dt-1")
+        val modelName = ModelName("my-model")
+        val modelId = HdtIdFactory.modelId(hdtId, modelName)
         val model = Model(
-            HdtId("dt-1"),
-            ModelName("my-model"),
+            hdtId,
+            modelName,
             ModelDescription("Test Model"),
             listOf(
                 buildProperty(modelId, "username", now, "leona".pv()),
                 buildProperty(modelId, "password", now, "123456".pv()),
-                )
+            )
         )
         val serialized = serde.serialize(model)
         //println(serialized)

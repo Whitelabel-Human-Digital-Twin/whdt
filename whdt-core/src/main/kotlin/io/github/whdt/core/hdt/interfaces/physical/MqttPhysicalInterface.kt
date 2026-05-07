@@ -1,6 +1,7 @@
 package io.github.whdt.core.hdt.interfaces.physical
 
 import io.github.whdt.core.hdt.HdtId
+import io.github.whdt.core.hdt.HdtIdFactory
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,5 +15,5 @@ data class MqttPhysicalInterface(
     override val config: Map<String, String> = emptyMap(),
 ) : PhysicalInterface {
     override val interfaceType: PhysicalInterfaceType = PhysicalInterfaceType.MQTT
-    override val id = PhysicalInterfaceId("$hdtId:$name")
+    override val id = HdtIdFactory.physicalInterfaceId(hdtId, name)
 }

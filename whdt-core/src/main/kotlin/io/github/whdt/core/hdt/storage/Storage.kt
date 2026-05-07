@@ -1,6 +1,7 @@
 package io.github.whdt.core.hdt.storage
 
 import io.github.whdt.core.hdt.HdtId
+import io.github.whdt.core.hdt.HdtIdFactory
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -12,15 +13,16 @@ enum class StorageType {
 }
 
 @JvmInline @Serializable value class StorageName(val value: String) {
-    override fun toString(): String {
-        return value
+    init {
+        require(value.isNotBlank()) { "StorageName must not be blank" }
+        require(':' !in value) { "StorageName must not contain ':'" }
     }
+
+    override fun toString(): String = value
 }
 
 @JvmInline @Serializable value class StorageId(val value: String) {
-    override fun toString(): String {
-        return value
-    }
+    override fun toString(): String = value
 }
 
 @Serializable
@@ -31,7 +33,7 @@ data class Storage(
     @Transient
     val config: Map<String, String> = emptyMap(),
 ) {
-    val id = StorageId("$hdtId:$name")
+    val id = HdtIdFactory.storageId(hdtId, name)
 
     fun addConfig(c: Map<String, String>): Storage {
         return copy(config = config + c)
