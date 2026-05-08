@@ -1,9 +1,10 @@
 package io.github.whdt.wldt.plugin.factory
 
 import io.github.whdt.core.hdt.HumanDigitalTwin
-import io.github.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
-import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
-import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
+import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
+import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceType
+import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterface
+import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceType
 import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.storage.StorageType
 import io.github.whdt.distributed.namespace.Namespace
@@ -26,7 +27,7 @@ import kotlin.time.ExperimentalTime
 object HumanDigitalTwinFactory {
     val logger: Logger = Logger.getLogger("HumanDigitalTwinFactory")
     val propertySerDe = Stub.propertyJsonSerDe()
-    //val messageSerDe = Stub.messageJsonSerDe()
+
     fun fromHumanDigitalTwin(hdt: HumanDigitalTwin): DigitalTwin {
 
         val shad = WhdtShadowingFunction("${hdt.hdtId}-shadowing-function", hdt.models)
@@ -34,41 +35,25 @@ object HumanDigitalTwinFactory {
 
         val properties = hdt.models.flatMap { it.properties }
 
-        hdt.physicalInterfaces.forEach {
-            val pI: PhysicalAdapter? = when (it) {
-                is MqttPhysicalInterface -> getPaFromPhysicalInterfaceMqtt(it, properties)
-                // Handle other physical interfaces if needed
-                else -> {
-                    logger.warning("cannot handle physical interface of type ${it.javaClass}")
-                    null
-                }
+        hdt.physicalInterfaces.forEach { pI ->
+            val pa: PhysicalAdapter? = when (pI.interfaceType) {
+                PhysicalInterfaceType.MQTT -> getPaFromPhysicalInterfaceMqtt(pI, properties)
             }
-            if(pI != null) {
-                dt.addPhysicalAdapter(pI)
-            }
+            if (pa != null) dt.addPhysicalAdapter(pa)
         }
 
-        hdt.digitalInterfaces.forEach {
-            val dI: DigitalAdapter<*>? = when (it) {
-                is MqttDigitalInterface -> getDaFromDigitalInterfaceMqtt(it, properties)
-                is HttpDigitalInterface -> getDaFromHttpDigitalInterface(it, dt, properties)
-                else -> {
-                    logger.warning("cannot handle digital interface of type ${it.javaClass}")
-                    null
-                }
+        hdt.digitalInterfaces.forEach { dI ->
+            val da: DigitalAdapter<*>? = when (dI.interfaceType) {
+                DigitalInterfaceType.MQTT -> getDaFromDigitalInterfaceMqtt(dI, properties)
+                DigitalInterfaceType.HTTP -> getDaFromHttpDigitalInterface(dI, dt, properties)
             }
-            if(dI != null) {
-                dt.addDigitalAdapter(dI)
-            }
+            if (da != null) dt.addDigitalAdapter(da)
         }
-
 
         val storages = hdt.storages.map { storage ->
-            when(storage.storageType) {
+            when (storage.storageType) {
                 StorageType.IN_MEMORY -> DefaultWldtStorage("${hdt.hdtId}-default-storage", true)
-                else -> {
-                    DefaultWldtStorage("${hdt.hdtId}-default-storage", true)
-                }
+                else -> DefaultWldtStorage("${hdt.hdtId}-default-storage", true)
             }
         }
 
@@ -77,11 +62,10 @@ object HumanDigitalTwinFactory {
         return dt
     }
 
-    fun getPaFromPhysicalInterfaceMqtt(pI: MqttPhysicalInterface, properties: List<Property>): MqttPhysicalAdapter {
-        val mqttConfigBuilder = MqttPhysicalAdapterConfiguration.builder(
-            pI.broker,
-            pI.port,
-        )
+    fun getPaFromPhysicalInterfaceMqtt(pI: PhysicalInterface, properties: List<Property>): MqttPhysicalAdapter {
+        val broker = pI.optionalString("broker", "localhost")
+        val port = pI.optionalInt("port", 1883)
+        val mqttConfigBuilder = MqttPhysicalAdapterConfiguration.builder(broker, port)
 
         properties.forEach { property ->
             mqttConfigBuilder.addPhysicalAssetPropertyAndTopic(
@@ -89,60 +73,39 @@ object HumanDigitalTwinFactory {
                 property,
                 Namespace.propertyUpdateRequestTopic(pI.hdtId, property.name)
             ) { string ->
-                //val message = messageSerDe.deserialize(string)
-                val property = propertySerDe.deserialize(string)
-                property
+                propertySerDe.deserialize(string)
             }
         }
 
-        val mqttConfig = mqttConfigBuilder.build()
-
-        return MqttPhysicalAdapter(
-            pI.id.toString(),
-            mqttConfig
-        )
+        return MqttPhysicalAdapter(pI.id.toString(), mqttConfigBuilder.build())
     }
 
     @OptIn(ExperimentalTime::class)
-    fun getDaFromDigitalInterfaceMqtt(dI: MqttDigitalInterface, properties: List<Property>): MqttDigitalAdapter {
-        val mqttConfigBuilder = MqttDigitalAdapterConfiguration.builder(
-            dI.broker,
-            dI.port,
-        )
+    fun getDaFromDigitalInterfaceMqtt(dI: DigitalInterface, properties: List<Property>): MqttDigitalAdapter {
+        val broker = dI.optionalString("broker", "localhost")
+        val port = dI.optionalInt("port", 1883)
+        val mqttConfigBuilder = MqttDigitalAdapterConfiguration.builder(broker, port)
 
         properties.forEach { property ->
             mqttConfigBuilder.addPropertyTopic(
                 property.id.toString(),
                 Namespace.propertyUpdateNotificationTopic(dI.hdtId, property.name),
                 MqttQosLevel.MQTT_QOS_0
-            ) { property: Property ->
-                // Build a Message
-                /*val message = Message(
-                    hdt = dI.hdtId,
-                    sender = SenderId.of(dI.id),
-                    sentAt = Clock.System.now().toEpochMilliseconds(),
-                    payload = propertySerDe.serializeToJsonElement(property)
-                )*/
-                propertySerDe.serialize(property)
+            ) { p: Property ->
+                propertySerDe.serialize(p)
             }
         }
 
-        val mqttConfig = mqttConfigBuilder.build()
-
-        return MqttDigitalAdapter(
-            dI.id.toString(),
-            mqttConfig
-        )
+        return MqttDigitalAdapter(dI.id.toString(), mqttConfigBuilder.build())
     }
 
-    fun getDaFromHttpDigitalInterface(dI: HttpDigitalInterface, dt: DigitalTwin, properties: List<Property>): HttpDigitalAdapter {
-        val httpConfig  = HttpDigitalAdapterConfiguration(dI.id.toString(), dI.host, dI.port)
+    fun getDaFromHttpDigitalInterface(dI: DigitalInterface, dt: DigitalTwin, properties: List<Property>): HttpDigitalAdapter {
+        val host = dI.optionalString("host", "localhost")
+        val port = dI.optionalInt("port", 8080)
+        val httpConfig = HttpDigitalAdapterConfiguration(dI.id.toString(), host, port)
 
         httpConfig.addPropertiesFilter(properties.map { it.id.toString() })
 
-        return HttpDigitalAdapter(
-            httpConfig,
-            dt
-        )
+        return HttpDigitalAdapter(httpConfig, dt)
     }
 }

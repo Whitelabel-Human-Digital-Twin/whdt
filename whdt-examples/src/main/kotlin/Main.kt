@@ -2,11 +2,12 @@ package io.github.whdt
 
 import io.github.whdt.core.hdt.HdtId
 import io.github.whdt.core.hdt.HumanDigitalTwin
+import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceName
-import io.github.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
-import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
-import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
+import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceType
+import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterface
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceName
+import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceType
 import io.github.whdt.core.hdt.model.Model
 import io.github.whdt.core.hdt.model.ModelDescription
 import io.github.whdt.core.hdt.model.ModelId
@@ -27,17 +28,20 @@ fun main() {
     )
     val model = Model(hdtId, ModelName("my-model"), ModelDescription("Test Model"), properties)
 
-    val pI = MqttPhysicalInterface(
+    val pI = PhysicalInterface(
+        interfaceType = PhysicalInterfaceType.MQTT,
         hdtId = hdtId,
         name = PhysicalInterfaceName("mqtt-physical-int"),
     )
 
-    val dI = MqttDigitalInterface(
+    val dI = DigitalInterface(
+        interfaceType = DigitalInterfaceType.MQTT,
         hdtId = hdtId,
         name = DigitalInterfaceName("mqtt-digital-int"),
     )
 
-    val httpDI = HttpDigitalInterface(
+    val httpDI = DigitalInterface(
+        interfaceType = DigitalInterfaceType.HTTP,
         hdtId = hdtId,
         name = DigitalInterfaceName("http-digital-int"),
     )

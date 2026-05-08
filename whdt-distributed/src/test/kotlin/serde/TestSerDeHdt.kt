@@ -2,10 +2,12 @@ package serde
 
 import io.github.whdt.core.hdt.HdtId
 import io.github.whdt.core.hdt.HumanDigitalTwin
+import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceName
-import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
-import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
+import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceType
+import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterface
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceName
+import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceType
 import io.github.whdt.core.hdt.storage.Storage
 import io.github.whdt.core.hdt.storage.StorageName
 import io.github.whdt.core.hdt.storage.StorageType
@@ -33,11 +35,13 @@ class TestSerDeHdt: FunSpec({
           testProperty(modelId, PropertyName("Surname"), "Doe".pv())
       )
       val model = Model(hdtId, modelName, ModelDescription("Test Model"), properties)
-      val pI = MqttPhysicalInterface(
+      val pI = PhysicalInterface(
+          interfaceType = PhysicalInterfaceType.MQTT,
           hdtId = hdtId,
           name = PhysicalInterfaceName("mqtt-phys-int")
       )
-      val dI = MqttDigitalInterface(
+      val dI = DigitalInterface(
+          interfaceType = DigitalInterfaceType.MQTT,
           hdtId = hdtId,
           name = DigitalInterfaceName("mqtt-digital-int")
       )

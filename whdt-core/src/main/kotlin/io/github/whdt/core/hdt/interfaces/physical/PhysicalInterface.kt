@@ -2,7 +2,8 @@ package io.github.whdt.core.hdt.interfaces.physical
 
 import io.github.whdt.core.hdt.HdtId
 import io.github.whdt.core.hdt.HdtIdFactory
-import kotlinx.serialization.SerialName
+import io.github.whdt.core.hdt.interfaces.config.MalformedConfigValueException
+import io.github.whdt.core.hdt.interfaces.config.MissingConfigKeyException
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -24,21 +25,32 @@ enum class PhysicalInterfaceType {
 }
 
 @Serializable
-sealed interface PhysicalInterface {
-    val interfaceType: PhysicalInterfaceType
-    val hdtId: HdtId
-    val name: PhysicalInterfaceName
-    val id: PhysicalInterfaceId
-    val config: Map<String, String>
-}
+data class PhysicalInterface(
+    val interfaceType: PhysicalInterfaceType,
+    val hdtId: HdtId,
+    val name: PhysicalInterfaceName,
+    val config: Map<String, String> = emptyMap(),
+) {
+    val id: PhysicalInterfaceId = HdtIdFactory.physicalInterfaceId(hdtId, name)
 
-@Serializable
-@SerialName("physical-interface-impl")
-data class PhysicalInterfaceImpl(
-    override val interfaceType: PhysicalInterfaceType,
-    override val hdtId: HdtId,
-    override val name: PhysicalInterfaceName,
-    override val config: Map<String, String> = emptyMap(),
-) : PhysicalInterface {
-    override val id = HdtIdFactory.physicalInterfaceId(hdtId, name)
+    fun requireString(key: String): String =
+        config[key] ?: throw MissingConfigKeyException(key, interfaceType.toString())
+
+    fun requireInt(key: String): Int = requireString(key).let {
+        it.toIntOrNull() ?: throw MalformedConfigValueException(key, "Int", it)
+    }
+
+    fun requireBoolean(key: String): Boolean = requireString(key).let {
+        it.toBooleanStrictOrNull() ?: throw MalformedConfigValueException(key, "Boolean", it)
+    }
+
+    fun optionalString(key: String, default: String): String = config[key] ?: default
+
+    fun optionalInt(key: String, default: Int): Int =
+        config[key]?.let { it.toIntOrNull() ?: throw MalformedConfigValueException(key, "Int", it) }
+            ?: default
+
+    fun optionalBoolean(key: String, default: Boolean): Boolean =
+        config[key]?.let { it.toBooleanStrictOrNull() ?: throw MalformedConfigValueException(key, "Boolean", it) }
+            ?: default
 }
