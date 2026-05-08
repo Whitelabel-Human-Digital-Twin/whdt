@@ -1,0 +1,80 @@
+package io.github.whdt.wldt.plugin.factory.digital
+
+import io.github.whdt.core.hdt.HdtId
+import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
+import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceName
+import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceType
+import io.github.whdt.distributed.serde.Stub
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.result.shouldBeFailure
+import io.kotest.matchers.result.shouldBeSuccess
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.types.shouldBeInstanceOf
+
+class MqttDigitalAdapterFactoryTest : FunSpec({
+
+    val factory = MqttDigitalAdapterFactory(Stub.propertyJsonSerDe())
+
+    fun di(config: Map<String, String> = emptyMap()) = DigitalInterface(
+        interfaceType = DigitalInterfaceType.MQTT,
+        hdtId = HdtId("test-hdt"),
+        name = DigitalInterfaceName("test-mqtt-di"),
+        config = config,
+    )
+
+    context("interfaceType") {
+        test("is MQTT") {
+            factory.interfaceType shouldBe DigitalInterfaceType.MQTT
+        }
+    }
+
+    context("validate") {
+        test("succeeds with empty config (all keys have defaults)") {
+            factory.validate(di()) shouldBeSuccess Unit
+        }
+
+        test("succeeds with valid broker and port") {
+            factory.validate(di(mapOf("broker" to "mqtt.local", "port" to "1883"))) shouldBeSuccess Unit
+        }
+
+        test("fails when port is malformed") {
+            val result = factory.validate(di(mapOf("port" to "not-a-number")))
+            result shouldBeFailure { e ->
+                e.message shouldContain "port"
+            }
+        }
+
+        test("fails when broker key is present but empty string is accepted") {
+            factory.validate(di(mapOf("broker" to ""))) shouldBeSuccess Unit
+        }
+    }
+
+    context("create") {
+        test("returns a MqttDigitalAdapter with the correct id") {
+            val dI = di()
+            val adapter = factory.create(dI, mockDigitalTwin(), emptyList())
+            adapter.shouldBeInstanceOf<it.wldt.adapter.mqtt.digital.MqttDigitalAdapter>()
+            adapter.id shouldBe dI.id.toString()
+        }
+
+        test("applies default broker and port when config is empty") {
+            val adapter = factory.create(di(), mockDigitalTwin(), emptyList())
+            adapter.shouldBeInstanceOf<it.wldt.adapter.mqtt.digital.MqttDigitalAdapter>()
+        }
+
+        test("uses provided broker and port from config") {
+            val adapter = factory.create(
+                di(mapOf("broker" to "custom.broker", "port" to "1884")),
+                mockDigitalTwin(),
+                emptyList(),
+            )
+            adapter.shouldBeInstanceOf<it.wldt.adapter.mqtt.digital.MqttDigitalAdapter>()
+        }
+    }
+})
+
+private fun mockDigitalTwin() = it.wldt.core.engine.DigitalTwin(
+    "mock-dt",
+    io.github.whdt.wldt.plugin.shadowing.WhdtShadowingFunction("mock-sf", emptyList()),
+)

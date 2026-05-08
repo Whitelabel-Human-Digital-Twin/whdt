@@ -34,7 +34,9 @@ repositories {
 dependencies {
     implementation(project(":whdt-core"))
     implementation(project(":whdt-distributed"))
-    testImplementation(kotlin("test"))
+    testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
+    testImplementation("io.kotest:kotest-assertions-core:5.8.0")
+    testImplementation("io.kotest:kotest-framework-engine:5.8.0")
 
     implementation("io.github.wldt:wldt-core:0.4.0")
     implementation("io.github.wldt:mqtt-physical-adapter:0.1.2")
