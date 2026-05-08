@@ -2,7 +2,8 @@ package io.github.whdt.core.hdt.interfaces.digital
 
 import io.github.whdt.core.hdt.HdtId
 import io.github.whdt.core.hdt.HdtIdFactory
-import kotlinx.serialization.SerialName
+import io.github.whdt.core.hdt.interfaces.config.MalformedConfigValueException
+import io.github.whdt.core.hdt.interfaces.config.MissingConfigKeyException
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,21 +26,32 @@ enum class DigitalInterfaceType {
 }
 
 @Serializable
-sealed interface DigitalInterface {
-    val interfaceType: DigitalInterfaceType
-    val hdtId: HdtId
-    val name: DigitalInterfaceName
-    val id: DigitalInterfaceId
-    val config: Map<String, String>
-}
+data class DigitalInterface(
+    val interfaceType: DigitalInterfaceType,
+    val hdtId: HdtId,
+    val name: DigitalInterfaceName,
+    val config: Map<String, String> = emptyMap(),
+) {
+    val id: DigitalInterfaceId = HdtIdFactory.digitalInterfaceId(hdtId, name)
 
-@Serializable
-@SerialName("digital-interface-impl")
-data class DigitalInterfaceImpl(
-    override val interfaceType: DigitalInterfaceType,
-    override val hdtId: HdtId,
-    override val name: DigitalInterfaceName,
-    override val config: Map<String, String> = emptyMap(),
-) : DigitalInterface {
-    override val id = HdtIdFactory.digitalInterfaceId(hdtId, name)
+    fun requireString(key: String): String =
+        config[key] ?: throw MissingConfigKeyException(key, interfaceType.toString())
+
+    fun requireInt(key: String): Int = requireString(key).let {
+        it.toIntOrNull() ?: throw MalformedConfigValueException(key, "Int", it)
+    }
+
+    fun requireBoolean(key: String): Boolean = requireString(key).let {
+        it.toBooleanStrictOrNull() ?: throw MalformedConfigValueException(key, "Boolean", it)
+    }
+
+    fun optionalString(key: String, default: String): String = config[key] ?: default
+
+    fun optionalInt(key: String, default: Int): Int =
+        config[key]?.let { it.toIntOrNull() ?: throw MalformedConfigValueException(key, "Int", it) }
+            ?: default
+
+    fun optionalBoolean(key: String, default: Boolean): Boolean =
+        config[key]?.let { it.toBooleanStrictOrNull() ?: throw MalformedConfigValueException(key, "Boolean", it) }
+            ?: default
 }

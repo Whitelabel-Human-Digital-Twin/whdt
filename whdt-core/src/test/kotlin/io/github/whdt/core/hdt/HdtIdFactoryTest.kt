@@ -2,10 +2,10 @@ package io.github.whdt.core.hdt
 
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceName
-import io.github.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
-import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
-import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
+import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceType
+import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterface
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceName
+import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceType
 import io.github.whdt.core.hdt.model.Model
 import io.github.whdt.core.hdt.model.ModelDescription
 import io.github.whdt.core.hdt.model.ModelId
@@ -56,7 +56,7 @@ class HdtIdFactoryTest : FunSpec({
         id: HdtId,
         models: List<Model>,
         storages: List<Storage> = listOf(Storage.default(id)),
-        physicalInterfaces: List<MqttPhysicalInterface> = emptyList(),
+        physicalInterfaces: List<PhysicalInterface> = emptyList(),
         digitalInterfaces: List<DigitalInterface> = emptyList(),
     ) = HumanDigitalTwin(
         hdtId = id,
@@ -286,30 +286,30 @@ class HdtIdFactoryTest : FunSpec({
         }
 
         test("rejects duplicate physical interface names") {
-            val pi1 = MqttPhysicalInterface(hdtId, PhysicalInterfaceName("mqtt-pi"))
-            val pi2 = MqttPhysicalInterface(hdtId, PhysicalInterfaceName("mqtt-pi"))
+            val pi1 = PhysicalInterface(PhysicalInterfaceType.MQTT, hdtId, PhysicalInterfaceName("mqtt-pi"))
+            val pi2 = PhysicalInterface(PhysicalInterfaceType.MQTT, hdtId, PhysicalInterfaceName("mqtt-pi"))
             shouldThrow<IllegalArgumentException> {
                 buildHdt(hdtId, emptyList(), physicalInterfaces = listOf(pi1, pi2))
             }.message shouldContain "Duplicate physical interface IDs"
         }
 
         test("rejects physical interface referencing a different HDT") {
-            val foreignPi = MqttPhysicalInterface(HdtId("other"), PhysicalInterfaceName("mqtt-pi"))
+            val foreignPi = PhysicalInterface(PhysicalInterfaceType.MQTT, HdtId("other"), PhysicalInterfaceName("mqtt-pi"))
             shouldThrow<IllegalArgumentException> {
                 buildHdt(hdtId, emptyList(), physicalInterfaces = listOf(foreignPi))
             }.message shouldContain "reference HDT"
         }
 
         test("rejects duplicate digital interface names") {
-            val di1 = MqttDigitalInterface(hdtId, DigitalInterfaceName("di"))
-            val di2 = HttpDigitalInterface(hdtId, DigitalInterfaceName("di"))
+            val di1 = DigitalInterface(DigitalInterfaceType.MQTT, hdtId, DigitalInterfaceName("di"))
+            val di2 = DigitalInterface(DigitalInterfaceType.HTTP, hdtId, DigitalInterfaceName("di"))
             shouldThrow<IllegalArgumentException> {
                 buildHdt(hdtId, emptyList(), digitalInterfaces = listOf(di1, di2))
             }.message shouldContain "Duplicate digital interface IDs"
         }
 
         test("rejects digital interface referencing a different HDT") {
-            val foreignDi = MqttDigitalInterface(HdtId("other"), DigitalInterfaceName("di"))
+            val foreignDi = DigitalInterface(DigitalInterfaceType.MQTT, HdtId("other"), DigitalInterfaceName("di"))
             shouldThrow<IllegalArgumentException> {
                 buildHdt(hdtId, emptyList(), digitalInterfaces = listOf(foreignDi))
             }.message shouldContain "reference HDT"
@@ -406,9 +406,9 @@ class HdtIdFactoryTest : FunSpec({
     context("HumanDigitalTwin.rename") {
         val origId = HdtId("dt-1")
         val newId = HdtId("dt-2")
-        val pi = MqttPhysicalInterface(origId, PhysicalInterfaceName("mqtt-pi"))
-        val mqttDi = MqttDigitalInterface(origId, DigitalInterfaceName("mqtt-di"))
-        val httpDi = HttpDigitalInterface(origId, DigitalInterfaceName("http-di"))
+        val pi = PhysicalInterface(PhysicalInterfaceType.MQTT, origId, PhysicalInterfaceName("mqtt-pi"))
+        val mqttDi = DigitalInterface(DigitalInterfaceType.MQTT, origId, DigitalInterfaceName("mqtt-di"))
+        val httpDi = DigitalInterface(DigitalInterfaceType.HTTP, origId, DigitalInterfaceName("http-di"))
         val base = HumanDigitalTwin(
             hdtId = origId,
             models = listOf(buildModel("vitals", origId, listOf("heart-rate", "spo2"))),
@@ -451,20 +451,20 @@ class HdtIdFactoryTest : FunSpec({
             }
         }
 
-        test("cascades hdtId to MqttPhysicalInterface") {
-            val updatedPi = renamed.physicalInterfaces.filterIsInstance<MqttPhysicalInterface>().first()
+        test("cascades hdtId to PhysicalInterface") {
+            val updatedPi = renamed.physicalInterfaces.first { it.interfaceType == PhysicalInterfaceType.MQTT }
             updatedPi.hdtId shouldBe newId
             updatedPi.id shouldBe HdtIdFactory.physicalInterfaceId(newId, updatedPi.name)
         }
 
-        test("cascades hdtId to MqttDigitalInterface") {
-            val updatedMqtt = renamed.digitalInterfaces.filterIsInstance<MqttDigitalInterface>().first()
+        test("cascades hdtId to MQTT DigitalInterface") {
+            val updatedMqtt = renamed.digitalInterfaces.first { it.interfaceType == DigitalInterfaceType.MQTT }
             updatedMqtt.hdtId shouldBe newId
             updatedMqtt.id shouldBe HdtIdFactory.digitalInterfaceId(newId, updatedMqtt.name)
         }
 
-        test("cascades hdtId to HttpDigitalInterface") {
-            val updatedHttp = renamed.digitalInterfaces.filterIsInstance<HttpDigitalInterface>().first()
+        test("cascades hdtId to HTTP DigitalInterface") {
+            val updatedHttp = renamed.digitalInterfaces.first { it.interfaceType == DigitalInterfaceType.HTTP }
             updatedHttp.hdtId shouldBe newId
             updatedHttp.id shouldBe HdtIdFactory.digitalInterfaceId(newId, updatedHttp.name)
         }

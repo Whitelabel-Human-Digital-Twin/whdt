@@ -2,14 +2,9 @@ package io.github.whdt.core.hdt
 
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceId
-import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceImpl
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceName
-import io.github.whdt.core.hdt.interfaces.digital.HttpDigitalInterface
-import io.github.whdt.core.hdt.interfaces.digital.MqttDigitalInterface
-import io.github.whdt.core.hdt.interfaces.physical.MqttPhysicalInterface
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterface
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceId
-import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceImpl
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceName
 import io.github.whdt.core.hdt.model.Model
 import io.github.whdt.core.hdt.model.ModelId
@@ -99,13 +94,6 @@ fun HumanDigitalTwin.rename(newHdtId: HdtId): HumanDigitalTwin {
     )
 }
 
-private fun PhysicalInterface.withHdtId(newHdtId: HdtId): PhysicalInterface = when (this) {
-    is MqttPhysicalInterface -> copy(hdtId = newHdtId)
-    is PhysicalInterfaceImpl -> copy(hdtId = newHdtId)
-}
+private fun PhysicalInterface.withHdtId(newHdtId: HdtId): PhysicalInterface = copy(hdtId = newHdtId)
 
-private fun DigitalInterface.withHdtId(newHdtId: HdtId): DigitalInterface = when (this) {
-    is MqttDigitalInterface -> copy(hdtId = newHdtId)
-    is HttpDigitalInterface -> copy(hdtId = newHdtId)
-    is DigitalInterfaceImpl -> copy(hdtId = newHdtId)
-}
+private fun DigitalInterface.withHdtId(newHdtId: HdtId): DigitalInterface = copy(hdtId = newHdtId)
