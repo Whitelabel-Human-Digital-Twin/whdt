@@ -4,6 +4,11 @@ import io.github.whdt.core.hdt.HdtId
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceName
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceType
+import io.github.whdt.core.hdt.model.ModelId
+import io.github.whdt.core.hdt.model.property.Property
+import io.github.whdt.core.hdt.model.property.PropertyDescription
+import io.github.whdt.core.hdt.model.property.PropertyName
+import io.github.whdt.core.hdt.model.property.PropertyValue
 import io.github.whdt.distributed.serde.Stub
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.result.shouldBeFailure
@@ -11,6 +16,8 @@ import io.kotest.matchers.result.shouldBeSuccess
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 class MqttDigitalAdapterFactoryTest : FunSpec({
 
@@ -53,13 +60,13 @@ class MqttDigitalAdapterFactoryTest : FunSpec({
     context("create") {
         test("returns a MqttDigitalAdapter with the correct id") {
             val dI = di()
-            val adapter = factory.create(dI, mockDigitalTwin(), emptyList())
+            val adapter = factory.create(dI, mockDigitalTwin(), listOf(testProperty()))
             adapter.shouldBeInstanceOf<it.wldt.adapter.mqtt.digital.MqttDigitalAdapter>()
             adapter.id shouldBe dI.id.toString()
         }
 
         test("applies default broker and port when config is empty") {
-            val adapter = factory.create(di(), mockDigitalTwin(), emptyList())
+            val adapter = factory.create(di(), mockDigitalTwin(), listOf(testProperty()))
             adapter.shouldBeInstanceOf<it.wldt.adapter.mqtt.digital.MqttDigitalAdapter>()
         }
 
@@ -67,7 +74,7 @@ class MqttDigitalAdapterFactoryTest : FunSpec({
             val adapter = factory.create(
                 di(mapOf("broker" to "custom.broker", "port" to "1884")),
                 mockDigitalTwin(),
-                emptyList(),
+                listOf(testProperty()),
             )
             adapter.shouldBeInstanceOf<it.wldt.adapter.mqtt.digital.MqttDigitalAdapter>()
         }
@@ -77,4 +84,13 @@ class MqttDigitalAdapterFactoryTest : FunSpec({
 private fun mockDigitalTwin() = it.wldt.core.engine.DigitalTwin(
     "mock-dt",
     io.github.whdt.wldt.plugin.shadowing.WhdtShadowingFunction("mock-sf", emptyList()),
+)
+
+@OptIn(ExperimentalTime::class)
+private fun testProperty() = Property(
+    modelId = ModelId("test-model"),
+    name = PropertyName("test-prop"),
+    description = PropertyDescription(""),
+    timestamp = Clock.System.now(),
+    value = PropertyValue.StringPropertyValue("value"),
 )
