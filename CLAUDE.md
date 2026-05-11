@@ -80,6 +80,13 @@ Adapts the WHDT domain model to the WLDT execution runtime.
 
 Scaffolding for a planned ergonomic DSL that will let developers define HDTs in Kotlin without manually constructing the `HumanDigitalTwin` data class hierarchy. No sources yet.
 
+### Module versioning
+Each module is versioned following the *semantic versioning* conventions. Before publishing, it is imperative to adjust the
+version number according to what has been changed: leftmost for major, non retro-compatible changes, middle one for major, retro-compatible
+changes and rightmost one for minor changes. For each publication, only one number will be increased and only by one.
+
+N.B. before the publication of the first v1.0.0 modules, major changes only increase the middle number.
+
 ## Publishing
 
 Each publishable module reads its version from `<module>/version.txt`. The root `build.gradle.kts` also reads a `packageVersion` environment variable for the group-level version. Releases are automated via semantic-release (`scripts/release.mjs`, `package.json`).
