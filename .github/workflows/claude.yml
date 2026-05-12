@@ -25,7 +25,6 @@ jobs:
       id-token: write
       actions: read # Required for Claude to read CI results on PRs
     steps:
-      - run: chmod +x ./gradlew
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -35,6 +34,7 @@ jobs:
         with:
           java-version: '23'
           distribution: 'temurin'
+      - run: chmod +x ./gradlew
       - name: Run Claude Code
         id: claude
         uses: anthropics/claude-code-action@v1
@@ -51,9 +51,5 @@ jobs:
           # Optional: Add claude_args to customize behavior and configuration
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
-          claude_args: '
-          --model claude-opus-4-7
-          --max-turns 40
-          --allowed-tools "Bash(./gradlew test),Bash(./gradlew build),Bash(./gradlew *)"
-          '
+          claude_args: '--model claude-opus-4-7, --max-turns 40, --allowed-tools "Bash(./gradlew test),Bash(./gradlew build),Bash(./gradlew *)"'
 
