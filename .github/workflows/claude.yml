@@ -25,17 +25,16 @@ jobs:
       id-token: write
       actions: read # Required for Claude to read CI results on PRs
     steps:
-      - name: Setup JDK
-        uses: actions/setup-java@v4
-        with:
-          java-version: '23'
-          distribution: 'graalvm'
       - run: chmod +x ./gradlew
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
-
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '23'
+          distribution: 'temurin'
       - name: Run Claude Code
         id: claude
         uses: anthropics/claude-code-action@v1
