@@ -2,7 +2,7 @@ package io.github.whdt.wldt.plugin.factory.digital
 
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceType
-import io.github.whdt.core.hdt.model.property.Property
+import io.github.whdt.core.hdt.model.Model
 import it.wldt.adapter.digital.DigitalAdapter
 import it.wldt.core.engine.DigitalTwin
 
@@ -32,6 +32,6 @@ class DigitalAdapterRegistry(factories: List<DigitalAdapterFactory>) {
         )
     }
 
-    fun create(dI: DigitalInterface, dt: DigitalTwin, properties: List<Property>): DigitalAdapter<*>? =
-        byType[dI.interfaceType]?.create(dI, dt, properties)
+    fun create(dI: DigitalInterface, dt: DigitalTwin, models: List<Model>): DigitalAdapter<*>? =
+        byType[dI.interfaceType]?.create(dI, dt, models)
 }

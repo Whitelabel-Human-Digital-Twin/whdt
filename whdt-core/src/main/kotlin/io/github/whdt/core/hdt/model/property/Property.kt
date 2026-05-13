@@ -4,7 +4,6 @@ import io.github.whdt.core.hdt.HdtIdFactory
 import io.github.whdt.core.hdt.model.ModelId
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlin.time.Instant
 
 @JvmInline @Serializable value class PropertyId(val value: String) {
     override fun toString(): String = value
@@ -29,9 +28,17 @@ data class Property(
     val modelId: ModelId,
     val name: PropertyName,
     val description: PropertyDescription,
-    val timestamp: Instant,
-    val value: PropertyValue,
+    val declaredType: PropertyValueType,
+    val initialValue: PropertyValue? = null,
     val metadata: Map<String, String> = emptyMap(),
 ) {
     val id: PropertyId = HdtIdFactory.propertyId(modelId, name)
+
+    init {
+        if (initialValue != null) {
+            require(initialValue.valueType() == declaredType) {
+                "Property '$id': initialValue type ${initialValue.valueType()} does not match declaredType $declaredType"
+            }
+        }
+    }
 }

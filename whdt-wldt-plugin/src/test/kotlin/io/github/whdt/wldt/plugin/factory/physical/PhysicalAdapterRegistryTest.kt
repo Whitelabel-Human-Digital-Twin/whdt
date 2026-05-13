@@ -4,7 +4,7 @@ import io.github.whdt.core.hdt.HdtId
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterface
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceName
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceType
-import io.github.whdt.core.hdt.model.property.Property
+import io.github.whdt.core.hdt.model.Model
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.result.shouldBeFailure
@@ -28,7 +28,7 @@ class PhysicalAdapterRegistryTest : FunSpec({
     val alwaysOkFactory = object : PhysicalAdapterFactory {
         override val interfaceType = PhysicalInterfaceType.MQTT
         override fun validate(pI: PhysicalInterface): Result<Unit> = Result.success(Unit)
-        override fun create(pI: PhysicalInterface, properties: List<Property>): PhysicalAdapter =
+        override fun create(pI: PhysicalInterface, models: List<Model>): PhysicalAdapter =
             error("not used in registry tests")
     }
 
@@ -36,7 +36,7 @@ class PhysicalAdapterRegistryTest : FunSpec({
         override val interfaceType = PhysicalInterfaceType.MQTT
         override fun validate(pI: PhysicalInterface): Result<Unit> =
             Result.failure(IllegalArgumentException("bad config for ${pI.id}"))
-        override fun create(pI: PhysicalInterface, properties: List<Property>): PhysicalAdapter =
+        override fun create(pI: PhysicalInterface, models: List<Model>): PhysicalAdapter =
             error("not used in registry tests")
     }
 
@@ -90,7 +90,7 @@ class PhysicalAdapterRegistryTest : FunSpec({
                 var called = false
                 override val interfaceType = PhysicalInterfaceType.MQTT
                 override fun validate(pI: PhysicalInterface): Result<Unit> = Result.success(Unit)
-                override fun create(pI: PhysicalInterface, properties: List<Property>): PhysicalAdapter {
+                override fun create(pI: PhysicalInterface, models: List<Model>): PhysicalAdapter {
                     called = true
                     error("sentinel — not a real adapter")
                 }

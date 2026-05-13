@@ -16,15 +16,15 @@ import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.model.property.PropertyDescription
 import io.github.whdt.core.hdt.model.property.PropertyName
 import io.github.whdt.core.hdt.model.property.PropertyValue
+import io.github.whdt.core.hdt.model.property.PropertyValueType
 import io.github.whdt.wldt.plugin.execution.WldtApp
-import kotlin.time.Clock
 
 fun main() {
     val hdtId = HdtId("Mimosa_1")
     val modelId = ModelId("$hdtId:my-model")
     val properties = listOf(
-        testProperty(modelId, "First Name", PropertyValue.StringPropertyValue("John")),
-        testProperty(modelId, "Surname", PropertyValue.StringPropertyValue("Doe"))
+        testProperty(modelId, "First Name", PropertyValueType.STRING, PropertyValue.StringPropertyValue("John")),
+        testProperty(modelId, "Surname", PropertyValueType.STRING, PropertyValue.StringPropertyValue("Doe"))
     )
     val model = Model(hdtId, ModelName("my-model"), ModelDescription("Test Model"), properties)
 
@@ -59,12 +59,12 @@ fun main() {
     println("Started Dts: ${startedDts.map { it.getOrNull() }}")
 }
 
-fun testProperty(modelId: ModelId, name: String, value: PropertyValue): Property {
+fun testProperty(modelId: ModelId, name: String, declaredType: PropertyValueType, initialValue: PropertyValue? = null): Property {
     return Property(
         modelId = modelId,
         name = PropertyName(name),
         description = PropertyDescription(""),
-        timestamp = Clock.System.now(),
-        value = value
+        declaredType = declaredType,
+        initialValue = initialValue,
     )
 }

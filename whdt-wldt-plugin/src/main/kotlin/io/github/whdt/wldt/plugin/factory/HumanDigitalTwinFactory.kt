@@ -15,18 +15,18 @@ import java.util.logging.Logger
 
 object HumanDigitalTwinFactory {
     val logger: Logger = Logger.getLogger("HumanDigitalTwinFactory")
-    val propertySerDe = Stub.propertyJsonSerDe()
+    val observationSerDe = Stub.observationJsonSerDe()
 
     private val digitalRegistry = DigitalAdapterRegistry(
         listOf(
-            MqttDigitalAdapterFactory(propertySerDe),
+            MqttDigitalAdapterFactory(observationSerDe),
             HttpDigitalAdapterFactory(),
         )
     )
 
     private val physicalRegistry = PhysicalAdapterRegistry(
         listOf(
-            MqttPhysicalAdapterFactory(propertySerDe),
+            MqttPhysicalAdapterFactory(observationSerDe),
         )
     )
 
@@ -34,17 +34,15 @@ object HumanDigitalTwinFactory {
         val shad = WhdtShadowingFunction("${hdt.hdtId}-shadowing-function", hdt.models)
         val dt = DigitalTwin(hdt.hdtId.id, shad)
 
-        val properties = hdt.models.flatMap { it.properties }
-
         physicalRegistry.validateAll(hdt.physicalInterfaces).getOrThrow()
         hdt.physicalInterfaces.forEach { pI ->
-            physicalRegistry.create(pI, properties)?.let { dt.addPhysicalAdapter(it) }
+            physicalRegistry.create(pI, hdt.models)?.let { dt.addPhysicalAdapter(it) }
                 ?: logger.warning("no factory registered for interface type ${pI.interfaceType}")
         }
 
         digitalRegistry.validateAll(hdt.digitalInterfaces).getOrThrow()
         hdt.digitalInterfaces.forEach { dI ->
-            digitalRegistry.create(dI, dt, properties)?.let { dt.addDigitalAdapter(it) }
+            digitalRegistry.create(dI, dt, hdt.models)?.let { dt.addDigitalAdapter(it) }
                 ?: logger.warning("no factory registered for interface type ${dI.interfaceType}")
         }
 

@@ -4,11 +4,13 @@ import io.github.whdt.core.hdt.HdtId
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterface
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceName
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceType
-import io.github.whdt.core.hdt.model.ModelId
+import io.github.whdt.core.hdt.model.Model
+import io.github.whdt.core.hdt.model.ModelDescription
+import io.github.whdt.core.hdt.model.ModelName
 import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.model.property.PropertyDescription
 import io.github.whdt.core.hdt.model.property.PropertyName
-import io.github.whdt.core.hdt.model.property.PropertyValue
+import io.github.whdt.core.hdt.model.property.PropertyValueType
 import io.github.whdt.distributed.serde.Stub
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.result.shouldBeFailure
@@ -16,12 +18,10 @@ import io.kotest.matchers.result.shouldBeSuccess
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 class MqttPhysicalAdapterFactoryTest : FunSpec({
 
-    val factory = MqttPhysicalAdapterFactory(Stub.propertyJsonSerDe())
+    val factory = MqttPhysicalAdapterFactory(Stub.observationJsonSerDe())
 
     fun pi(config: Map<String, String> = emptyMap()) = PhysicalInterface(
         interfaceType = PhysicalInterfaceType.MQTT,
@@ -56,31 +56,41 @@ class MqttPhysicalAdapterFactoryTest : FunSpec({
     context("create") {
         test("returns a MqttPhysicalAdapter with the correct id") {
             val pI = pi()
-            val adapter = factory.create(pI, listOf(testProperty()))
+            val adapter = factory.create(pI, listOf(testModel()))
             adapter.shouldBeInstanceOf<it.wldt.adapter.mqtt.physical.MqttPhysicalAdapter>()
             adapter.id shouldBe pI.id.toString()
         }
 
         test("applies default broker and port when config is empty") {
-            val adapter = factory.create(pi(), listOf(testProperty()))
+            val adapter = factory.create(pi(), listOf(testModel()))
             adapter.shouldBeInstanceOf<it.wldt.adapter.mqtt.physical.MqttPhysicalAdapter>()
         }
 
         test("uses provided broker and port from config") {
             val adapter = factory.create(
                 pi(mapOf("broker" to "custom.broker", "port" to "1884")),
-                listOf(testProperty()),
+                listOf(testModel()),
             )
             adapter.shouldBeInstanceOf<it.wldt.adapter.mqtt.physical.MqttPhysicalAdapter>()
         }
     }
 })
 
-@OptIn(ExperimentalTime::class)
-private fun testProperty() = Property(
-    modelId = ModelId("test-model"),
-    name = PropertyName("test-prop"),
-    description = PropertyDescription(""),
-    timestamp = Clock.System.now(),
-    value = PropertyValue.StringPropertyValue("value"),
-)
+private fun testModel(): Model {
+    val hdtId = HdtId("test-hdt")
+    val modelName = ModelName("test-model")
+    val model = Model(
+        hdtId = hdtId,
+        name = modelName,
+        description = ModelDescription(""),
+        properties = listOf(
+            Property(
+                modelId = io.github.whdt.core.hdt.HdtIdFactory.modelId(hdtId, modelName),
+                name = PropertyName("test-prop"),
+                description = PropertyDescription(""),
+                declaredType = PropertyValueType.STRING,
+            )
+        ),
+    )
+    return model
+}

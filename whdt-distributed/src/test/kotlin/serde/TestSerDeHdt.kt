@@ -20,10 +20,10 @@ import io.github.whdt.core.hdt.model.property.PropertyDescription
 import io.github.whdt.core.hdt.model.property.PropertyName
 import io.github.whdt.core.hdt.model.property.PropertyValue
 import io.github.whdt.core.hdt.model.property.PropertyValue.Companion.pv
+import io.github.whdt.core.hdt.model.property.PropertyValueType
 import io.github.whdt.distributed.serde.Stub
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import kotlin.time.Clock
 
 class TestSerDeHdt: FunSpec({
   test("Test SerDe HumanDigitalTwin") {
@@ -31,8 +31,8 @@ class TestSerDeHdt: FunSpec({
       val modelName = ModelName("my-model")
       val modelId = ModelId("$hdtId:$modelName")
       val properties = listOf(
-          testProperty(modelId, PropertyName("First Name"), "John".pv()),
-          testProperty(modelId, PropertyName("Surname"), "Doe".pv())
+          testProperty(modelId, PropertyName("First Name"), PropertyValueType.STRING, "John".pv()),
+          testProperty(modelId, PropertyName("Surname"), PropertyValueType.STRING, "Doe".pv())
       )
       val model = Model(hdtId, modelName, ModelDescription("Test Model"), properties)
       val pI = PhysicalInterface(
@@ -67,13 +67,13 @@ class TestSerDeHdt: FunSpec({
   }
 }) {
     companion object {
-        fun testProperty(modelId: ModelId, name: PropertyName, value: PropertyValue): Property {
+        fun testProperty(modelId: ModelId, name: PropertyName, declaredType: PropertyValueType, initialValue: PropertyValue? = null): Property {
             return Property(
                 modelId = modelId,
                 name = name,
                 description = PropertyDescription(""),
-                timestamp = Clock.System.now(),
-                value = value
+                declaredType = declaredType,
+                initialValue = initialValue,
             )
         }
     }

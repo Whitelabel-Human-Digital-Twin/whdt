@@ -13,7 +13,7 @@ import io.github.whdt.core.hdt.model.ModelName
 import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.model.property.PropertyDescription
 import io.github.whdt.core.hdt.model.property.PropertyName
-import io.github.whdt.core.hdt.model.property.PropertyValue
+import io.github.whdt.core.hdt.model.property.PropertyValueType
 import io.github.whdt.core.hdt.storage.Storage
 import io.github.whdt.core.hdt.storage.StorageName
 import io.github.whdt.core.hdt.storage.StorageType
@@ -21,7 +21,6 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
-import kotlin.time.Clock
 
 class HdtIdFactoryTest : FunSpec({
 
@@ -33,8 +32,7 @@ class HdtIdFactoryTest : FunSpec({
         modelId = mId,
         name = PropertyName(name),
         description = PropertyDescription(""),
-        timestamp = Clock.System.now(),
-        value = PropertyValue.StringPropertyValue("x"),
+        declaredType = PropertyValueType.STRING,
     )
 
     fun buildModel(

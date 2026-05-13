@@ -4,7 +4,7 @@ import io.github.whdt.core.hdt.HdtId
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceName
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceType
-import io.github.whdt.core.hdt.model.property.Property
+import io.github.whdt.core.hdt.model.Model
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.result.shouldBeFailure
@@ -31,7 +31,7 @@ class DigitalAdapterRegistryTest : FunSpec({
     val alwaysOkFactory = object : DigitalAdapterFactory {
         override val interfaceType = DigitalInterfaceType.MQTT
         override fun validate(dI: DigitalInterface): Result<Unit> = Result.success(Unit)
-        override fun create(dI: DigitalInterface, dt: DigitalTwin, properties: List<Property>): DigitalAdapter<*> =
+        override fun create(dI: DigitalInterface, dt: DigitalTwin, models: List<Model>): DigitalAdapter<*> =
             error("not used in registry tests")
     }
 
@@ -39,7 +39,7 @@ class DigitalAdapterRegistryTest : FunSpec({
         override val interfaceType = DigitalInterfaceType.HTTP
         override fun validate(dI: DigitalInterface): Result<Unit> =
             Result.failure(IllegalArgumentException("bad config for ${dI.id}"))
-        override fun create(dI: DigitalInterface, dt: DigitalTwin, properties: List<Property>): DigitalAdapter<*> =
+        override fun create(dI: DigitalInterface, dt: DigitalTwin, models: List<Model>): DigitalAdapter<*> =
             error("not used in registry tests")
     }
 
@@ -80,7 +80,7 @@ class DigitalAdapterRegistryTest : FunSpec({
                 override val interfaceType = DigitalInterfaceType.MQTT
                 override fun validate(dI: DigitalInterface): Result<Unit> =
                     Result.failure(IllegalArgumentException("mqtt fail for ${dI.id}"))
-                override fun create(dI: DigitalInterface, dt: DigitalTwin, properties: List<Property>): DigitalAdapter<*> =
+                override fun create(dI: DigitalInterface, dt: DigitalTwin, models: List<Model>): DigitalAdapter<*> =
                     error("not used")
             }
             val registry = DigitalAdapterRegistry(listOf(anotherFailFactory, alwaysFailFactory))
@@ -112,12 +112,11 @@ class DigitalAdapterRegistryTest : FunSpec({
         }
 
         test("delegates to the matching factory") {
-            val sentinel = object {}
             val capturingFactory = object : DigitalAdapterFactory {
                 var called = false
                 override val interfaceType = DigitalInterfaceType.MQTT
                 override fun validate(dI: DigitalInterface): Result<Unit> = Result.success(Unit)
-                override fun create(dI: DigitalInterface, dt: DigitalTwin, properties: List<Property>): DigitalAdapter<*> {
+                override fun create(dI: DigitalInterface, dt: DigitalTwin, models: List<Model>): DigitalAdapter<*> {
                     called = true
                     error("sentinel — not a real adapter") // won't reach assertion check
                 }
