@@ -5,6 +5,7 @@ import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterface
 import io.github.whdt.core.hdt.model.Model
 import io.github.whdt.core.hdt.model.property.Property
+import io.github.whdt.core.hdt.model.property.PropertyObservation
 import io.github.whdt.distributed.serde.modules.hdtModule
 import io.github.whdt.distributed.serde.modules.interfaceModule
 import io.github.whdt.distributed.serde.modules.propertyModule
@@ -39,6 +40,7 @@ object Stub {
     
     fun hdtJsonSerDe(): SerDe<HumanDigitalTwin> = jsonSerDe<HumanDigitalTwin>(hdtJson)
     fun propertyJsonSerDe(): SerDe<Property> = jsonSerDe<Property>(propertyJson)
+    fun observationJsonSerDe(): SerDe<PropertyObservation> = jsonSerDe<PropertyObservation>(propertyJson)
     fun modelJsonSerDe(): SerDe<Model> = jsonSerDe<Model>(propertyJson)
     fun physicalInterfaceJsonSerDe(): SerDe<PhysicalInterface> = jsonSerDe<PhysicalInterface>(interfaceJson)
     fun digitalInterfaceJsonSerDe(): SerDe<DigitalInterface> = jsonSerDe<DigitalInterface>(interfaceJson)

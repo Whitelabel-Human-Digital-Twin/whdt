@@ -2,17 +2,20 @@ package io.github.whdt.wldt.plugin.factory.digital
 
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceType
-import io.github.whdt.core.hdt.model.property.Property
+import io.github.whdt.core.hdt.model.Model
+import io.github.whdt.core.hdt.model.property.PropertyObservation
+import io.github.whdt.core.hdt.model.property.PropertyValue
 import io.github.whdt.distributed.namespace.Namespace
 import io.github.whdt.distributed.serde.SerDe
 import it.wldt.adapter.mqtt.digital.MqttDigitalAdapter
 import it.wldt.adapter.mqtt.digital.MqttDigitalAdapterConfiguration
 import it.wldt.adapter.mqtt.digital.topic.MqttQosLevel
 import it.wldt.core.engine.DigitalTwin
+import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 class MqttDigitalAdapterFactory(
-    private val propertySerDe: SerDe<Property>,
+    private val observationSerDe: SerDe<PropertyObservation>,
 ) : DigitalAdapterFactory {
     override val interfaceType = DigitalInterfaceType.MQTT
 
@@ -22,16 +25,33 @@ class MqttDigitalAdapterFactory(
     }
 
     @OptIn(ExperimentalTime::class)
-    override fun create(dI: DigitalInterface, dt: DigitalTwin, properties: List<Property>): MqttDigitalAdapter {
+    override fun create(dI: DigitalInterface, dt: DigitalTwin, models: List<Model>): MqttDigitalAdapter {
         val broker = dI.optionalString("broker", DEFAULT_BROKER)
         val port = dI.optionalInt("port", DEFAULT_PORT)
         val builder = MqttDigitalAdapterConfiguration.builder(broker, port)
-        properties.forEach { property ->
-            builder.addPropertyTopic(
-                property.id.toString(),
-                Namespace.propertyUpdateNotificationTopic(dI.hdtId, property.name),
-                MqttQosLevel.MQTT_QOS_0
-            ) { p: Property -> propertySerDe.serialize(p) }
+        val hdtId = dI.hdtId
+        models.forEach { model ->
+            model.properties.forEach { property ->
+                val capturedModel = model
+                val capturedProperty = property
+                builder.addPropertyTopic(
+                    property.id.toString(),
+                    Namespace.propertyUpdateNotificationTopic(hdtId, property.name),
+                    MqttQosLevel.MQTT_QOS_0
+                ) { value: Any? ->
+                    observationSerDe.serialize(
+                        PropertyObservation(
+                            hdtId = hdtId,
+                            modelId = capturedModel.id,
+                            modelName = capturedModel.name,
+                            propertyId = capturedProperty.id,
+                            propertyName = capturedProperty.name,
+                            timestamp = Clock.System.now(),
+                            value = value as PropertyValue,
+                        )
+                    )
+                }
+            }
         }
         return MqttDigitalAdapter(dI.id.toString(), builder.build())
     }

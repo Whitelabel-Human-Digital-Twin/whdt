@@ -2,7 +2,7 @@ package io.github.whdt.wldt.plugin.factory.physical
 
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterface
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterfaceType
-import io.github.whdt.core.hdt.model.property.Property
+import io.github.whdt.core.hdt.model.Model
 import it.wldt.adapter.physical.PhysicalAdapter
 
 class PhysicalAdapterRegistry(factories: List<PhysicalAdapterFactory>) {
@@ -31,6 +31,6 @@ class PhysicalAdapterRegistry(factories: List<PhysicalAdapterFactory>) {
         )
     }
 
-    fun create(pI: PhysicalInterface, properties: List<Property>): PhysicalAdapter? =
-        byType[pI.interfaceType]?.create(pI, properties)
+    fun create(pI: PhysicalInterface, models: List<Model>): PhysicalAdapter? =
+        byType[pI.interfaceType]?.create(pI, models)
 }

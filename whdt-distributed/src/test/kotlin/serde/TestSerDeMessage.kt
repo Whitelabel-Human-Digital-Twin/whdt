@@ -6,6 +6,7 @@ import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.model.property.PropertyDescription
 import io.github.whdt.core.hdt.model.property.PropertyName
 import io.github.whdt.core.hdt.model.property.PropertyValue.Companion.pv
+import io.github.whdt.core.hdt.model.property.PropertyValueType
 import io.github.whdt.distributed.id.SenderId
 import io.github.whdt.distributed.message.Message
 import io.github.whdt.distributed.serde.Stub
@@ -29,8 +30,8 @@ class TestSerDeMessage: FunSpec({
           ModelId("my-model"),
           PropertyName("my-property"),
           PropertyDescription(""),
-          now,
-          "test-property".pv()
+          PropertyValueType.STRING,
+          "test-property".pv(),
       )
       val message = Message(
           hdt = hdtId,

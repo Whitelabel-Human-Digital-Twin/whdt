@@ -2,7 +2,7 @@ package io.github.whdt.wldt.plugin.factory.digital
 
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterfaceType
-import io.github.whdt.core.hdt.model.property.Property
+import io.github.whdt.core.hdt.model.Model
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapter
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapterConfiguration
 import it.wldt.core.engine.DigitalTwin
@@ -15,11 +15,11 @@ class HttpDigitalAdapterFactory : DigitalAdapterFactory {
         dI.optionalInt("port", DEFAULT_PORT)
     }
 
-    override fun create(dI: DigitalInterface, dt: DigitalTwin, properties: List<Property>): HttpDigitalAdapter {
+    override fun create(dI: DigitalInterface, dt: DigitalTwin, models: List<Model>): HttpDigitalAdapter {
         val host = dI.optionalString("host", DEFAULT_HOST)
         val port = dI.optionalInt("port", DEFAULT_PORT)
         val httpConfig = HttpDigitalAdapterConfiguration(dI.id.toString(), host, port)
-        httpConfig.addPropertiesFilter(properties.map { it.id.toString() })
+        httpConfig.addPropertiesFilter(models.flatMap { it.properties }.map { it.id.toString() })
         return HttpDigitalAdapter(httpConfig, dt)
     }
 
