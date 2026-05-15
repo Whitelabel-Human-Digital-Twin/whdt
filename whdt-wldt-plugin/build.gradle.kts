@@ -28,6 +28,13 @@ publishing {
 }
 
 repositories {
+    maven {
+        url = uri("https://maven.pkg.github.com/Whitelabel-Human-Digital-Twin/whdt") // or the correct GitHub repo
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GPR_USER")
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("GPR_TOKEN")
+        }
+    }
     mavenCentral()
 }
 
@@ -42,6 +49,7 @@ dependencies {
     implementation("io.github.wldt:mqtt-physical-adapter:0.1.2")
     implementation("io.github.wldt:mqtt-digital-adapter:0.1.2")
     implementation("io.github.wldt:http-digital-adapter:0.2")
+    implementation("io.github.whdt:augmentation-extensions:0.1.0")
 }
 
 tasks.test {
