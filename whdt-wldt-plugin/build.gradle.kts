@@ -50,6 +50,7 @@ dependencies {
     implementation("io.github.wldt:mqtt-digital-adapter:0.1.2")
     implementation("io.github.wldt:http-digital-adapter:0.2")
     implementation("io.github.whdt:augmentation-extensions:0.1.0")
+    implementation ("org.jetbrains.kotlinx:kotlin-deeplearning-onnx:0.5.2")
 }
 
 tasks.test {
