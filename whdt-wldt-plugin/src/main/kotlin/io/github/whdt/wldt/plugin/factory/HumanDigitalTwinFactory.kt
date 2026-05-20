@@ -1,5 +1,6 @@
 package io.github.whdt.wldt.plugin.factory
 
+import io.github.whdt.augmentation.AugmentedDigitalTwin
 import io.github.whdt.core.hdt.HumanDigitalTwin
 import io.github.whdt.core.hdt.storage.StorageType
 import io.github.whdt.distributed.serde.Stub
@@ -32,7 +33,7 @@ object HumanDigitalTwinFactory {
 
     fun fromHumanDigitalTwin(hdt: HumanDigitalTwin): DigitalTwin {
         val shad = WhdtShadowingFunction("${hdt.hdtId}-shadowing-function", hdt.models)
-        val dt = DigitalTwin(hdt.hdtId.id, shad)
+        val dt = AugmentedDigitalTwin(hdt.hdtId.id, shad)
 
         physicalRegistry.validateAll(hdt.physicalInterfaces).getOrThrow()
         hdt.physicalInterfaces.forEach { pI ->

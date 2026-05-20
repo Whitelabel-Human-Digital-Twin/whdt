@@ -1,5 +1,8 @@
 package io.github.whdt.wldt.plugin.shadowing
 
+import io.github.whdt.augmentation.AugmentationFunction
+import io.github.whdt.augmentation.event.AugmentationEvent
+import io.github.whdt.augmentation.shadowing.AugmentedShadowingFunction
 import io.github.whdt.core.hdt.model.Model
 import it.wldt.adapter.digital.event.DigitalActionWldtEvent
 import it.wldt.adapter.physical.PhysicalAssetAction
@@ -9,7 +12,6 @@ import it.wldt.adapter.physical.event.PhysicalAssetEventWldtEvent
 import it.wldt.adapter.physical.event.PhysicalAssetPropertyWldtEvent
 import it.wldt.adapter.physical.event.PhysicalAssetRelationshipInstanceCreatedWldtEvent
 import it.wldt.adapter.physical.event.PhysicalAssetRelationshipInstanceDeletedWldtEvent
-import it.wldt.core.model.ShadowingFunction
 import it.wldt.core.state.DigitalTwinStateAction
 import it.wldt.core.state.DigitalTwinStateEvent
 import it.wldt.core.state.DigitalTwinStateEventNotification
@@ -19,7 +21,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.function.Consumer
 
-class WhdtShadowingFunction(id: String, val models: List<Model>): ShadowingFunction(id) {
+class WhdtShadowingFunction(id: String, val models: List<Model>): AugmentedShadowingFunction(id) {
     val logger: Logger = LoggerFactory.getLogger(WhdtShadowingFunction::class.java)
 
     override fun onCreate() {
@@ -146,7 +148,7 @@ class WhdtShadowingFunction(id: String, val models: List<Model>): ShadowingFunct
 
     private fun setupStartingModels() {
 
-        logger.debug("Setting up models for shadowing");
+        logger.debug("Setting up models for shadowing")
 
         this.models.forEach { m ->
             try {
@@ -201,5 +203,25 @@ class WhdtShadowingFunction(id: String, val models: List<Model>): ShadowingFunct
 
             notifyShadowingSync()
         }
+    }
+
+    override fun onAugmentationEvent(augmentationEvent: AugmentationEvent<*>) {
+    }
+
+    override fun onAugmentationFunctionAdded(augmentationFunction: AugmentationFunction) {
+        try {
+            this.observeAugmentationFunctionOutput(augmentationFunction)
+        } catch (_: java.lang.Exception) {
+            logger.warn(
+                "Shadowing - onAugmentationFunctionAdded - failed to observe function {} output",
+                augmentationFunction.id
+            )
+        }
+    }
+
+    override fun onAugmentationFunctionStart(augmentationFunction: AugmentationFunction) {
+    }
+
+    override fun onAugmentationFunctionStop(augmentationFunction: AugmentationFunction) {
     }
 }
