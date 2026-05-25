@@ -30,7 +30,8 @@ data class Property(
     val description: PropertyDescription,
     val declaredType: PropertyValueType,
     val initialValue: PropertyValue? = null,
-    val metadata: Map<String, String> = emptyMap(),
+    val tags: Map<String, String> = emptyMap(),
+    val coding: Coding? = null,
 ) {
     val id: PropertyId = HdtIdFactory.propertyId(modelId, name)
 

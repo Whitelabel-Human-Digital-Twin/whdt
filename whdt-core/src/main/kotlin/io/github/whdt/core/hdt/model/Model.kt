@@ -30,6 +30,8 @@ data class Model(
     val name: ModelName,
     val description: ModelDescription,
     val properties: List<Property>,
+    val tags: Map<String, String> = emptyMap(),
+    val format: Format = WellKnownFormats.UNSPECIFIED,
 ) {
     val id: ModelId = HdtIdFactory.modelId(hdtId, name)
 
