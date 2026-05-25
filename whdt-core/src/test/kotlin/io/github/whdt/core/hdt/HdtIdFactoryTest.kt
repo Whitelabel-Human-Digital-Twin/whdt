@@ -10,6 +10,8 @@ import io.github.whdt.core.hdt.model.Model
 import io.github.whdt.core.hdt.model.ModelDescription
 import io.github.whdt.core.hdt.model.ModelId
 import io.github.whdt.core.hdt.model.ModelName
+import io.github.whdt.core.hdt.model.WellKnownFormats
+import io.github.whdt.core.hdt.model.property.Coding
 import io.github.whdt.core.hdt.model.property.Property
 import io.github.whdt.core.hdt.model.property.PropertyDescription
 import io.github.whdt.core.hdt.model.property.PropertyName
@@ -473,6 +475,107 @@ class HdtIdFactoryTest : FunSpec({
             base.storages.forEach { it.hdtId shouldBe origId }
             base.physicalInterfaces.forEach { it.hdtId shouldBe origId }
             base.digitalInterfaces.forEach { it.hdtId shouldBe origId }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Rename preservation — tags, coding, format
+    // -------------------------------------------------------------------------
+
+    context("Model.rename — preserves tags, coding, format") {
+        val coding = Coding(system = "loinc", code = "8867-4")
+        val mName = ModelName("vitals")
+        val mId = HdtIdFactory.modelId(hdtId, mName)
+        val propWithMeta = Property(
+            modelId = mId,
+            name = PropertyName("heart-rate"),
+            description = PropertyDescription(""),
+            declaredType = PropertyValueType.INT,
+            tags = mapOf("unit" to "bpm"),
+            coding = coding,
+        )
+        val modelWithMeta = Model(
+            hdtId = hdtId,
+            name = mName,
+            description = ModelDescription(""),
+            properties = listOf(propWithMeta),
+            tags = mapOf("domain" to "cardiology"),
+            format = WellKnownFormats.FHIR_R4,
+        )
+
+        test("preserves model tags after rename") {
+            modelWithMeta.rename(ModelName("biometrics")).tags shouldBe mapOf("domain" to "cardiology")
+        }
+
+        test("preserves model format after rename") {
+            modelWithMeta.rename(ModelName("biometrics")).format shouldBe WellKnownFormats.FHIR_R4
+        }
+
+        test("preserves property tags after rename cascade") {
+            val renamed = modelWithMeta.rename(ModelName("biometrics"))
+            renamed.properties.first { it.name.value == "heart-rate" }.tags shouldBe mapOf("unit" to "bpm")
+        }
+
+        test("preserves property coding after rename cascade") {
+            val renamed = modelWithMeta.rename(ModelName("biometrics"))
+            renamed.properties.first { it.name.value == "heart-rate" }.coding shouldBe coding
+        }
+    }
+
+    context("HumanDigitalTwin.renameModel — preserves tags, coding, format") {
+        val coding = Coding(system = "snomed", code = "364075005")
+        val mName = ModelName("vitals")
+        val mId = HdtIdFactory.modelId(hdtId, mName)
+        val propWithMeta = Property(
+            modelId = mId,
+            name = PropertyName("heart-rate"),
+            description = PropertyDescription(""),
+            declaredType = PropertyValueType.INT,
+            tags = mapOf("unit" to "bpm"),
+            coding = coding,
+        )
+        val modelWithMeta = Model(
+            hdtId = hdtId,
+            name = mName,
+            description = ModelDescription(""),
+            properties = listOf(propWithMeta),
+            tags = mapOf("domain" to "cardiology"),
+            format = WellKnownFormats.RAW,
+        )
+        val baseHdt = HumanDigitalTwin(hdtId = hdtId, models = listOf(modelWithMeta))
+
+        test("preserves model tags after renameModel") {
+            val updated = baseHdt.renameModel(mName, ModelName("biometrics"))
+            updated.models.first { it.name.value == "biometrics" }.tags shouldBe mapOf("domain" to "cardiology")
+        }
+
+        test("preserves model format after renameModel") {
+            val updated = baseHdt.renameModel(mName, ModelName("biometrics"))
+            updated.models.first { it.name.value == "biometrics" }.format shouldBe WellKnownFormats.RAW
+        }
+
+        test("preserves property tags after renameModel cascade") {
+            val updated = baseHdt.renameModel(mName, ModelName("biometrics"))
+            val prop = updated.models.first { it.name.value == "biometrics" }.properties.first()
+            prop.tags shouldBe mapOf("unit" to "bpm")
+        }
+
+        test("preserves property coding after renameModel cascade") {
+            val updated = baseHdt.renameModel(mName, ModelName("biometrics"))
+            val prop = updated.models.first { it.name.value == "biometrics" }.properties.first()
+            prop.coding shouldBe coding
+        }
+    }
+
+    context("HumanDigitalTwin.rename — preserves HDT tags") {
+        val hdtWithTags = HumanDigitalTwin(
+            hdtId = hdtId,
+            models = emptyList(),
+            tags = mapOf("owner" to "alice"),
+        )
+
+        test("preserves HDT tags after rename") {
+            hdtWithTags.rename(HdtId("dt-2")).tags shouldBe mapOf("owner" to "alice")
         }
     }
 })

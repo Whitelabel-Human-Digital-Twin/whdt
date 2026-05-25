@@ -27,7 +27,7 @@ data class HumanDigitalTwin(
     val physicalInterfaces: List<PhysicalInterface> = emptyList(),
     val digitalInterfaces: List<DigitalInterface> = emptyList(),
     val storages: List<Storage> = listOf(Storage.default(hdtId)),
-    val metadata: Map<String, String> = emptyMap(),
+    val tags: Map<String, String> = emptyMap(),
 ) {
     init {
         val dupModels = models.groupBy { it.id }.filterValues { it.size > 1 }.keys
