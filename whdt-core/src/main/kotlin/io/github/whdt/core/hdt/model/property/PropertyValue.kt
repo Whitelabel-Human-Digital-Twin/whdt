@@ -39,3 +39,23 @@ sealed class PropertyValue {
         fun String.pv(): PropertyValue = StringPropertyValue(this)
     }
 }
+
+/**
+ * Maps a JVM value into a [PropertyValue].
+ * - `null` → [PropertyValue.EmptyPropertyValue]
+ * - `String`, `Int`, `Long`, `Float`, `Double`, `Boolean` → matching wrapper
+ * - anything else → `null`
+ *
+ * Top-level (not in [PropertyValue.Companion]) to avoid overload ambiguity
+ * with the primitive `.pv()` helpers and to signal that this conversion may fail.
+ */
+fun Any?.toPropertyValue(): PropertyValue? = when (this) {
+    null       -> PropertyValue.EmptyPropertyValue
+    is String  -> PropertyValue.StringPropertyValue(this)
+    is Int     -> PropertyValue.IntPropertyValue(this)
+    is Long    -> PropertyValue.LongPropertyValue(this)
+    is Float   -> PropertyValue.FloatPropertyValue(this)
+    is Double  -> PropertyValue.DoublePropertyValue(this)
+    is Boolean -> PropertyValue.BooleanPropertyValue(this)
+    else       -> null
+}
