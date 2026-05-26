@@ -1,6 +1,12 @@
 package io.github.whdt.wldt.plugin.shadowing
 
+import io.github.whdt.core.hdt.event.CodingLinkedUpdateEvent
 import io.github.whdt.core.hdt.model.Model
+import io.github.whdt.core.hdt.model.property.Coding
+import io.github.whdt.core.hdt.model.property.Property
+import io.github.whdt.core.hdt.model.property.toPropertyValue
+import io.github.whdt.core.hdt.query.propertiesByCoding
+import io.github.whdt.distributed.serde.Stub
 import it.wldt.adapter.digital.event.DigitalActionWldtEvent
 import it.wldt.adapter.physical.PhysicalAssetAction
 import it.wldt.adapter.physical.PhysicalAssetDescription
@@ -21,6 +27,9 @@ import java.util.function.Consumer
 
 class WhdtShadowingFunction(id: String, val models: List<Model>): ShadowingFunction(id) {
     val logger: Logger = LoggerFactory.getLogger(WhdtShadowingFunction::class.java)
+
+    private lateinit var propertyByKey: Map<String, Property>
+    private lateinit var codingIndex: Map<Coding, List<Property>>
 
     override fun onCreate() {
         logger.debug("Shadowing - OnCreate")
@@ -104,6 +113,8 @@ class WhdtShadowingFunction(id: String, val models: List<Model>): ShadowingFunct
         } catch (e: java.lang.Exception) {
             logger.error(e.message, e)
         }
+
+        emitCodingLinkedUpdateIfAny(physicalPropertyEventMessage!!)
     }
 
     override fun onPhysicalAssetEventNotification(physicalAssetEventWldtEvent: PhysicalAssetEventWldtEvent<*>?) {
@@ -145,15 +156,49 @@ class WhdtShadowingFunction(id: String, val models: List<Model>): ShadowingFunct
     }
 
     private fun setupStartingModels() {
+        logger.debug("Setting up models for shadowing")
+        val allProps = models.flatMap { it.properties }
+        propertyByKey = allProps.associateBy { it.id.toString() }
+        codingIndex = allProps.propertiesByCoding()
+        logger.debug(
+            "Indexed {} properties; {} distinct codings",
+            propertyByKey.size, codingIndex.size,
+        )
+    }
 
-        logger.debug("Setting up models for shadowing");
+    private fun emitCodingLinkedUpdateIfAny(
+        physicalPropertyEventMessage: PhysicalAssetPropertyWldtEvent<*>,
+    ) {
+        val key = physicalPropertyEventMessage.physicalPropertyId
+        val source = propertyByKey[key] ?: return
+        val coding = source.coding ?: return
+        val siblings = (codingIndex[coding].orEmpty()).filter { it.id != source.id }
+        if (siblings.isEmpty()) return
 
-        this.models.forEach { m ->
-            try {
+        val newValue = physicalPropertyEventMessage.getBody().toPropertyValue() ?: run {
+            logger.warn(
+                "Coding-linked update suppressed: unsupported value type {} for property {}",
+                physicalPropertyEventMessage.getBody()?.javaClass, source.id,
+            )
+            return
+        }
 
-            } catch (e: Exception) {
-                logger.error("Error setting up model ${m.id}:\n${e.message}", e)
-            }
+        val payload = CodingLinkedUpdateEvent(
+            sourcePropertyId = source.id,
+            coding = coding,
+            linkedPropertyIds = siblings.map { it.id },
+            newValue = newValue,
+        )
+        try {
+            this.digitalTwinStateManager.notifyDigitalTwinStateEvent(
+                DigitalTwinStateEventNotification<String?>(
+                    CodingLinkedUpdateEvent.WLDT_EVENT_KEY,
+                    Stub.codingLinkedUpdateEventSerDe().serialize(payload),
+                    System.currentTimeMillis(),
+                )
+            )
+        } catch (e: WldtDigitalTwinStateEventNotificationException) {
+            logger.error("Failed to emit coding-linked update event: {}", e.message, e)
         }
     }
 
@@ -196,6 +241,21 @@ class WhdtShadowingFunction(id: String, val models: List<Model>): ShadowingFunct
                     logger.error("Error registering event for PAD: {}", id, ex)
                 }
             })
+
+            try {
+                if (!this.digitalTwinStateManager.digitalTwinState.containsEvent(CodingLinkedUpdateEvent.WLDT_EVENT_KEY)) {
+                    this.digitalTwinStateManager.registerEvent(
+                        DigitalTwinStateEvent(
+                            CodingLinkedUpdateEvent.WLDT_EVENT_KEY,
+                            "coding-linked-update",
+                        )
+                    )
+                }
+            } catch (e: WldtDigitalTwinStateException) {
+                logger.error("Error registering coding-linked-update event: {}", id, e)
+            } catch (e: WldtDigitalTwinStateEventException) {
+                logger.error("Error registering coding-linked-update event: {}", id, e)
+            }
 
             this.digitalTwinStateManager.commitStateTransaction()
 

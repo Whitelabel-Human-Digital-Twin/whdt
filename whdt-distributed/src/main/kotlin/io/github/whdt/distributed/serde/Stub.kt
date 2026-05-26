@@ -1,6 +1,7 @@
 package io.github.whdt.distributed.serde
 
 import io.github.whdt.core.hdt.HumanDigitalTwin
+import io.github.whdt.core.hdt.event.CodingLinkedUpdateEvent
 import io.github.whdt.core.hdt.interfaces.digital.DigitalInterface
 import io.github.whdt.core.hdt.interfaces.physical.PhysicalInterface
 import io.github.whdt.core.hdt.model.Model
@@ -45,4 +46,5 @@ object Stub {
     fun physicalInterfaceJsonSerDe(): SerDe<PhysicalInterface> = jsonSerDe<PhysicalInterface>(interfaceJson)
     fun digitalInterfaceJsonSerDe(): SerDe<DigitalInterface> = jsonSerDe<DigitalInterface>(interfaceJson)
     fun messageJsonSerDe(): SerDe<Message> = jsonSerDe<Message>(messageJson)
+    fun codingLinkedUpdateEventSerDe(): SerDe<CodingLinkedUpdateEvent> = jsonSerDe<CodingLinkedUpdateEvent>(propertyJson)
 }

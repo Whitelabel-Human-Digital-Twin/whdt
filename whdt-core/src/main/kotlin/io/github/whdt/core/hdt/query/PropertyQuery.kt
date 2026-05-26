@@ -1,6 +1,7 @@
 package io.github.whdt.core.hdt.query
 
 import io.github.whdt.core.hdt.HumanDigitalTwin
+import io.github.whdt.core.hdt.model.property.Coding
 import io.github.whdt.core.hdt.model.property.Property
 
 /**
@@ -39,3 +40,9 @@ fun Map<String?, List<Property>>.thenGroupByTag(key: String): Map<String?, Map<S
  */
 fun HumanDigitalTwin.allProperties(): List<Property> =
     models.flatMap { it.properties }
+
+fun HumanDigitalTwin.findByCoding(coding: Coding): List<Property> =
+    allProperties().findByCoding(coding)
+
+fun HumanDigitalTwin.propertiesByCoding(): Map<Coding, List<Property>> =
+    allProperties().propertiesByCoding()
